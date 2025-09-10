@@ -1,0 +1,33 @@
+functionsDirectory = "/Users/cedars-user2/Documents/Keith's Stuff/lead gen/health insurance/netlify/functions"
+functionsDirectoryOrigin = "default"
+headers = []
+redirects = []
+
+[build]
+publish = "/Users/cedars-user2/Documents/Keith's Stuff/lead gen/health insurance"
+publishOrigin = "default"
+functions = "/Users/cedars-user2/Documents/Keith's Stuff/lead gen/health insurance/netlify/functions"
+
+[build.environment]
+
+[build.processing]
+
+[build.processing.css]
+
+[build.processing.html]
+
+[build.processing.images]
+
+[build.processing.js]
+
+[build.services]
+
+[functions]
+
+[functions."*"]
+
+[[plugins]]
+origin = "ui"
+package = "@netlify/plugin-lighthouse"
+
+[plugins.inputs]
