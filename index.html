@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Coverage Reality Check - See What's Available</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://keen-cranachan-385651.netlify.app/" />
+    <meta property="og:title" content="Health Coverage Reality Check - See What's Available" />
+    <meta property="og:description" content="Medical bills are a leading cause of personal bankruptcies. Smart families secure their finances before an accident strikes – 60‑second coverage check, no obligation." />
+    <meta property="og:image" content="https://keen-cranachan-385651.netlify.app/images/prelander%201%20image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Health Coverage Reality Check" />
+    <meta property="og:locale" content="en_US" />
+    
+    <!-- Meta Pixel Code -->
+<script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '635600969586902');
+    // fbq('track', 'PageView'); // Disabled automatic PageView
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=635600969586902&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+    
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-59Z6DNHZ');</script>
+    <!-- End Google Tag Manager -->
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+        
+        .hero-section {
+            padding: 40px 25px 30px;
+            text-align: center;
+        }
+        
+        .main-headline {
+            font-size: 30px;
+            font-weight: 800;
+            color: #2c3e50;
+            line-height: 1.2;
+            margin-bottom: 24px;
+        }
+        
+        .subheadline {
+            font-size: 18px;
+            color: #5a6c7d;
+            line-height: 1.4;
+            margin-bottom: 32px;
+            font-weight: 500;
+        }
+        
+        .hero-image {
+            width: 100%;
+            max-width: 420px;
+            height: 280px;
+            margin: 0 auto 35px;
+            border-radius: 15px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+            background: #f8f9fb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+        
+        .cta-primary {
+            background: linear-gradient(135deg, #4CAF50, #43a047);
+            color: white;
+            border: none;
+            padding: 20px 45px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 380px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.35);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.4);
+        }
+        
+        .cta-primary:focus {
+            outline: 3px solid rgba(76, 175, 80, 0.3);
+            outline-offset: 2px;
+        }
+        
+        .cta-primary:active {
+            transform: translateY(-1px);
+        }
+        
+        .value-bullets {
+            padding: 35px 25px;
+            background: #f8f9fb;
+            margin-top: 25px;
+        }
+        
+        .bullets-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .bullet-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
+            border-left: 5px solid #4CAF50;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.2s ease;
+        }
+        
+        .bullet-item:hover {
+            transform: translateX(8px);
+        }
+        
+        .bullet-icon {
+            font-size: 22px;
+            margin-right: 16px;
+            margin-top: 2px;
+            min-width: 30px;
+        }
+        
+        .bullet-text {
+            font-size: 16px;
+            color: #34495e;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+        
+        .urgency-section {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border-left: 5px solid #f39c12;
+            padding: 20px 25px;
+            margin: 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .urgency-text {
+            font-size: 16px;
+            color: #856404;
+            font-weight: 700;
+        }
+        
+        .bottom-cta {
+            padding: 35px 25px 45px;
+            text-align: center;
+            background: white;
+        }
+        
+        .bottom-text {
+            font-size: 17px;
+            color: #5a6c7d;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+        
+        .trust-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .trust-item {
+            font-size: 13px;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+        }
+        
+        .social-proof {
+            background: linear-gradient(135deg, #e8f5e8, #d4edda);
+            padding: 22px 25px;
+            margin: 25px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 5px solid #28a745;
+        }
+        
+        .social-proof-text {
+            font-size: 16px;
+            color: #155724;
+            font-weight: 700;
+        }
+
+        .dynamic-content {
+            opacity: 0;
+            transition: all 0.8s ease-in-out;
+        }
+
+        .dynamic-content.visible {
+            opacity: 1;
+        }
+
+        .disclaimer {
+            background: #f8f9fa;
+            padding: 20px 25px;
+            margin-top: 20px;
+            border-top: 2px solid #e9ecef;
+            font-size: 12px;
+            color: #6c757d;
+            text-align: center;
+            line-height: 1.5;
+        }
+        
+        .disclaimer p {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        
+        .disclaimer p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 35px 30px;
+            max-width: 480px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.2s ease;
+            z-index: 10;
+        }
+
+        .modal-close:hover {
+            color: #666;
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .modal-subtitle {
+            font-size: 15px;
+            color: #5a6c7d;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .quick-form {
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+            background: #f8f9fb;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #9ca3af;
+            font-weight: 400;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .modal-cta {
+            background: linear-gradient(135deg, #4CAF50, #43a047);
+            color: white;
+            border: none;
+            padding: 16px 35px;
+            font-size: 17px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.35);
+        }
+
+        .modal-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+        }
+
+        .modal-cta:active {
+            transform: translateY(0);
+        }
+
+        .modal-cta:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .trust-line {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            font-size: 12px;
+            color: #6c757d;
+            font-weight: 600;
+        }
+
+        .trust-item-mini {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .privacy-note {
+            text-align: center;
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 12px;
+            line-height: 1.3;
+        }
+
+        .form-validation {
+            font-size: 13px;
+            color: #dc3545;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .form-group.error .form-input {
+            border-color: #dc3545;
+            background: #fff5f5;
+        }
+
+        .form-group.error .form-validation {
+            display: block;
+        }
+
+        /* Honeypot field styling - ensure complete invisibility */
+        .honeypot-field {
+            position: absolute !important;
+            left: -9999px !important;
+            top: -9999px !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            z-index: -9999 !important;
+            width: 1px !important;
+            height: 1px !important;
+            overflow: hidden !important;
+            clip: rect(0, 0, 0, 0) !important;
+            border: 0 !important;
+            margin: -1px !important;
+            padding: 0 !important;
+        }
+
+        .honeypot-field input {
+            position: absolute !important;
+            left: -9999px !important;
+            top: -9999px !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            z-index: -9999 !important;
+            width: 1px !important;
+            height: 1px !important;
+            overflow: hidden !important;
+            clip: rect(0, 0, 0, 0) !important;
+            border: 0 !important;
+            margin: -1px !important;
+            padding: 0 !important;
+        }
+
+        @media (max-width: 480px) {
+            .main-headline {
+                font-size: 26px;
+            }
+            
+            .subheadline {
+                font-size: 16px;
+            }
+            
+            .hero-section {
+                padding: 30px 20px 25px;
+            }
+            
+            .value-bullets {
+                padding: 25px 20px;
+            }
+            
+            .hero-image {
+                height: 240px;
+                font-size: 14px;
+            }
+            
+            .trust-indicators {
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header pulse">
+            ⚡ 2025 Health Plans Available: Limited-time enrollment opportunities in your area
+        </div>
+        
+        <div class="hero-section">
+            <h1 class="main-headline dynamic-content" id="main-headline">
+                One Unexpected Bill Away from Losing Everything Built – Smart Families Act First
+            </h1>
+            
+            <p class="subheadline dynamic-content" id="subheadline">
+                Medical bills are a leading cause of personal bankruptcies. Many families now secure their finances before an accident strikes – 60‑second coverage check, no obligation.
+            </p>
+            
+            <div class="hero-image dynamic-content" id="hero-image">
+                <img src="images/prelander 1 image.png" alt="Young family reviewing health insurance options" />
+            </div>
+            
+            <!-- Honeypot field - hidden from real users but visible to bots -->
+            <div class="honeypot-field" style="position: absolute; left: -9999px; opacity: 0; pointer-events: none;">
+                <input type="text" name="website" id="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+                <input type="email" name="email_confirm" id="email_confirm" tabindex="-1" autocomplete="off" aria-hidden="true">
+                <input type="checkbox" name="terms_agree" id="terms_agree" tabindex="-1" aria-hidden="true">
+            </div>
+            
+            <a href="#" class="cta-primary dynamic-content" role="button" rel="nofollow" onclick="redirectToQuiz(event)">
+                🔍 Am I Protected From Financial Ruin?
+            </a>
+        </div>
+        
+        <div class="social-proof dynamic-content">
+            <div class="social-proof-text" id="social-proof">
+                ✅ Thousands of working adults checked their options this month
+            </div>
+        </div>
+        
+        <div class="urgency-section dynamic-content">
+            <div class="urgency-text" id="urgency-text">
+                ⏰ Enrollment windows vary by area and plan type - check what's available today
+            </div>
+        </div>
+        
+        <div class="value-bullets dynamic-content">
+            <h3 class="bullets-title">Smart Adults Don't Wait for Disaster to Strike:</h3>
+            
+            <div class="bullet-item">
+                <span class="bullet-icon">💔</span>
+                <span class="bullet-text">No parent should choose between a child's health and family savings – one ER visit can cost $50,000+</span>
+            </div>
+            
+            <div class="bullet-item">
+                <span class="bullet-icon">🏠</span>
+                <span class="bullet-text">Independent workers risk losing months of income – one slip could shut down everything you've built</span>
+            </div>
+            
+            <div class="bullet-item">
+                <span class="bullet-icon">💰</span>
+                <span class="bullet-text">Many families qualify for reduced-rate plans – some eligible for significant savings through available programs*</span>
+            </div>
+            
+            <div class="bullet-item">
+                <span class="bullet-icon">😴</span>
+                <span class="bullet-text">Sleep better knowing there's a plan – instant relief comes from being prepared for the unexpected</span>
+            </div>
+            
+            <div class="bullet-item">
+                <span class="bullet-icon">🔒</span>
+                <span class="bullet-text">Private 60-second reality check – no SSN required, just see what protection you qualify for</span>
+            </div>
+            
+            <div class="bullet-item">
+                <span class="bullet-icon">⚡</span>
+                <span class="bullet-text">Faster than your morning coffee – instant access to real coverage from established providers</span>
+            </div>
+        </div>
+        
+        <div class="bottom-cta dynamic-content">
+            <p class="bottom-text">
+                <strong>Don't gamble with everything you've worked for.</strong><br>
+                Take 60 seconds to see what affordable coverage options are available – zero obligation, complete privacy.
+            </p>
+            
+            <a href="#" class="cta-primary" role="button" rel="nofollow" onclick="redirectToQuiz(event)" id="bottom-cta">
+                🛡️ Take Control Now
+            </a>
+            
+            <div class="trust-indicators">
+                <div class="trust-item">
+                    🔒 <span>100% Private</span>
+                </div>
+                <div class="trust-item">
+                    ⚡ <span>Instant Results</span>
+                </div>
+                <div class="trust-item">
+                    ✅ <span>No Commitment</span>
+                </div>
+                <div class="trust-item">
+                    🏥 <span>Real Coverage</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <p><strong>Coverage & Results:</strong> Coverage availability, pricing, and savings vary by state, age, income, and eligibility. Not all applicants qualify for the same rates or benefits. This is not an insurance offer but a tool to check available options.</p>
+            
+            <p><strong>Non-Affiliation:</strong> Policy Pulse is an independent resource hub and is not affiliated with any government program or insurance provider. We do not sell insurance directly. Licensed agents may contact you regarding plan options.</p>
+            
+            <p><strong>Privacy & Security:</strong> Information provided is used solely for connecting you with licensed agents and plan options. We never request SSNs, banking, or credit card information on this site.</p>
+            
+            <p><strong>Age Requirement:</strong> This service is intended for U.S. residents aged 18 and older.</p>
+        </div>
+    </div>
+
+    <!-- Modal for Lead Capture -->
+    <div class="modal-overlay" id="leadModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            
+            <div class="modal-header">
+                <h3 class="modal-title">Smart Adults Don't Leave It to Chance</h3>
+                <p class="modal-subtitle">See what protection you qualify for • Private check • Zero commitment</p>
+            </div>
+
+            <form class="quick-form" id="leadForm" action="/go/firstquote" method="POST">
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="text" class="form-input" id="firstName" name="first_name" 
+                               placeholder="First name" required autocomplete="given-name">
+                        <div class="form-validation">Please enter your first name</div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-input" id="lastName" name="last_name" 
+                               placeholder="Last name" required autocomplete="family-name">
+                        <div class="form-validation">Please enter your last name</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <input type="email" class="form-input" id="email" name="email" 
+                           placeholder="Email address" required autocomplete="email">
+                    <div class="form-validation">Please enter a valid email address</div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="tel" class="form-input" id="phone" name="phone" 
+                               placeholder="Phone number" required autocomplete="tel">
+                        <div class="form-validation">Please enter your phone number</div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-input" id="zipcode" name="zipcode" 
+                               placeholder="ZIP code" required autocomplete="postal-code" maxlength="5" pattern="[0-9]{5}">
+                        <div class="form-validation">Please enter valid ZIP code</div>
+                    </div>
+                </div>
+
+                <button type="submit" class="modal-cta" id="modalSubmitBtn">
+                    🛡️ Show Me What I Qualify For
+                </button>
+
+                <div class="trust-line">
+                    <div class="trust-item-mini">
+                        <span>🔒</span> <span>SSL Encrypted</span>
+                    </div>
+                    <div class="trust-item-mini">
+                        <span>⚡</span> <span>Instant Results</span>
+                    </div>
+                    <div class="trust-item-mini">
+                        <span>🛡️</span> <span>Privacy Protected</span>
+                    </div>
+                </div>
+
+                <div class="privacy-note">
+                    Smart decision-makers start here. Information stays private and shows available options only. 
+                    Licensed agents may reach out to help secure coverage that fits.
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Fixed angle system - no rotation, URL param driven
+        const angles = {
+            'one_bill_away': {
+                headline: "One Unexpected Bill Away from Losing Everything Built – Smart Families Act First",
+                subheadline: "Medical bills are a leading cause of personal bankruptcies. Many families now secure their finances before an accident strikes – 60‑second coverage check, no obligation.",
+                cta: "🔍 Am I Protected From Financial Ruin?",
+                bottomCta: "🛡️ Take Control Now"
+            },
+            'family_shield': {
+                headline: "Smart Parents Shield Their Savings – Before the $50K ER Bill Arrives",
+                subheadline: "No parent should have to choose between a child's health and family savings. Thousands of families this year have locked in affordable coverage. Get instant access to plans that help parents protect both children and household finances.",
+                cta: "Is My Family's Future Secure?",
+                bottomCta: "Shield My Family Now"
+            },
+            'freelancer_safety': {
+                headline: "Independent & Thriving – One Slip Could Cost Months of Income",
+                subheadline: "Successful freelancers and 1099 pros don't leave it to chance. One accident could shut down months of income – successful independents lock in protection before disaster strikes.",
+                cta: "Can I Afford to Get Sick?",
+                bottomCta: "Secure My Independence"
+            }
+        };
+
+        // Get angle from URL - NO ROTATION
+        const urlParams = new URLSearchParams(window.location.search);
+        const primaryAngle = urlParams.get('angle') || urlParams.get('utm_term') || 'one_bill_away';
+        
+        // Behavioral tracking - THROTTLED events only
+        let scrollDepth = 0;
+        let timeOnPage = Date.now();
+        let engagementScore = 0;
+        let ctaInteractions = 0;
+        
+        // Event firing controls - prevent spam
+        let eventsFired = {
+            scroll25: false,
+            scroll60: false,
+            scroll90: false,
+            ctaHover: false,
+            qualityTime: false,
+            deepConsideration: false,
+            abandonment: false
+        };
+        
+        // Set angle content on load
+        if (angles[primaryAngle] && primaryAngle !== 'one_bill_away') {
+            setTimeout(() => {
+                const angle = angles[primaryAngle];
+                document.getElementById('main-headline').textContent = angle.headline;
+                document.querySelector('.subheadline').textContent = angle.subheadline;
+                document.querySelector('.cta-primary').textContent = angle.cta;
+                document.getElementById('bottom-cta').textContent = angle.bottomCta;
+            }, 800);
+        }
+
+        // FIXED: Single event names with angle as parameter
+        function fireEventToPixelAndServer(eventName, eventData = {}) {
+            const cleanEventData = {
+                ...eventData,
+                primary_angle: primaryAngle,
+                client_user_agent: navigator.userAgent
+            };
+
+            // Generate single event ID for consistency
+            const eventId = crypto?.randomUUID?.() || `evt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+            // Handle PageView vs custom events for Facebook
+            // 1️⃣ SENDS TO FACEBOOK PIXEL
+            if (typeof fbq !== 'undefined') {
+                if (eventName === 'PageView') {
+                    fbq('track', 'PageView', cleanEventData);
+                } else {
+                    fbq('trackCustom', eventName, cleanEventData, {
+                        eventID: eventId //same event id as gtm for deduplication
+                    });
+                }
+            }
+
+            // GTM DataLayer for Stape server
+             // 2️⃣ SENDS TO GTM DATALAYER
+            if (typeof dataLayer !== 'undefined') {
+                const fbp = getCookie('_fbp') || '';
+                const fbc = getCookie('_fbc') || '';
+                
+                dataLayer.push({
+                    event: eventName,
+                    event_name: eventName,
+                    _fbp: fbp,
+                    fbc: fbc,
+                    event_id: eventId, //same event id as pixel for deduplication
+                    ...cleanEventData
+                });
+            }
+        }
+
+        // Fire enhanced PageView after 2 seconds to filter bots
+        document.addEventListener('DOMContentLoaded', () => {
+            // Reset honeypot state for fresh session
+            resetHoneypotState();
+            
+            // Initialize honeypot monitoring
+            setupHoneypotMonitoring();
+            
+            // Fire PageView after 2 seconds to filter out bots
+            setTimeout(() => {
+                // Only fire if no bot activity detected
+                if (!botDetected) {
+                    fireEventToPixelAndServer('PageView');
+                }
+            }, 2000);
+        });
+
+        // FIXED: Throttled scroll tracking - fires once per milestone
+        window.addEventListener('scroll', function() {
+            const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+            scrollDepth = Math.max(scrollDepth, scrollPercent);
+            
+            // Fire milestone events only once
+            if (scrollPercent >= 25 && !eventsFired.scroll25) {
+                eventsFired.scroll25 = true;
+                fireEventToPixelAndServer('ScrollDepth', {
+                    scroll_percent: 25,
+                    time_to_scroll: Math.round((Date.now() - timeOnPage) / 1000)
+                });
+                engagementScore += 2;
+            }
+            
+            if (scrollPercent >= 60 && !eventsFired.scroll60) {
+                eventsFired.scroll60 = true;
+                fireEventToPixelAndServer('ScrollDepth', {
+                    scroll_percent: 60,
+                    time_to_scroll: Math.round((Date.now() - timeOnPage) / 1000)
+                });
+                engagementScore += 4;
+            }
+            
+            if (scrollPercent >= 90 && !eventsFired.scroll90) {
+                eventsFired.scroll90 = true;
+                fireEventToPixelAndServer('ScrollDepth', {
+                    scroll_percent: 90,
+                    time_to_scroll: Math.round((Date.now() - timeOnPage) / 1000)
+                });
+                engagementScore += 8;
+            }
+        });
+        
+        // FIXED: CTA interaction tracking - single event per session
+        document.querySelectorAll('.cta-primary').forEach((button, index) => {
+            button.addEventListener('mouseenter', function() {
+                ctaInteractions++;
+                
+                if (!eventsFired.ctaHover) {
+                    eventsFired.ctaHover = true;
+                    fireEventToPixelAndServer('CTAEngagement', {
+                        cta_position: index === 0 ? 'hero' : 'bottom',
+                        first_hover_time: Math.round((Date.now() - timeOnPage) / 1000)
+                    });
+                    engagementScore += 6;
+                }
+            });
+        });
+        
+        // FIXED: Time-based engagement - single events at key moments
+        setInterval(function() {
+            const timeSpent = (Date.now() - timeOnPage) / 1000;
+            
+            if (Math.floor(timeSpent) >= 6 && !eventsFired.qualityTime) {
+                eventsFired.qualityTime = true;
+                fireEventToPixelAndServer('QualityEngagement', {
+                    time_spent: Math.round(timeSpent),
+                    scroll_completion: Math.round(scrollDepth)
+                });
+                engagementScore += 3;
+            }
+            
+            if (Math.floor(timeSpent) >= 10 && !eventsFired.deepConsideration) {
+                eventsFired.deepConsideration = true;
+                fireEventToPixelAndServer('QualityEngagement', {
+                    time_spent: Math.round(timeSpent),
+                    cta_interactions: ctaInteractions,
+                    engagement_quality: 'deep_consideration'
+                });
+                engagementScore += 6;
+            }
+        }, 1000);
+        
+        // Progressive content revelation
+        function revealContent() {
+            const elements = document.querySelectorAll('.dynamic-content');
+            elements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.classList.add('visible');
+                }, index * 200);
+            });
+        }
+
+        setTimeout(revealContent, 600);
+        
+        // Honeypot monitoring with bot blocking
+        let honeypotInteractions = 0;
+        let botDetected = false;
+        
+        // Reset honeypot state for each page load
+        function resetHoneypotState() {
+            honeypotInteractions = 0;
+            botDetected = false;
+            console.log('Honeypot state reset for new session');
+        }
+        
+        // Monitor honeypot fields for bot activity
+        function setupHoneypotMonitoring() {
+            const honeypotFields = document.querySelectorAll('.honeypot-field input');
+            
+            honeypotFields.forEach(field => {
+                // Monitor for any interaction with honeypot fields
+                field.addEventListener('focus', () => {
+                    honeypotInteractions++;
+                    botDetected = true;
+                    console.log('Bot detected via honeypot focus:', field.name, 'Total:', honeypotInteractions);
+                });
+                
+                field.addEventListener('input', () => {
+                    honeypotInteractions++;
+                    botDetected = true;
+                    console.log('Bot detected via honeypot input:', field.name, 'Total:', honeypotInteractions);
+                });
+                
+                field.addEventListener('change', () => {
+                    honeypotInteractions++;
+                    botDetected = true;
+                    console.log('Bot detected via honeypot change:', field.name, 'Total:', honeypotInteractions);
+                });
+            });
+        }
+        
+        // Main conversion: opens modal for form collection
+        function redirectToQuiz(e) {
+            if (e) e.preventDefault();
+            
+            // Block conversion if bot detected via honeypot
+            if (botDetected) {
+                console.log('Bot conversion blocked - honeypot interaction detected');
+                return false;
+            }
+            
+            const timeSpent = (Date.now() - timeOnPage) / 1000;
+            let intentScore = engagementScore;
+            
+            // Behavioral bonuses
+            if (timeSpent > 9) intentScore += 8;
+            if (scrollDepth > 90) intentScore += 8;
+            if (ctaInteractions > 2) intentScore += 6;
+            
+            const conversionData = {
+                scroll_completion: Math.round(scrollDepth),
+                page_duration: Math.round(timeSpent),
+                cta_interactions: ctaInteractions,
+                engagement_score: engagementScore,
+                intent_score: intentScore,
+                conversion_trigger: 'prelander_cta',
+                honeypot_interactions: honeypotInteractions,
+                bot_detected: botDetected
+            };
+            
+            // Fire initial engagement event
+            fireEventToPixelAndServer('CTAClicked', conversionData);
+
+            // Open modal for form collection
+            openModal();
+        }
+
+        // Modal functions
+        function openModal() {
+            const modal = document.getElementById('leadModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Focus on first input for better UX
+            setTimeout(() => {
+                document.getElementById('firstName').focus();
+            }, 300);
+
+            // Track modal open
+            fireEventToPixelAndServer('ModalOpened', {
+                modal_type: 'lead_capture',
+                trigger_source: 'prelander_cta'
+            });
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('leadModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+
+            // Track modal abandonment
+            fireEventToPixelAndServer('ModalAbandoned', {
+                modal_type: 'lead_capture',
+                form_completion: getFormCompletion()
+            });
+        }
+
+        // Form validation helpers
+        function validateField(field) {
+            const group = field.closest('.form-group');
+            group.classList.remove('error');
+
+            let isValid = true;
+            const value = field.value.trim();
+
+            switch(field.type) {
+                case 'email':
+                    isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+                    break;
+                case 'tel':
+                    // Remove any non-digits for validation
+                    const digits = value.replace(/\D/g, '');
+                    isValid = digits.length >= 10;
+                    break;
+                case 'text':
+                    if (field.name === 'zipcode') {
+                        isValid = /^\d{5}$/.test(value);
+                    } else {
+                        isValid = value.length >= 2;
+                    }
+                    break;
+                default:
+                    isValid = value.length >= 2;
+            }
+
+            if (!isValid) {
+                group.classList.add('error');
+            }
+
+            return isValid;
+        }
+
+        function getFormCompletion() {
+            const fields = document.querySelectorAll('#leadForm input[required]');
+            let completed = 0;
+            
+            fields.forEach(field => {
+                if (field.value.trim().length > 0) completed++;
+            });
+            
+            return Math.round((completed / fields.length) * 100);
+        }
+
+        // Form submission handler - posts to server endpoint
+        document.getElementById('leadForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Always prevent default form submission
+            
+            // Validate all fields
+            const fields = this.querySelectorAll('input[required]');
+            let isFormValid = true;
+            
+            fields.forEach(field => {
+                if (!validateField(field)) {
+                    isFormValid = false;
+                }
+            });
+
+            if (!isFormValid) {
+                // Track validation errors
+                fireEventToPixelAndServer('FormValidationError', {
+                    form_completion: getFormCompletion(),
+                    error_type: 'field_validation'
+                });
+                return;
+            }
+
+            // Disable form while processing
+            const submitBtn = document.getElementById('modalSubmitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '⏳ Checking Available Plans...';
+
+            // Collect form data
+            const formData = {
+                firstName: document.getElementById('firstName').value.trim(),
+                lastName: document.getElementById('lastName').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                zipcode: document.getElementById('zipcode').value.trim()
+            };
+
+            // Calculate final intent score
+            const timeSpent = (Date.now() - timeOnPage) / 1000;
+            let finalIntentScore = engagementScore;
+            
+            if (timeSpent > 9) finalIntentScore += 8;
+            if (scrollDepth > 90) finalIntentScore += 8;
+            if (ctaInteractions > 2) finalIntentScore += 6;
+            finalIntentScore += 15; // Modal completion bonus
+
+            // Fire lead conversion events
+            const eventId = crypto?.randomUUID?.() || `lead_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            
+            const conversionData = {
+                scroll_completion: Math.round(scrollDepth),
+                page_duration: Math.round(timeSpent),
+                cta_interactions: ctaInteractions,
+                engagement_score: engagementScore,
+                intent_score: finalIntentScore,
+                conversion_trigger: 'modal_form_submit',
+                lead_source: 'prelander_modal'
+            };
+
+            fireEventToPixelAndServer('LeadCaptured', conversionData);
+
+            // Add hidden fields for tracking
+            const hiddenFields = {
+                s1: primaryAngle,
+                s2: eventId, // Click ID for postback
+                s3: finalIntentScore,
+                fbp: getCookie('_fbp') || '',
+                fbc: getCookie('_fbc') || ''
+            };
+
+            // Add hidden fields to form
+            Object.entries(hiddenFields).forEach(([name, value]) => {
+                if (value) {
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = name;
+                    hiddenInput.value = value;
+                    this.appendChild(hiddenInput);
+                }
+            });
+
+            // Send user data to GTM dataLayer
+            if (typeof dataLayer !== 'undefined') {
+                dataLayer.push({
+                    event: 'LeadCaptured',
+                    event_name: 'LeadCaptured',
+                    event_id: eventId,
+                    user_email: formData.email,
+                    user_phone: formData.phone,
+                    user_first_name: formData.firstName,
+                    user_last_name: formData.lastName,
+                    user_zipcode: formData.zipcode,
+                    primary_angle: primaryAngle,
+                    intent_score: finalIntentScore,
+                    engagement_score: engagementScore,
+                    scroll_completion: Math.round(scrollDepth),
+                    page_duration: Math.round(timeSpent),
+                    cta_interactions: ctaInteractions,
+                    conversion_trigger: 'modal_form_submit',
+                    lead_source: 'prelander_modal'
+                });
+            }
+
+            // Submit form to Netlify function via fetch
+            const formDataToSubmit = new FormData(this);
+            
+            // Convert FormData to URLSearchParams for proper encoding
+            const urlParams = new URLSearchParams();
+            for (let [key, value] of formDataToSubmit.entries()) {
+                urlParams.append(key, value);
+            }
+            
+            // Debug: Log form data being sent
+            console.log('Form data being sent:');
+            for (let [key, value] of urlParams.entries()) {
+                console.log(`${key}: ${value}`);
+            }
+            
+            console.log('Submitting form to Netlify function...');
+            
+            // Try multiple Netlify function URLs to ensure it works on any domain
+            const timestamp = Date.now();
+            const netlifyUrls = [
+                `https://keen-cranachan-385651.netlify.app/.netlify/functions/go-firstquote?t=${timestamp}`, // Your actual Netlify URL with cache busting
+                `${window.location.origin}/.netlify/functions/go-firstquote?t=${timestamp}`,
+                `/.netlify/functions/go-firstquote?t=${timestamp}`
+            ];
+            
+            let currentUrlIndex = 0;
+            
+            function tryNextUrl() {
+                if (currentUrlIndex >= netlifyUrls.length) {
+                    console.error('All Netlify function URLs failed');
+                    alert('Unable to process your request. Please try again or contact support.');
+                    return;
+                }
+                
+                const currentUrl = netlifyUrls[currentUrlIndex];
+                console.log(`Trying Netlify function URL ${currentUrlIndex + 1}:`, currentUrl);
+                
+                fetch(currentUrl, {
+                    method: 'POST',
+                    body: urlParams,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    redirect: 'manual' // Prevent automatic redirect following
+                })
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    console.log('Response headers:', response.headers);
+                    
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        console.log('Response not ok, status:', response.status);
+                        console.log('Response text:', response.text());
+                        currentUrlIndex++;
+                        tryNextUrl();
+                        return null;
+                    }
+                })
+                .then(data => {
+                    if (data && data.success && data.redirectUrl) {
+                        console.log('Redirecting to:', data.redirectUrl);
+                        window.location.href = data.redirectUrl;
+                    } else {
+                        console.log('No valid response data, trying next URL');
+                        currentUrlIndex++;
+                        tryNextUrl();
+                    }
+                })
+                .catch(error => {
+                    console.error(`Fetch error for URL ${currentUrlIndex + 1}:`, error);
+                    currentUrlIndex++;
+                    tryNextUrl();
+                });
+            }
+            
+            tryNextUrl();
+        });
+
+        // Real-time form validation
+        document.querySelectorAll('#leadForm input').forEach(input => {
+            input.addEventListener('blur', function() {
+                validateField(this);
+            });
+            
+            input.addEventListener('input', function() {
+                const group = this.closest('.form-group');
+                if (group.classList.contains('error')) {
+                    validateField(this);
+                }
+            });
+        });
+
+        // Phone number formatting
+        document.getElementById('phone').addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length >= 6) {
+                value = value.slice(0,3) + '-' + value.slice(3,6) + '-' + value.slice(6,10);
+            } else if (value.length >= 3) {
+                value = value.slice(0,3) + '-' + value.slice(3);
+            }
+            this.value = value;
+        });
+
+        // ZIP code validation
+        document.getElementById('zipcode').addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').slice(0, 5);
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('leadModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Close modal with escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('leadModal').classList.contains('active')) {
+                closeModal();
+            }
+        });
+
+        
+        // Cookie helper for FB params
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        // (Removed hashing helpers; not collecting or passing PII)
+        
+        // FIXED: Single abandonment event per session
+        window.addEventListener('beforeunload', function() {
+            const timeSpent = (Date.now() - timeOnPage) / 1000;
+            
+            if (timeSpent > 5 && engagementScore > 8 && !eventsFired.abandonment && !document.querySelector('.conversion-triggered')) {
+                eventsFired.abandonment = true;
+                
+                const abandonmentData = {
+                    page_duration: Math.round(timeSpent),
+                    scroll_completion: Math.round(scrollDepth),
+                    engagement_level: engagementScore,
+                    abandonment_type: 'qualified_abandonment',
+                    retargeting_priority: engagementScore > 20 ? 'high' : 'medium'
+                };
+                
+                fireEventToPixelAndServer('QualifiedAbandonment', abandonmentData);
+                
+                if (typeof fbq !== 'undefined') {
+                    fbq('trackCustom', 'QualifiedAbandonment', abandonmentData);
+                }
+            }
+        });
+    </script>
+    
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-59Z6DNHZ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+</body>
+</html>
