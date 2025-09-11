@@ -953,42 +953,21 @@
         function validateHumanBehavior() {
             const timeSpent = (Date.now() - sessionStartTime) / 1000;
             
-            console.log('Validating human behavior:', {
-                timeSpent: timeSpent,
-                tabVisible: tabVisible,
-                hasScrolled: hasScrolled,
-                hasPointerMoved: hasPointerMoved,
-                motionEntropyLength: motionEntropy.length
-            });
-            
             // Dwell gate: buffer events until ≥2s visible
-            if (timeSpent < 2) {
-                console.log('Failed: dwell time < 2s');
-                return false;
-            }
+            if (timeSpent < 2) return false;
             
             // Visibility rule: don't promote if tab stayed hidden
-            if (!tabVisible) {
-                console.log('Failed: tab not visible');
-                return false;
-            }
+            if (!tabVisible) return false;
             
-            // Motion entropy: require human-like pointer move OR one scroll
-            if (!hasScrolled && !hasPointerMoved) {
-                console.log('Failed: no scroll or pointer movement');
-                return false;
-            }
+            // Motion entropy: require human-like pointer move OR meaningful scroll
+            if (!hasScrolled && !hasPointerMoved) return false;
             
             // If user moved pointer, check motion entropy (non-linear movement)
             if (hasPointerMoved && motionEntropy.length > 3) {
                 const entropy = calculateMotionEntropy(motionEntropy);
-                if (entropy < 0.05) {
-                    console.log('Failed: motion entropy too low:', entropy);
-                    return false;
-                }
+                if (entropy < 0.05) return false; // Less strict threshold
             }
             
-            console.log('Human behavior validation passed');
             return true;
         }
         
@@ -1242,7 +1221,10 @@
         
         // Enhanced scroll tracking with behavior validation
         window.addEventListener('scroll', function() {
-            hasScrolled = true;
+            // Only count meaningful scroll (at least 10px) as human behavior
+            if (window.scrollY > 10) {
+                hasScrolled = true;
+            }
             const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
             scrollDepth = Math.max(scrollDepth, scrollPercent);
             
