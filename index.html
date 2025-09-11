@@ -973,9 +973,10 @@
                 return false;
             }
             
-            // Motion entropy: require human-like pointer move OR one scroll
-            if (!hasScrolled && !hasPointerMoved) {
-                console.log('Failed: no scroll or pointer movement');
+            // Motion entropy: require human-like pointer move OR one scroll OR just time
+            // More flexible - allow validation with just dwell time if tab is visible
+            if (!hasScrolled && !hasPointerMoved && timeSpent < 5) {
+                console.log('Failed: no scroll or pointer movement and insufficient time');
                 return false;
             }
             
@@ -1065,6 +1066,11 @@
                 }
                 
                 lastMousePos = currentPos;
+                
+                // Retry PageView if it was previously blocked
+                if (!humanBehaviorValidated && !eventsBlocked) {
+                    fireEventToPixelAndServer('PageView');
+                }
             });
             
             // Touch support for mobile
@@ -1243,7 +1249,16 @@
         
         // Enhanced scroll tracking with behavior validation
         window.addEventListener('scroll', function() {
-            hasScrolled = true;
+            // Only count meaningful scroll (at least 10px) as human behavior
+            // But only if it's NEW scroll from the initial position
+            if (Math.abs(window.scrollY - initialScrollY) > 10) {
+                hasScrolled = true;
+                
+                // Retry PageView if it was previously blocked
+                if (!humanBehaviorValidated && !eventsBlocked) {
+                    fireEventToPixelAndServer('PageView');
+                }
+            }
             const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
             scrollDepth = Math.max(scrollDepth, scrollPercent);
             
@@ -1459,18 +1474,16 @@
                 return false;
             }
             
-            if (formHeuristics.keystrokeCount < 6) { // Less than 6 keystrokes
-                console.log('Form submission blocked - insufficient keystrokes');
-                return false;
-            }
+            // More flexible form heuristics - require at least 2 of 4 conditions
+            let passedConditions = 0;
             
-            if (formDwellTime < 5) { // Less than 5 seconds form dwell
-                console.log('Form submission blocked - insufficient form dwell time');
-                return false;
-            }
+            if (formHeuristics.keystrokeCount >= 3) passedConditions++; // Reduced from 6 to 3
+            if (formDwellTime >= 2) passedConditions++; // Reduced from 5 to 2 seconds
+            if (formHeuristics.fieldFocusCount >= 1) passedConditions++; // Reduced from 2 to 1
+            if (formHeuristics.timeToFirstInput >= 100) passedConditions++; // Reduced from 300ms to 100ms
             
-            if (formHeuristics.fieldFocusCount < 2) { // Less than 2 field focuses
-                console.log('Form submission blocked - insufficient field interaction');
+            if (passedConditions < 2) {
+                console.log(`Form submission blocked - only ${passedConditions}/4 conditions met (need 2+)`);
                 return false;
             }
             
