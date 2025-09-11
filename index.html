@@ -982,7 +982,7 @@
             // If user moved pointer, check motion entropy (non-linear movement)
             if (hasPointerMoved && motionEntropy.length > 3) {
                 const entropy = calculateMotionEntropy(motionEntropy);
-                if (entropy < 0.05) {
+                if (entropy < 0.01) {
                     console.log('Failed: motion entropy too low:', entropy);
                     return false;
                 }
