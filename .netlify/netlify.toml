@@ -1,12 +1,12 @@
-functionsDirectory = "/Users/cedars-user2/Documents/Keith's Stuff/lead gen/health insurance/netlify/functions"
+functionsDirectory = "/Users/cedars-user2/Documents/Keith's Stuff 26 aug 2025/lead gen/health insurance/netlify/functions"
 functionsDirectoryOrigin = "default"
 headers = []
 redirects = []
 
 [build]
-publish = "/Users/cedars-user2/Documents/Keith's Stuff/lead gen/health insurance"
+publish = "/Users/cedars-user2/Documents/Keith's Stuff 26 aug 2025/lead gen/health insurance"
 publishOrigin = "default"
-functions = "/Users/cedars-user2/Documents/Keith's Stuff/lead gen/health insurance/netlify/functions"
+functions = "/Users/cedars-user2/Documents/Keith's Stuff 26 aug 2025/lead gen/health insurance/netlify/functions"
 
 [build.environment]
 
