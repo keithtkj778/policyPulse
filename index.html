@@ -1479,7 +1479,7 @@
             
             if (formHeuristics.keystrokeCount >= 3) passedConditions++; // Reduced from 6 to 3
             if (formDwellTime >= 1) passedConditions++; // Reduced from 2 to 1 second
-            if (formHeuristics.fieldFocusCount >= 2) passedConditions++; // Increased from 1 to 2
+            if (formHeuristics.fieldFocusCount >= 1) passedConditions++; // Reduced from 2 to 1
             if (formHeuristics.timeToFirstInput >= 33) passedConditions++; // Reduced from 100ms to 33ms (1/3)
             
             if (passedConditions < 2) {
