@@ -1468,8 +1468,8 @@
             const formDwellTime = formHeuristics.formDwellTime ? (Date.now() - formHeuristics.formDwellTime) / 1000 : 0;
             const timeToFirstInput = formHeuristics.timeToFirstInput || 0;
             
-            // Check form heuristics
-            if (timeToFirstInput < 300) { // Less than 300ms to first input
+            // Check form heuristics - more flexible for autofill
+            if (timeToFirstInput < 50) { // Less than 50ms to first input (very strict)
                 console.log('Form submission blocked - suspiciously fast input');
                 return false;
             }
