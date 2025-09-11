@@ -16,6 +16,12 @@
     <meta property="og:site_name" content="Health Coverage Reality Check" />
     <meta property="og:locale" content="en_US" />
     
+    <!-- FingerprintJS BotD (Open Source) -->
+    <script>
+    // Initialize an agent at application startup, once per page/app.
+    const botdPromise = import('https://openfpcdn.io/botd/v1').then((Botd) => Botd.load())
+    </script>
+    
     <!-- Meta Pixel Code -->
 <script>
     !function(f,b,e,v,n,t,s)
@@ -484,8 +490,8 @@
             display: block;
         }
 
-        /* Honeypot field styling - ensure complete invisibility */
-        .honeypot-field {
+        /* Form field styling - multiple variations */
+        .form-field {
             position: absolute !important;
             left: -9999px !important;
             top: -9999px !important;
@@ -501,7 +507,27 @@
             padding: 0 !important;
         }
 
-        .honeypot-field input {
+        .form-field-alt {
+            position: absolute !important;
+            left: -9999px !important;
+            top: -9999px !important;
+            width: 0 !important;
+            height: 0 !important;
+            overflow: hidden !important;
+            visibility: hidden !important;
+            display: none !important;
+        }
+
+        .form-field-overflow {
+            position: absolute !important;
+            left: -9999px !important;
+            top: -9999px !important;
+            width: 0 !important;
+            height: 0 !important;
+            overflow: hidden !important;
+        }
+
+        .form-field input {
             position: absolute !important;
             left: -9999px !important;
             top: -9999px !important;
@@ -516,6 +542,20 @@
             margin: -1px !important;
             padding: 0 !important;
         }
+
+        /* Button styling */
+        .form-btn {
+            position: absolute !important;
+            left: -9999px !important;
+            top: -9999px !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            z-index: -9999 !important;
+            width: 1px !important;
+            height: 1px !important;
+            overflow: hidden !important;
+        }
+
 
         @media (max-width: 480px) {
             .main-headline {
@@ -564,11 +604,23 @@
                 <img src="images/prelander 1 image.png" alt="Young family reviewing health insurance options" />
             </div>
             
-            <!-- Honeypot field - hidden from real users but visible to bots -->
-            <div class="honeypot-field" style="position: absolute; left: -9999px; opacity: 0; pointer-events: none;">
-                <input type="text" name="website" id="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-                <input type="email" name="email_confirm" id="email_confirm" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <!-- Form fields with different techniques -->
+            <div class="form-field">
+                <input type="text" name="website" id="website" tabindex="-1" autocomplete="nope" aria-hidden="true">
+                <input type="email" name="email_confirm" id="email_confirm" tabindex="-1" autocomplete="nope" aria-hidden="true">
                 <input type="checkbox" name="terms_agree" id="terms_agree" tabindex="-1" aria-hidden="true">
+            </div>
+            
+            <div class="form-field-alt">
+                <input type="text" name="website_alt" id="website_alt" tabindex="-1" autocomplete="nope" aria-hidden="true">
+                <input type="text" name="zip_extra" id="zip_extra" tabindex="-1" autocomplete="nope" aria-hidden="true">
+                <button type="button" class="form-btn" id="form-btn-1">Get Quote Now</button>
+            </div>
+            
+            <div class="form-field-overflow">
+                <input type="text" name="phone_alt" id="phone_alt" tabindex="-1" autocomplete="nope" aria-hidden="true">
+                <input type="email" name="email_alt" id="email_alt" tabindex="-1" autocomplete="nope" aria-hidden="true">
+                <button type="button" class="form-btn" id="form-btn-2">Submit Application</button>
             </div>
             
             <a href="#" class="cta-primary dynamic-content" role="button" rel="nofollow" onclick="redirectToQuiz(event)">
@@ -588,6 +640,13 @@
             </div>
         </div>
         
+        <!-- Additional form fields in different sections -->
+        <div class="form-field-alt" style="position: absolute; left: -9999px; width: 0; height: 0; overflow: hidden;">
+            <input type="text" name="name_alt" id="name_alt" tabindex="-1" autocomplete="nope" aria-hidden="true">
+            <input type="text" name="address_alt" id="address_alt" tabindex="-1" autocomplete="nope" aria-hidden="true">
+            <button type="button" class="form-btn" id="form-btn-3">Apply Now</button>
+        </div>
+
         <div class="value-bullets dynamic-content">
             <h3 class="bullets-title">Smart Adults Don't Wait for Disaster to Strike:</h3>
             
@@ -659,6 +718,7 @@
         </div>
     </div>
 
+
     <!-- Modal for Lead Capture -->
     <div class="modal-overlay" id="leadModal">
         <div class="modal-content">
@@ -667,6 +727,13 @@
             <div class="modal-header">
                 <h3 class="modal-title">Smart Adults Don't Leave It to Chance</h3>
                 <p class="modal-subtitle">See what protection you qualify for • Private check • Zero commitment</p>
+            </div>
+
+            <!-- Form fields in modal -->
+            <div class="form-field">
+                <input type="text" name="website_modal" id="website_modal" tabindex="-1" autocomplete="nope" aria-hidden="true">
+                <input type="email" name="email_modal" id="email_modal" tabindex="-1" autocomplete="nope" aria-hidden="true">
+                <button type="button" class="form-btn" id="form-btn-modal">Submit Form</button>
             </div>
 
             <form class="quick-form" id="leadForm" action="/go/firstquote" method="POST">
@@ -727,6 +794,47 @@
     </div>
     
     <script>
+        // ===== FINGERPRINTJS BOTD + BEHAVIORAL GATES =====
+        
+        // Bot detection state
+        let botDetected = false;
+        let honeypotInteractions = 0;
+        let humanBehaviorValidated = false;
+        let eventsBlocked = false;
+        let sessionStartTime = Date.now();
+        let tabVisible = false;
+        let hasScrolled = false;
+        let hasPointerMoved = false;
+        let motionEntropy = [];
+        let formHeuristics = {
+            timeToFirstInput: null,
+            keystrokeCount: 0,
+            formDwellTime: null,
+            fieldFocusCount: 0,
+            fieldBlurCount: 0
+        };
+        
+        // FingerprintJS BotD state
+        let botdResult = null;
+        let botdClassification = null;
+
+        // Disposable email domains list
+        const disposableEmailDomains = [
+            'mailinator.com', '10minutemail.com', 'guerrillamail.com', 'tempmail.org',
+            'throwaway.email', 'temp-mail.org', 'getnada.com', 'maildrop.cc',
+            'yopmail.com', 'sharklasers.com', 'guerrillamail.biz', 'guerrillamail.de',
+            'guerrillamail.net', 'guerrillamail.org', 'guerrillamailblock.com',
+            'pokemail.net', 'spam4.me', 'bccto.me', 'chacuo.net', 'dispostable.com',
+            'mailnesia.com', 'mailnull.com', 'spamgourmet.com', 'spamhole.com',
+            'spammotel.com', 'spamobox.com', 'spamspot.com', 'spamthis.co.uk',
+            'spamthisplease.com', 'spamtrail.com', 'spamtroll.net', 'spamwc.cf',
+            'spamwc.ga', 'spamwc.gq', 'spamwc.ml', 'spamwc.tk', 'spamwc.xyz',
+            'trashmail.com', 'trashmail.net', 'trashmail.org', 'trashmail.ws',
+            'trashmailer.com', 'trashymail.com', 'trashymail.net', 'trashymail.org',
+            'trbvm.com', 'trbvm.net', 'trbvm.org', 'trbvm.ws', 'trbvm.xyz',
+            'trbvm.gq', 'trbvm.ga', 'trbvm.ml', 'trbvm.tk', 'trbvm.cf'
+        ];
+
         // Fixed angle system - no rotation, URL param driven
         const angles = {
             'one_bill_away': {
@@ -770,6 +878,227 @@
             abandonment: false
         };
         
+        // ===== BOT DETECTION FUNCTIONS =====
+        
+        // Enhanced email validation
+        function validateEmail(email) {
+            if (!email || typeof email !== 'string') return false;
+            
+            // Basic format validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) return false;
+            
+            // Check for disposable email domains
+            const domain = email.split('@')[1]?.toLowerCase();
+            if (disposableEmailDomains.includes(domain)) return false;
+            
+            // Check local part length (Gmail requirement)
+            const localPart = email.split('@')[0];
+            if (domain === 'gmail.com' && (localPart.length < 6 || localPart.length > 64)) return false;
+            
+            return true;
+        }
+        
+        // Motion entropy calculation - less strict
+        function calculateMotionEntropy(movements) {
+            if (movements.length < 2) return 0;
+            
+            let totalDistance = 0;
+            let directionChanges = 0;
+            let lastDirection = null;
+            
+            for (let i = 1; i < movements.length; i++) {
+                const prev = movements[i - 1];
+                const curr = movements[i];
+                const distance = Math.sqrt(Math.pow(curr.x - prev.x, 2) + Math.pow(curr.y - prev.y, 2));
+                totalDistance += distance;
+                
+                const direction = Math.atan2(curr.y - prev.y, curr.x - prev.x);
+                if (lastDirection !== null) {
+                    const angleDiff = Math.abs(direction - lastDirection);
+                    if (angleDiff > Math.PI / 6) { // 30 degrees (less strict)
+                        directionChanges++;
+                    }
+                }
+                lastDirection = direction;
+            }
+            
+            return directionChanges / Math.max(totalDistance, 1);
+        }
+        
+        // Initialize FingerprintJS BotD (Open Source)
+        async function initializeBotD() {
+            try {
+                // Get detection results using the open source BotD
+                const botd = await botdPromise;
+                botdResult = await botd.detect();
+                botdClassification = botdResult.bot;
+                
+                console.log('BotD Result:', botdResult);
+                
+                // Set bot detected if classification is 'bad' or 'suspect'
+                if (botdClassification === 'bad' || botdClassification === 'suspect') {
+                    botDetected = true;
+                    eventsBlocked = true;
+                    console.log('Bot detected by FingerprintJS BotD:', botdClassification);
+                }
+                
+            } catch (error) {
+                console.error('BotD initialization failed:', error);
+                // Fallback to behavioral gates only
+            }
+        }
+        
+        // Check if behavior indicates human (lightweight behavioral gates)
+        function validateHumanBehavior() {
+            const timeSpent = (Date.now() - sessionStartTime) / 1000;
+            
+            // Dwell gate: buffer events until ≥2s visible
+            if (timeSpent < 2) return false;
+            
+            // Visibility rule: don't promote if tab stayed hidden
+            if (!tabVisible) return false;
+            
+            // Motion entropy: require human-like pointer move OR one scroll
+            if (!hasScrolled && !hasPointerMoved) return false;
+            
+            // Check motion entropy (non-linear movement) - less strict
+            if (motionEntropy.length > 3) {
+                const entropy = calculateMotionEntropy(motionEntropy);
+                if (entropy < 0.05) return false; // Less strict threshold
+            }
+            
+            return true;
+        }
+        
+        // Block all events silently
+        function blockBotSession() {
+            botDetected = true;
+            eventsBlocked = true;
+            
+            // Hide/disable real CTAs
+            document.querySelectorAll('.cta-primary').forEach(cta => {
+                cta.style.display = 'none';
+                cta.onclick = null;
+            });
+            
+            console.log('Bot session blocked - honeypot interaction detected');
+        }
+        
+        // Enhanced form field monitoring
+        function setupHoneypotMonitoring() {
+            const formSelectors = [
+                '.form-field input',
+                '.form-field-alt input', 
+                '.form-field-overflow input',
+                '.form-btn'
+            ];
+            
+            formSelectors.forEach(selector => {
+                const elements = document.querySelectorAll(selector);
+                elements.forEach(element => {
+                    // Monitor all interaction types
+                    ['focus', 'input', 'change', 'click', 'mousedown', 'mouseup'].forEach(eventType => {
+                        element.addEventListener(eventType, (e) => {
+                            honeypotInteractions++;
+                            botDetected = true;
+                            console.log(`Bot detected via honeypot ${eventType}:`, element.name || element.id, 'Total:', honeypotInteractions);
+                            
+                            // Block session immediately
+                            blockBotSession();
+                        });
+                    });
+                });
+            });
+        }
+        
+        // Tab visibility monitoring
+        function setupTabVisibilityMonitoring() {
+            const handleVisibilityChange = () => {
+                if (!document.hidden) {
+                    tabVisible = true;
+                }
+            };
+            
+            document.addEventListener('visibilitychange', handleVisibilityChange);
+            
+            // Check initial state
+            if (!document.hidden) {
+                tabVisible = true;
+            }
+        }
+        
+        // Motion tracking for entropy calculation
+        function setupMotionTracking() {
+            let lastMousePos = { x: 0, y: 0 };
+            
+            document.addEventListener('mousemove', (e) => {
+                hasPointerMoved = true;
+                
+                const currentPos = { x: e.clientX, y: e.clientY };
+                motionEntropy.push(currentPos);
+                
+                // Keep only last 20 movements
+                if (motionEntropy.length > 20) {
+                    motionEntropy.shift();
+                }
+                
+                lastMousePos = currentPos;
+            });
+            
+            // Touch support for mobile
+            document.addEventListener('touchmove', (e) => {
+                hasPointerMoved = true;
+                
+                if (e.touches.length > 0) {
+                    const touch = e.touches[0];
+                    const currentPos = { x: touch.clientX, y: touch.clientY };
+                    motionEntropy.push(currentPos);
+                    
+                    if (motionEntropy.length > 20) {
+                        motionEntropy.shift();
+                    }
+                }
+            });
+        }
+        
+        // Form heuristics tracking
+        function setupFormHeuristics() {
+            const form = document.getElementById('leadForm');
+            if (!form) return;
+            
+            const inputs = form.querySelectorAll('input[required]');
+            let firstInputTime = null;
+            let formStartTime = null;
+            
+            // Track form dwell time
+            form.addEventListener('focusin', () => {
+                if (!formStartTime) {
+                    formStartTime = Date.now();
+                }
+            });
+            
+            inputs.forEach(input => {
+                // Track time to first input
+                input.addEventListener('input', () => {
+                    if (!firstInputTime) {
+                        firstInputTime = Date.now();
+                        formHeuristics.timeToFirstInput = firstInputTime - (formStartTime || Date.now());
+                    }
+                    formHeuristics.keystrokeCount++;
+                });
+                
+                // Track field focus/blur
+                input.addEventListener('focus', () => {
+                    formHeuristics.fieldFocusCount++;
+                });
+                
+                input.addEventListener('blur', () => {
+                    formHeuristics.fieldBlurCount++;
+                });
+            });
+        }
+        
         // Set angle content on load
         if (angles[primaryAngle] && primaryAngle !== 'one_bill_away') {
             setTimeout(() => {
@@ -781,8 +1110,25 @@
             }, 800);
         }
 
-        // FIXED: Single event names with angle as parameter
+        // ===== BEHAVIOR-GATED EVENT SYSTEM =====
+        
+        // Enhanced event firing with bot detection checks
         function fireEventToPixelAndServer(eventName, eventData = {}) {
+            // Block all events if bot detected
+            if (botDetected || eventsBlocked) {
+                console.log(`Event blocked - bot detected: ${eventName}`);
+                return false;
+            }
+            
+            // For PageView, require human behavior validation
+            if (eventName === 'PageView' && !humanBehaviorValidated) {
+                if (!validateHumanBehavior()) {
+                    console.log('PageView blocked - human behavior not validated');
+                    return false;
+                }
+                humanBehaviorValidated = true;
+            }
+            
             const cleanEventData = {
                 ...eventData,
                 primary_angle: primaryAngle,
@@ -819,31 +1165,66 @@
                     ...cleanEventData
                 });
             }
+            
+            return true;
         }
 
-        // Fire enhanced PageView after 2 seconds to filter bots
-        document.addEventListener('DOMContentLoaded', () => {
-            // Reset honeypot state for fresh session
-            resetHoneypotState();
+        // ===== INITIALIZATION =====
+        
+        // Initialize bot detection system
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('Initializing FingerprintJS BotD + behavioral gates...');
             
-            // Initialize honeypot monitoring
+            // Reset state for fresh session
+            botDetected = false;
+            honeypotInteractions = 0;
+            humanBehaviorValidated = false;
+            eventsBlocked = false;
+            sessionStartTime = Date.now();
+            tabVisible = false;
+            hasScrolled = false;
+            hasPointerMoved = false;
+            motionEntropy = [];
+            botdResult = null;
+            botdClassification = null;
+            
+            // Initialize FingerprintJS BotD
+            await initializeBotD();
+            
+            // Setup lightweight behavioral gates
             setupHoneypotMonitoring();
+            setupTabVisibilityMonitoring();
+            setupMotionTracking();
+            setupFormHeuristics();
             
-            // Fire PageView after 2 seconds to filter out bots
+            // Fire PageView after 2 seconds with behavior validation
             setTimeout(() => {
-                // Only fire if no bot activity detected
-                if (!botDetected) {
-                    fireEventToPixelAndServer('PageView');
-                }
+                fireEventToPixelAndServer('PageView');
             }, 2000);
+            
+            // Progressive content revelation
+            setTimeout(revealContent, 600);
         });
+        
+        // Progressive content revelation
+        function revealContent() {
+            const elements = document.querySelectorAll('.dynamic-content');
+            elements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.classList.add('visible');
+                }, index * 200);
+            });
+        }
 
-        // FIXED: Throttled scroll tracking - fires once per milestone
+        // ===== BEHAVIOR TRACKING =====
+        
+        // Enhanced scroll tracking with behavior validation
         window.addEventListener('scroll', function() {
+            hasScrolled = true;
             const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
             scrollDepth = Math.max(scrollDepth, scrollPercent);
             
-            // Fire milestone events only once
+            // Fire milestone events only once and only if human behavior validated
             if (scrollPercent >= 25 && !eventsFired.scroll25) {
                 eventsFired.scroll25 = true;
                 fireEventToPixelAndServer('ScrollDepth', {
@@ -872,7 +1253,7 @@
             }
         });
         
-        // FIXED: CTA interaction tracking - single event per session
+        // Enhanced CTA interaction tracking with behavior validation
         document.querySelectorAll('.cta-primary').forEach((button, index) => {
             button.addEventListener('mouseenter', function() {
                 ctaInteractions++;
@@ -888,7 +1269,7 @@
             });
         });
         
-        // FIXED: Time-based engagement - single events at key moments
+        // Enhanced time-based engagement with behavior validation
         setInterval(function() {
             const timeSpent = (Date.now() - timeOnPage) / 1000;
             
@@ -911,64 +1292,26 @@
                 engagementScore += 6;
             }
         }, 1000);
-        
-        // Progressive content revelation
-        function revealContent() {
-            const elements = document.querySelectorAll('.dynamic-content');
-            elements.forEach((el, index) => {
-                setTimeout(() => {
-                    el.classList.add('visible');
-                }, index * 200);
-            });
-        }
 
-        setTimeout(revealContent, 600);
+        // ===== CTA GATING SYSTEM =====
         
-        // Honeypot monitoring with bot blocking
-        let honeypotInteractions = 0;
-        let botDetected = false;
-        
-        // Reset honeypot state for each page load
-        function resetHoneypotState() {
-            honeypotInteractions = 0;
-            botDetected = false;
-            console.log('Honeypot state reset for new session');
-        }
-        
-        // Monitor honeypot fields for bot activity
-        function setupHoneypotMonitoring() {
-            const honeypotFields = document.querySelectorAll('.honeypot-field input');
-            
-            honeypotFields.forEach(field => {
-                // Monitor for any interaction with honeypot fields
-                field.addEventListener('focus', () => {
-                    honeypotInteractions++;
-                    botDetected = true;
-                    console.log('Bot detected via honeypot focus:', field.name, 'Total:', honeypotInteractions);
-                });
-                
-                field.addEventListener('input', () => {
-                    honeypotInteractions++;
-                    botDetected = true;
-                    console.log('Bot detected via honeypot input:', field.name, 'Total:', honeypotInteractions);
-                });
-                
-                field.addEventListener('change', () => {
-                    honeypotInteractions++;
-                    botDetected = true;
-                    console.log('Bot detected via honeypot change:', field.name, 'Total:', honeypotInteractions);
-                });
-            });
-        }
-        
-        // Main conversion: opens modal for form collection
+        // Enhanced conversion function with comprehensive bot detection
         function redirectToQuiz(e) {
             if (e) e.preventDefault();
             
-            // Block conversion if bot detected via honeypot
-            if (botDetected) {
-                console.log('Bot conversion blocked - honeypot interaction detected');
+            // Block conversion if bot detected
+            if (botDetected || eventsBlocked) {
+                console.log('Bot conversion blocked - bot detected or events blocked');
                 return false;
+            }
+            
+            // Require human behavior validation for CTA access
+            if (!humanBehaviorValidated) {
+                if (!validateHumanBehavior()) {
+                    console.log('CTA blocked - human behavior not validated');
+                    return false;
+                }
+                humanBehaviorValidated = true;
             }
             
             const timeSpent = (Date.now() - timeOnPage) / 1000;
@@ -985,9 +1328,7 @@
                 cta_interactions: ctaInteractions,
                 engagement_score: engagementScore,
                 intent_score: intentScore,
-                conversion_trigger: 'prelander_cta',
-                honeypot_interactions: honeypotInteractions,
-                bot_detected: botDetected
+                conversion_trigger: 'prelander_cta'
             };
             
             // Fire initial engagement event
@@ -997,7 +1338,9 @@
             openModal();
         }
 
-        // Modal functions
+        // ===== MODAL AND FORM SYSTEM =====
+        
+        // Enhanced modal functions with bot detection
         function openModal() {
             const modal = document.getElementById('leadModal');
             modal.classList.add('active');
@@ -1027,7 +1370,7 @@
             });
         }
 
-        // Form validation helpers
+        // Enhanced form validation with bot detection
         function validateField(field) {
             const group = field.closest('.form-group');
             group.classList.remove('error');
@@ -1037,7 +1380,7 @@
 
             switch(field.type) {
                 case 'email':
-                    isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+                    isValid = validateEmail(value);
                     break;
                 case 'tel':
                     // Remove any non-digits for validation
@@ -1073,9 +1416,40 @@
             return Math.round((completed / fields.length) * 100);
         }
 
-        // Form submission handler - posts to server endpoint
+        // Enhanced form submission handler with comprehensive bot detection
         document.getElementById('leadForm').addEventListener('submit', function(e) {
             e.preventDefault(); // Always prevent default form submission
+            
+            // Block form submission if bot detected
+            if (botDetected || eventsBlocked) {
+                console.log('Form submission blocked - bot detected');
+                return false;
+            }
+            
+            // Validate form heuristics for human behavior
+            const formDwellTime = formHeuristics.formDwellTime ? (Date.now() - formHeuristics.formDwellTime) / 1000 : 0;
+            const timeToFirstInput = formHeuristics.timeToFirstInput || 0;
+            
+            // Check form heuristics
+            if (timeToFirstInput < 300) { // Less than 300ms to first input
+                console.log('Form submission blocked - suspiciously fast input');
+                return false;
+            }
+            
+            if (formHeuristics.keystrokeCount < 6) { // Less than 6 keystrokes
+                console.log('Form submission blocked - insufficient keystrokes');
+                return false;
+            }
+            
+            if (formDwellTime < 5) { // Less than 5 seconds form dwell
+                console.log('Form submission blocked - insufficient form dwell time');
+                return false;
+            }
+            
+            if (formHeuristics.fieldFocusCount < 2) { // Less than 2 field focuses
+                console.log('Form submission blocked - insufficient field interaction');
+                return false;
+            }
             
             // Validate all fields
             const fields = this.querySelectorAll('input[required]');
@@ -1119,7 +1493,7 @@
             if (ctaInteractions > 2) finalIntentScore += 6;
             finalIntentScore += 15; // Modal completion bonus
 
-            // Fire lead conversion events
+            // Fire lead conversion events with comprehensive bot detection data
             const eventId = crypto?.randomUUID?.() || `lead_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
             
             const conversionData = {
@@ -1255,6 +1629,8 @@
             tryNextUrl();
         });
 
+        // ===== FORM ENHANCEMENTS =====
+        
         // Real-time form validation
         document.querySelectorAll('#leadForm input').forEach(input => {
             input.addEventListener('blur', function() {
@@ -1299,6 +1675,7 @@
             }
         });
 
+        // ===== UTILITY FUNCTIONS =====
         
         // Cookie helper for FB params
         function getCookie(name) {
@@ -1306,10 +1683,10 @@
             const parts = value.split(`; ${name}=`);
             if (parts.length === 2) return parts.pop().split(';').shift();
         }
-
-        // (Removed hashing helpers; not collecting or passing PII)
         
-        // FIXED: Single abandonment event per session
+        // ===== FINAL EVENT TRACKING =====
+        
+        // Enhanced abandonment tracking with bot detection
         window.addEventListener('beforeunload', function() {
             const timeSpent = (Date.now() - timeOnPage) / 1000;
             
