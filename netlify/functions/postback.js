@@ -22,11 +22,11 @@ exports.handler = async (event, context) => {
     try {
         // Extract MaxBounty callback parameters
         const {
-            s1,      // Original angle parameter
-            s2,      // Original Facebook pixel ID (fbp)
-            s3,      // Original Facebook click ID (fbc)
-            s4,      // Additional tracking data
-            s5,      // Additional tracking data
+            s1,      // MaxBounty affiliate ID (765749)
+            s2,      // MaxBounty session ID (328562336)
+            s3,      // Our angle parameter
+            s4,      // Our Facebook pixel ID (fbp)
+            s5,      // Our Facebook click ID (fbc)
             OFFID,   // Campaign ID
             IP,      // User IP address
             RATE,    // Commission rate
@@ -34,10 +34,17 @@ exports.handler = async (event, context) => {
             CONVERSION_ID // Conversion ID
         } = event.queryStringParameters || {};
 
+        // Map to our tracking variables
+        const angle = s3;  // Our angle is in s3
+        const fbp = s4;    // Our fbp is in s4
+        const fbc = s5;    // Our fbc is in s5
+
         console.log('Extracted tracking data:', {
-            angle: s1,
-            fbp: s2,
-            fbc: s3,
+            angle: angle,
+            fbp: fbp,
+            fbc: fbc,
+            maxBountyAffiliateId: s1,
+            maxBountySessionId: s2,
             campaignId: OFFID,
             ip: IP,
             rate: RATE,
@@ -46,7 +53,7 @@ exports.handler = async (event, context) => {
         });
 
         // Validate required parameters
-        if (!s1 || !s2 || !s3) {
+        if (!angle || !fbp || !fbc) {
             console.log('Missing required tracking parameters');
             return {
                 statusCode: 400,
@@ -57,9 +64,9 @@ exports.handler = async (event, context) => {
 
         // Fire Facebook Pixel Lead event
         await fireFacebookPixelLead({
-            fbp: s2,           // Facebook pixel ID
-            fbc: s3,           // Facebook click ID
-            angle: s1,         // Original angle
+            fbp: fbp,          // Facebook pixel ID (from s4)
+            fbc: fbc,          // Facebook click ID (from s5)
+            angle: angle,      // Original angle (from s3)
             campaignId: OFFID,
             ip: IP,
             rate: RATE,
@@ -69,9 +76,9 @@ exports.handler = async (event, context) => {
 
         // Fire additional tracking events
         await fireAdditionalTracking({
-            angle: s1,
-            fbp: s2,
-            fbc: s3,
+            angle: angle,
+            fbp: fbp,
+            fbc: fbc,
             campaignId: OFFID,
             ip: IP,
             rate: RATE,
@@ -92,9 +99,9 @@ exports.handler = async (event, context) => {
                 success: true,
                 message: 'Conversion tracked successfully',
                 data: {
-                    angle: s1,
-                    fbp: s2,
-                    fbc: s3,
+                    angle: angle,
+                    fbp: fbp,
+                    fbc: fbc,
                     campaignId: OFFID,
                     conversionId: CONVERSION_ID
                 }
