@@ -161,7 +161,7 @@ async function fireFacebookPixelLead(trackingData) {
                 custom_data: {
                     content_name: 'Health Insurance Lead',
                     content_category: 'Health Insurance',
-                    value: trackingData.sale || 0,
+                    value: trackingData.sale || 7,  // Default $50 per lead if no sale amount
                     currency: 'USD'
                 },
                 event_source_url: 'https://policypulse.online',
