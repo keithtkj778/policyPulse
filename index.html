@@ -643,8 +643,7 @@
                 <button type="button" class="form-btn" id="form-btn-2">Submit Application</button>
             </div>
 
-            <a href="https://afflat3e3.com/trk/lnk/C94F5D99-5FC1-4F17-B862-BD110C21C8F7/?o=30127&c=918277&a=765749&k=5E9E785FF72D238BE1639961F85156BF&l=34069&s1=angle&s2=fbp&s3=fbc"
-                class="cta-primary dynamic-content" role="button" rel="nofollow">
+            <a href="#" onclick="handleCTAClick(event)" class="cta-primary dynamic-content" role="button" rel="nofollow">
                 🔍 Am I Protected From Financial Ruin?
             </a>
         </div>
@@ -715,8 +714,7 @@
                 privacy.
             </p>
 
-            <a href="https://afflat3e3.com/trk/lnk/C94F5D99-5FC1-4F17-B862-BD110C21C8F7/?o=30127&c=918277&a=765749&k=5E9E785FF72D238BE1639961F85156BF&l=34069&s1=angle&s2=fbp&s3=fbc"
-                class="cta-primary" role="button" rel="nofollow" id="bottom-cta">
+            <a href="#" onclick="handleCTAClick(event)" class="cta-primary" role="button" rel="nofollow" id="bottom-cta">
                 🛡️ Take Control Now
             </a>
 
@@ -1187,14 +1185,63 @@
             fireEventToPixelAndServer('CTAClicked', conversionData);
         }
 
+        // Handle CTA clicks with dynamic tracking
+        async function handleCTAClick(event) {
+            event.preventDefault();
+            
+            // Track the click
+            trackCTAClick('direct_cta');
+            
+            // Get Facebook pixel data
+            const fbp = getCookie('_fbp') || `fb.1.${Date.now()}.${Math.random().toString(36).substr(2, 9)}`;
+            const fbc = getCookie('_fbc') || `fb.1.${Date.now()}.${Math.random().toString(36).substr(2, 9)}`;
+            
+            // Prepare tracking data
+            const trackingData = {
+                s1: primaryAngle, // Current angle
+                s2: fbp,          // Facebook pixel ID
+                s3: fbc           // Facebook click ID
+            };
+            
+            console.log('Sending tracking data to Netlify function:', trackingData);
+            
+            try {
+                // Call Netlify function
+                const response = await fetch('/.netlify/functions/go-firstquote', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams(trackingData)
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log('Netlify function response:', result);
+                    
+                    // Redirect to the final URL
+                    if (result.redirectUrl) {
+                        window.location.href = result.redirectUrl;
+                    } else {
+                        console.error('No redirect URL received');
+                        // Fallback to direct MaxBounty link
+                        window.location.href = 'https://afflat3e3.com/trk/lnk/C94F5D99-5FC1-4F17-B862-BD110C21C8F7/?o=30127&c=918277&a=765749&k=5E9E785FF72D238BE1639961F85156BF&l=34069';
+                    }
+                } else {
+                    console.error('Netlify function error:', response.status);
+                    // Fallback to direct MaxBounty link
+                    window.location.href = 'https://afflat3e3.com/trk/lnk/C94F5D99-5FC1-4F17-B862-BD110C21C8F7/?o=30127&c=918277&a=765749&k=5E9E785FF72D238BE1639961F85156BF&l=34069';
+                }
+            } catch (error) {
+                console.error('Error calling Netlify function:', error);
+                // Fallback to direct MaxBounty link
+                window.location.href = 'https://afflat3e3.com/trk/lnk/C94F5D99-5FC1-4F17-B862-BD110C21C8F7/?o=30127&c=918277&a=765749&k=5E9E785FF72D238BE1639961F85156BF&l=34069';
+            }
+        }
+
         // ===== SIMPLIFIED TRACKING =====
 
-        // Add click tracking to CTAs
-        document.querySelectorAll('.cta-primary').forEach(cta => {
-            cta.addEventListener('click', function () {
-                trackCTAClick('direct_cta');
-            });
-        });
+        // CTA click tracking is now handled in handleCTAClick function
 
         // ===== UTILITY FUNCTIONS =====
 
