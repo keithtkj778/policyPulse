@@ -1,5 +1,32 @@
 const fetch = require('node-fetch');
 
+/*
+================================================================================
+MAXBOUNTY CALLBACK URL - COPY THIS TO MAXBOUNTY DASHBOARD:
+================================================================================
+https://policypulse.online/.netlify/functions/postback?s1=#S1#&s2=#S2#&s3=#S3#&s4=#S4#&s5=#S5#&OFFID=#OFFID#&IP=#IP#&RATE=#RATE#&SALE=#SALE#&CONVERSION_ID=#CONVERSION_ID#
+
+Instructions:
+1. Go to MaxBounty Dashboard
+2. Navigate to your campaign settings
+3. Find "Callbacks" or "Postbacks" section
+4. Paste the URL above
+5. Save settings
+
+Parameter Mapping:
+- #S1# = MaxBounty Affiliate ID (765749)
+- #S2# = MaxBounty Session ID (328562336)
+- #S3# = Your Angle (one_bill_away, family_shield, etc.)
+- #S4# = Your Facebook Pixel ID (fb.1.1234567890.1234567890)
+- #S5# = Your Facebook Click ID (fb.1.1234567890.1234567890)
+- #OFFID# = Campaign ID
+- #IP# = User IP Address
+- #RATE# = Commission Rate
+- #SALE# = Sale Amount
+- #CONVERSION_ID# = Conversion ID
+================================================================================
+*/
+
 // Facebook Pixel API configuration
 const FACEBOOK_PIXEL_ID = 'YOUR_PIXEL_ID'; // Replace with your actual pixel ID
 const FACEBOOK_ACCESS_TOKEN = 'YOUR_ACCESS_TOKEN'; // Replace with your access token
