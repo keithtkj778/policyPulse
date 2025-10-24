@@ -62,12 +62,10 @@ exports.handler = async (event, context) => {
         } = event.queryStringParameters || {};
 
         // Map to our tracking variables
-        const angle = s3;  // Our angle is in s3
         const fbp = s4;    // Our fbp is in s4
         const fbc = s5;    // Our fbc is in s5
 
         console.log('Extracted tracking data:', {
-            angle: angle,
             fbp: fbp,
             fbc: fbc,
             maxBountyAffiliateId: s1,
@@ -80,7 +78,7 @@ exports.handler = async (event, context) => {
         });
 
         // Validate required parameters
-        if (!angle || !fbp || !fbc) {
+        if (!fbp || !fbc) {
             console.log('Missing required tracking parameters');
             return {
                 statusCode: 400,
@@ -93,7 +91,6 @@ exports.handler = async (event, context) => {
         await fireFacebookPixelLead({
             fbp: fbp,          // Facebook pixel ID (from s4)
             fbc: fbc,          // Facebook click ID (from s5)
-            angle: angle,      // Original angle (from s3)
             campaignId: OFFID,
             ip: IP,
             rate: RATE,
@@ -103,7 +100,6 @@ exports.handler = async (event, context) => {
 
         // Fire additional tracking events
         await fireAdditionalTracking({
-            angle: angle,
             fbp: fbp,
             fbc: fbc,
             campaignId: OFFID,
@@ -126,7 +122,6 @@ exports.handler = async (event, context) => {
                 success: true,
                 message: 'Conversion tracked successfully',
                 data: {
-                    angle: angle,
                     fbp: fbp,
                     fbc: fbc,
                     campaignId: OFFID,
@@ -164,7 +159,7 @@ async function fireFacebookPixelLead(trackingData) {
                     fbc: trackingData.fbc
                 },
                 custom_data: {
-                    content_name: `Health Insurance Lead - ${trackingData.angle}`,
+                    content_name: 'Health Insurance Lead',
                     content_category: 'Health Insurance',
                     value: trackingData.sale || 0,
                     currency: 'USD'
@@ -204,7 +199,6 @@ async function fireAdditionalTracking(trackingData) {
         // Log conversion for analytics
         console.log('Conversion tracked:', {
             timestamp: new Date().toISOString(),
-            angle: trackingData.angle,
             fbp: trackingData.fbp,
             fbc: trackingData.fbc,
             campaignId: trackingData.campaignId,
