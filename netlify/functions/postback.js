@@ -22,7 +22,7 @@ Parameter Mapping:
 - #S6# = Your Real User IP Address
 - #S7# = Your Real User Agent
 - #OFFID# = Campaign ID
-- #IP# = MaxBounty IP Address (fallback)
+- #IP# = MaxBounty IP Address
 - #RATE# = Commission Rate
 - #SALE# = Sale Amount
 - #CONVERSION_ID# = Conversion ID
@@ -56,10 +56,10 @@ exports.handler = async (event, context) => {
             s3,      // Our angle parameter
             s4,      // Our Facebook pixel ID (fbp)
             s5,      // Our Facebook click ID (fbc)
-            s6,      // Our real user IP address
-            s7,      // Our real user agent
+            s6,      // Our real user IP address (from MaxBounty postback)
+            s7,      // Our real user agent (from MaxBounty postback)
             OFFID,   // Campaign ID
-            IP,      // MaxBounty's IP address (fallback)
+            IP,      // MaxBounty's IP address
             RATE,    // Commission rate
             SALE,    // Sale amount
             CONVERSION_ID // Conversion ID
@@ -68,8 +68,8 @@ exports.handler = async (event, context) => {
         // Map to our tracking variables
         const fbp = s4;    // Our fbp is in s4
         const fbc = s5;    // Our fbc is in s5
-        const userIP = s6 || IP;    // Our real IP or MaxBounty's IP as fallback
-        const userAgent = s7 || 'MaxBounty Postback';    // Our real user agent or fallback
+        const userIP = s6 || IP;    // Our real IP (s6) or MaxBounty's IP as fallback
+        const userAgent = s7 || 'MaxBounty Postback';    // Our real user agent (s7) or fallback
 
         console.log('Extracted tracking data:', {
             fbp: fbp,
