@@ -31,7 +31,7 @@ Parameter Mapping:
 */
 
 // Facebook Pixel API configuration
-const FACEBOOK_PIXEL_ID = 'YOUR_NEW_PIXEL_ID'; // Replace with your new pixel ID
+const FACEBOOK_PIXEL_ID = '1601325491243806'; // Replace with your new pixel ID
 const FACEBOOK_ACCESS_TOKEN = 'EAAZA3IukzApIBP59YeDce8KudQBnfwRU8mV5n0lkTBrfnyKlvjQj8qwniiBOBEyQWasssZAYohRmqOEvQVq9Aj6P10gSKuUqmvkZBl75qyBQjZAbegV4eZBfUGucKBrktvVoXWXc6xGEMaP5hlZBOXHLhN0ijFlGbOkUO2RvBGIbCYefdqMNwIsr9BAYt56wZDZD'; // Replace with your new access token
 
 // Facebook Conversions API endpoint
