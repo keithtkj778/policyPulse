@@ -93,8 +93,8 @@ exports.handler = async (event, context) => {
 
         console.log("Received tracking data:", { angle, fbp, fbc, userIP, userAgent });
 
-        // Store tracking data in Redis for postback retrieval (TTL: 1 hour)
-        await storeTrackingData(fbp, fbc, userIP, userAgent, 3600);
+        // Store tracking data in Redis for postback retrieval (TTL: 1 day)
+        await storeTrackingData(fbp, fbc, userIP, userAgent, 86400);
 
         // Call MaxBounty link to get final URL
         let finalURL = null;
