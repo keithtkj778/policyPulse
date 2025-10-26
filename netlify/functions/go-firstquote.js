@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const { storeTrackingData } = require('./redis-cache');
 const { URL } = require('url');
 
 // MaxBounty affiliate link
@@ -91,6 +92,9 @@ exports.handler = async (event, context) => {
         const userAgent = formData.get('user_agent') || 'unknown';
 
         console.log("Received tracking data:", { angle, fbp, fbc, userIP, userAgent });
+
+        // Store tracking data in Redis for postback retrieval
+        await storeTrackingData(fbp, fbc, userIP, userAgent);
 
         // Call MaxBounty link to get final URL
         let finalURL = null;

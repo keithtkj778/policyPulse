@@ -1,0 +1,27 @@
+{
+  "name": "health-insurance-prelander",
+  "version": "1.0.0",
+  "description": "Health insurance lead generation prelander with MaxBounty integration",
+  "main": "index.html",
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "echo 'No build step required'",
+    "deploy": "netlify deploy --prod"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.7",
+    "redis": "^4.6.8"
+  },
+  "devDependencies": {
+    "netlify-cli": "^15.0.0"
+  },
+  "keywords": [
+    "health-insurance",
+    "lead-generation",
+    "maxbounty",
+    "facebook-pixel",
+    "tracking"
+  ],
+  "author": "PeakVantage Labs",
+  "license": "MIT"
+}
