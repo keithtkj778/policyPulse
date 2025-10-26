@@ -32,10 +32,10 @@ Parameter Mapping:
 
 // Facebook Pixel API configuration
 const FACEBOOK_PIXEL_ID = 'YOUR_NEW_PIXEL_ID'; // Replace with your new pixel ID
-const FACEBOOK_ACCESS_TOKEN = 'YOUR_NEW_ACCESS_TOKEN'; // Replace with your new access token
+const FACEBOOK_ACCESS_TOKEN = 'EAAZA3IukzApIBP59YeDce8KudQBnfwRU8mV5n0lkTBrfnyKlvjQj8qwniiBOBEyQWasssZAYohRmqOEvQVq9Aj6P10gSKuUqmvkZBl75qyBQjZAbegV4eZBfUGucKBrktvVoXWXc6xGEMaP5hlZBOXHLhN0ijFlGbOkUO2RvBGIbCYefdqMNwIsr9BAYt56wZDZD'; // Replace with your new access token
 
 // Facebook Conversions API endpoint
-const FACEBOOK_CONVERSIONS_API = `https://graph.facebook.com/v18.0/${FACEBOOK_PIXEL_ID}/events`;
+const FACEBOOK_CONVERSIONS_API = `https://graph.facebook.com/v18.0/${FACEBOOK_PIXEL_ID}/events?access_token=${FACEBOOK_ACCESS_TOKEN}`;
 
 exports.handler = async (event, context) => {
     // Set function timeout
@@ -198,8 +198,7 @@ async function fireFacebookPixelLead(trackingData) {
         const response = await fetch(FACEBOOK_CONVERSIONS_API, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${FACEBOOK_ACCESS_TOKEN}`
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(eventData)
         });
