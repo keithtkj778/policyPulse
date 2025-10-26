@@ -4,7 +4,7 @@ const fetch = require('node-fetch');
 ================================================================================
 MAXBOUNTY CALLBACK URL - COPY THIS TO MAXBOUNTY DASHBOARD:
 ================================================================================
-https://policypulse.online/.netlify/functions/postback?s1=#S1#&s2=#S2#&s3=#S3#&s4=#S4#&s5=#S5#&OFFID=#OFFID#&IP=#IP#&RATE=#RATE#&SALE=#SALE#&CONVERSION_ID=#CONVERSION_ID#
+https://policypulse.online/.netlify/functions/postback?s1=#S1#&s2=#S2#&s3=#S3#&s4=#S4#&s5=#S5#&s6=#S6#&s7=#S7#&OFFID=#OFFID#&IP=#IP#&RATE=#RATE#&SALE=#SALE#&CONVERSION_ID=#CONVERSION_ID#
 
 Instructions:
 1. Go to MaxBounty Dashboard
@@ -19,8 +19,10 @@ Parameter Mapping:
 - #S3# = Your Angle (one_bill_away, family_shield, etc.)
 - #S4# = Your Facebook Pixel ID (fb.1.1234567890.1234567890)
 - #S5# = Your Facebook Click ID (fb.1.1234567890.1234567890)
+- #S6# = Your Real User IP Address
+- #S7# = Your Real User Agent
 - #OFFID# = Campaign ID
-- #IP# = User IP Address
+- #IP# = MaxBounty IP Address (fallback)
 - #RATE# = Commission Rate
 - #SALE# = Sale Amount
 - #CONVERSION_ID# = Conversion ID
@@ -54,8 +56,10 @@ exports.handler = async (event, context) => {
             s3,      // Our angle parameter
             s4,      // Our Facebook pixel ID (fbp)
             s5,      // Our Facebook click ID (fbc)
+            s6,      // Our real user IP address
+            s7,      // Our real user agent
             OFFID,   // Campaign ID
-            IP,      // User IP address
+            IP,      // MaxBounty's IP address (fallback)
             RATE,    // Commission rate
             SALE,    // Sale amount
             CONVERSION_ID // Conversion ID
@@ -64,6 +68,8 @@ exports.handler = async (event, context) => {
         // Map to our tracking variables
         const fbp = s4;    // Our fbp is in s4
         const fbc = s5;    // Our fbc is in s5
+        const userIP = s6 || IP;    // Our real IP or MaxBounty's IP as fallback
+        const userAgent = s7 || 'MaxBounty Postback';    // Our real user agent or fallback
 
         console.log('Extracted tracking data:', {
             fbp: fbp,
@@ -92,7 +98,8 @@ exports.handler = async (event, context) => {
             fbp: fbp,          // Facebook pixel ID (from s4)
             fbc: fbc,          // Facebook click ID (from s5)
             campaignId: OFFID,
-            ip: IP,
+            ip: userIP,        // Real user IP (from s6)
+            userAgent: userAgent, // Real user agent (from s7)
             rate: RATE,
             sale: SALE,
             conversionId: CONVERSION_ID
@@ -154,7 +161,7 @@ async function fireFacebookPixelLead(trackingData) {
                 action_source: 'website',
                 user_data: {
                     client_ip_address: trackingData.ip,
-                    client_user_agent: 'MaxBounty Postback',
+                    client_user_agent: trackingData.userAgent,
                     fbp: trackingData.fbp,
                     fbc: trackingData.fbc
                 },

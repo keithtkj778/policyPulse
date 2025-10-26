@@ -87,6 +87,8 @@ exports.handler = async (event, context) => {
         const angle = formData.get('s1') || 'prelander';
         const fbp = formData.get('s2') || `click_${Date.now()}`;
         const fbc = formData.get('s3') || '0';
+        const userIP = formData.get('s4') || 'unknown';
+        const userAgent = formData.get('s5') || 'unknown';
 
         console.log("Received tracking data:", { angle, fbp, fbc });
 
@@ -146,6 +148,8 @@ exports.handler = async (event, context) => {
             offerURL.searchParams.set("s3", angle);
             offerURL.searchParams.set("s4", fbp);
             offerURL.searchParams.set("s5", fbc);
+            offerURL.searchParams.set("s6", userIP);
+            offerURL.searchParams.set("s7", userAgent);
 
             console.log("Final URL with our tracking:", offerURL.toString());
 
