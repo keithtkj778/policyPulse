@@ -1221,11 +1221,11 @@
 
             // Prepare tracking data
             const trackingData = {
-                s1: primaryAngle, // Current angle
-                s2: fbp,          // Facebook pixel ID
-                s3: fbc,          // Facebook click ID
-                s4: serverData.ip || 'unknown', // Real user IP
-                s5: navigator.userAgent // Real user agent
+                angle: primaryAngle, // Current angle
+                fbp: fbp,           // Facebook pixel ID
+                fbc: fbc,           // Facebook click ID
+                user_ip: serverData.ip || 'unknown', // Real user IP
+                user_agent: navigator.userAgent // Real user agent
             };
             
             console.log('Sending tracking data to Netlify function:', trackingData);

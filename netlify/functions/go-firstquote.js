@@ -84,13 +84,13 @@ exports.handler = async (event, context) => {
         const formData = new URLSearchParams(event.body);
         
         // Extract tracking parameters
-        const angle = formData.get('s1') || 'prelander';
-        const fbp = formData.get('s2') || `click_${Date.now()}`;
-        const fbc = formData.get('s3') || '0';
-        const userIP = formData.get('s4') || 'unknown';
-        const userAgent = formData.get('s5') || 'unknown';
+        const angle = formData.get('angle') || 'prelander';
+        const fbp = formData.get('fbp') || `click_${Date.now()}`;
+        const fbc = formData.get('fbc') || '0';
+        const userIP = formData.get('user_ip') || 'unknown';
+        const userAgent = formData.get('user_agent') || 'unknown';
 
-        console.log("Received tracking data:", { angle, fbp, fbc });
+        console.log("Received tracking data:", { angle, fbp, fbc, userIP, userAgent });
 
         // Call MaxBounty link to get final URL
         let finalURL = null;
