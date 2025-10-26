@@ -25,23 +25,21 @@
     </script>
 
     <!-- Meta Pixel Code -->
-    <script>
-        !function (f, b, e, v, n, t, s) {
-            if (f.fbq) return; n = f.fbq = function () {
-                n.callMethod ?
-                n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-            };
-            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
-            n.queue = []; t = b.createElement(e); t.async = !0;
-            t.src = v; s = b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t, s)
-        }(window, document, 'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', '635600969586902');
-        // fbq('track', 'PageView'); // Disabled automatic PageView
+<script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1601325491243806');
+    // fbq('track', 'PageView'); // Disabled automatic PageView as want to dwell >=2s to prevent bots from triggering PageView
     </script>
     <noscript><img height="1" width="1" style="display:none"
-            src="https://www.facebook.com/tr?id=635600969586902&ev=PageView&noscript=1" /></noscript>
+    src="https://www.facebook.com/tr?id=1601325491243806&ev=PageView&noscript=1"
+    /></noscript>
     <!-- End Meta Pixel Code -->
 
     <!-- Google Tag Manager -->
@@ -1049,7 +1047,7 @@
         // ===== BEHAVIOR-GATED EVENT SYSTEM =====
 
         // Enhanced event firing with bot detection checks
-        function fireEventToPixelAndServer(eventName, eventData = {}) {
+        async function fireEventToPixelAndServer(eventName, eventData = {}) {
             // Block all events if bot detected
             if (botDetected || eventsBlocked) {
                 console.log(`Event blocked - bot detected: ${eventName}`);
@@ -1066,10 +1064,24 @@
                 console.log('PageView released - human behavior validated');
             }
 
+            // Get IP address and user agent from server
+            let serverData = {};
+            try {
+                const response = await fetch('/.netlify/functions/get-ip');
+                if (response.ok) {
+                    serverData = await response.json();
+                }
+            } catch (error) {
+                console.log('Could not fetch server data:', error);
+            }
+
             const cleanEventData = {
                 ...eventData,
                 primary_angle: primaryAngle,
-                client_user_agent: navigator.userAgent
+                client_user_agent: navigator.userAgent,
+                client_ip_address: serverData.ip || 'unknown',
+                page_url: window.location.href,
+                referrer: document.referrer
             };
 
             // Generate single event ID for consistency
