@@ -17,6 +17,7 @@ A high-converting health insurance lead generation prelander with comprehensive 
 You need a Redis database to store user tracking data. Options:
 
 #### Option A: Redis Cloud (Recommended)
+
 1. Go to [Redis Cloud](https://redis.com/try-free/)
 2. Create free account (30MB free tier)
 3. Create new database
@@ -24,6 +25,7 @@ You need a Redis database to store user tracking data. Options:
 5. Add to Netlify environment variables: `REDIS_URL`
 
 #### Option B: Railway Redis
+
 1. Go to [Railway](https://railway.app/)
 2. Create new project
 3. Add Redis service
@@ -31,6 +33,7 @@ You need a Redis database to store user tracking data. Options:
 5. Add to Netlify environment variables: `REDIS_URL`
 
 #### Option C: Upstash Redis
+
 1. Go to [Upstash](https://upstash.com/)
 2. Create free account
 3. Create Redis database
@@ -62,11 +65,13 @@ npx netlify-cli deploy --prod
 ## How It Works
 
 ### 1. User Journey
+
 ```
 User clicks ad → Prelander → CTA click → MaxBounty → Landing page → Conversion
 ```
 
 ### 2. Tracking Flow
+
 ```
 Frontend: angle, fbp, fbc, user_ip, user_agent
 ↓
@@ -80,6 +85,7 @@ Facebook: fbp, fbc, real_ip, real_user_agent
 ```
 
 ### 3. Attribution Benefits
+
 - **Perfect matching**: Real user data in both frontend and postback events
 - **iOS 14.5+ support**: Enhanced matching with IP and user agent
 - **ROAS optimization**: Conversion value tracking for Facebook CBO
@@ -97,26 +103,31 @@ FACEBOOK_ACCESS_TOKEN=your_access_token
 ## Testing
 
 ### Test Postback
+
 ```
 GET https://policypulse.online/.netlify/functions/test-postback?test=1
 ```
 
 ### Test Redis Cache
+
 Check Netlify function logs for Redis operations.
 
 ## Troubleshooting
 
 ### Redis Connection Issues
+
 - Check `REDIS_URL` environment variable
 - Verify Redis database is running
 - Check network connectivity
 
 ### MaxBounty Postback Issues
+
 - Verify callback URL is correct
 - Check MaxBounty campaign settings
 - Monitor function logs for errors
 
 ### Facebook Pixel Issues
+
 - Verify pixel ID and access token
 - Check Conversions API permissions
 - Monitor Facebook Events Manager
