@@ -28,8 +28,8 @@ Parameter Mapping:
 */
 
 // Facebook Pixel API configuration
-const FACEBOOK_PIXEL_ID = 'YOUR_PIXEL_ID'; // Replace with your actual pixel ID
-const FACEBOOK_ACCESS_TOKEN = 'YOUR_ACCESS_TOKEN'; // Replace with your access token
+const FACEBOOK_PIXEL_ID = 'YOUR_NEW_PIXEL_ID'; // Replace with your new pixel ID
+const FACEBOOK_ACCESS_TOKEN = 'YOUR_NEW_ACCESS_TOKEN'; // Replace with your new access token
 
 // Facebook Conversions API endpoint
 const FACEBOOK_CONVERSIONS_API = `https://graph.facebook.com/v18.0/${FACEBOOK_PIXEL_ID}/events`;
