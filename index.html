@@ -1212,25 +1212,6 @@
                 console.log('Could not fetch server data:', error);
             }
 
-            // Store fbp/fbc data in Redis for postback retrieval
-            try {
-                await fetch('/.netlify/functions/store-tracking', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        fbp: fbp,
-                        fbc: fbc,
-                        user_ip: serverData.ip || 'unknown',
-                        user_agent: navigator.userAgent,
-                        ttl: 86400 // 24 hours
-                    })
-                });
-                console.log('Stored tracking data in Redis for postback');
-            } catch (error) {
-                console.log('Failed to store tracking data:', error);
-            }
 
             // Prepare tracking data
             const trackingData = {
