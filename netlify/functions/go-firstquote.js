@@ -149,9 +149,9 @@ exports.handler = async (event, context) => {
             offerURL = new URL(finalURL);
             
             // Add our tracking parameters to s3, s4, s5 (safe parameters)
-            offerURL.searchParams.set("s3", angle);
-            offerURL.searchParams.set("s4", fbp);
-            offerURL.searchParams.set("s5", fbc);
+            offerURL.searchParams.set("s3", fbp);        // s3 = fbp
+            offerURL.searchParams.set("s4", fbc);        // s4 = fbc  
+            offerURL.searchParams.set("s5", userAgent);  // s5 = user agent
 
             console.log("Final URL with our tracking:", offerURL.toString());
 

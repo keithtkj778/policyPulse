@@ -1,11 +1,10 @@
 const fetch = require('node-fetch');
-const { getTrackingData, deleteTrackingData } = require('./redis-cache');
 
 /*
 ================================================================================
 MAXBOUNTY CALLBACK URL - COPY THIS TO MAXBOUNTY DASHBOARD:
 ================================================================================
-https://policypulse.online/.netlify/functions/postback?s1=#S1#&s2=#S2#&s3=#S3#&s4=#S4#&s5=#S5#&s6=#S6#&s7=#S7#&OFFID=#OFFID#&IP=#IP#&RATE=#RATE#&SALE=#SALE#&CONVERSION_ID=#CONVERSION_ID#
+https://policypulse.online/.netlify/functions/postback?s1=#S1#&s2=#S2#&s3=#S3#&s4=#S4#&s5=#S5#&OFFID=#OFFID#&IP=#IP#&RATE=#RATE#&SALE=#SALE#&CONVERSION_ID=#CONVERSION_ID#
 
 Instructions:
 1. Go to MaxBounty Dashboard
@@ -17,13 +16,11 @@ Instructions:
 Parameter Mapping:
 - #S1# = MaxBounty Affiliate ID (765749)
 - #S2# = MaxBounty Session ID (328562336)
-- #S3# = Your Angle (one_bill_away, family_shield, etc.)
-- #S4# = Your Facebook Pixel ID (fb.1.1234567890.1234567890)
-- #S5# = Your Facebook Click ID (fb.1.1234567890.1234567890)
-- #S6# = Your Real User IP Address
-- #S7# = Your Real User Agent
+- #S3# = Your Facebook Pixel ID (fbp)
+- #S4# = Your Facebook Click ID (fbc)
+- #S5# = Your User Agent String
 - #OFFID# = Campaign ID
-- #IP# = MaxBounty IP Address
+- #IP# = MaxBounty IP Address (used directly)
 - #RATE# = Commission Rate
 - #SALE# = Sale Amount
 - #CONVERSION_ID# = Conversion ID
@@ -62,26 +59,10 @@ exports.handler = async (event, context) => {
         } = event.queryStringParameters || {};
 
         // Map to our tracking variables
-        const fbp = s4;    // Our fbp is in s4
-        const fbc = s5;    // Our fbc is in s5
-        
-        // Try to get real user data from Redis cache
-        let userIP = IP;    // Default to MaxBounty's IP
-        let userAgent = 'MaxBounty Postback';    // Default user agent
-        
-        if (fbp && fbc) {
-            const cachedData = await getTrackingData(fbp, fbc);
-            if (cachedData) {
-                userIP = cachedData.userIP || IP;
-                userAgent = cachedData.userAgent || 'MaxBounty Postback';
-                console.log('Retrieved real user data from cache:', { userIP, userAgent });
-                
-                // Clean up cache after use
-                await deleteTrackingData(fbp, fbc);
-            } else {
-                console.log('No cached data found, using MaxBounty data');
-            }
-        }
+        const fbp = s3;    // Our fbp is in s3
+        const fbc = s4;    // Our fbc is in s4
+        const userAgent = s5 || 'MaxBounty Postback';  // Our user agent is in s5
+        const userIP = IP; // Use MaxBounty's IP directly
 
         console.log('Extracted tracking data:', {
             fbp: fbp,
