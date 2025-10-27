@@ -53,6 +53,20 @@
         })(window, document, 'script', 'dataLayer', 'GTM-P2RZ79C3');</script>
     <!-- End Google Tag Manager -->
 
+    <!-- Stape Client Script -->
+    <script>
+        (function(s,t,a,p,e,ribf){
+            s[t]=s[t]||function(){(s[t].q=s[t].q||[]).push(arguments)};
+            s[t].l=1*new Date();
+            var script = document.createElement('script');
+            script.async = 1;
+            script.src = 'https://paffribf.usc.stape.io/gtm.js?id=GTM-P2RZ79C3';
+            var first = document.getElementsByTagName('script')[0];
+            first.parentNode.insertBefore(script, first);
+        })(window, 'stape');
+    </script>
+    <!-- End Stape Client Script -->
+
     <style>
         * {
             margin: 0;
@@ -1100,13 +1114,12 @@
             }
 
             // GTM DataLayer for Stape server
-            // 2️⃣ SENDS TO GTM DATALAYER
-            if (typeof dataLayer !== 'undefined') {
+            // 2️⃣ SENDS TO STAPE SERVER-SIDE GTM
+            if (typeof stape !== 'undefined') {
                 const fbp = getCookie('_fbp') || '';
                 const fbc = getCookie('_fbc') || '';
 
-                dataLayer.push({
-                    event: eventName,
+                stape('event', eventName, {
                     event_name: eventName,
                     _fbp: fbp,
                     fbc: fbc,
