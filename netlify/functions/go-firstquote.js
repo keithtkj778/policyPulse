@@ -1,5 +1,18 @@
+/*
+================================================================================
+CTA CLICK HANDLER FUNCTION
+================================================================================
+Purpose: Handles CTA button clicks and redirects users to MaxBounty offer
+When Used: Called when user clicks "Am I Protected From Financial Ruin?" or 
+          "Take Control Now" buttons on the landing page
+Process: 1. Follows MaxBounty redirect chain to get final offer URL
+         2. Appends tracking parameters (s3=fbp, s4=fbc, s5=user_agent)
+         3. Returns final URL for user redirection
+Tracking: Adds fbp, fbc, and user_agent to MaxBounty URL for conversion tracking
+================================================================================
+*/
+
 const fetch = require('node-fetch');
-const { storeTrackingData } = require('./redis-cache');
 const { URL } = require('url');
 
 // MaxBounty affiliate link
@@ -93,8 +106,7 @@ exports.handler = async (event, context) => {
 
         console.log("Received tracking data:", { angle, fbp, fbc, userIP, userAgent });
 
-        // Store tracking data in Redis for postback retrieval (TTL: 1 day)
-        await storeTrackingData(fbp, fbc, userIP, userAgent, 86400);
+        // Note: Tracking data is now passed directly via URL parameters to MaxBounty
 
         // Call MaxBounty link to get final URL
         let finalURL = null;

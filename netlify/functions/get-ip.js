@@ -1,3 +1,16 @@
+/*
+================================================================================
+IP ADDRESS DETECTION FUNCTION
+================================================================================
+Purpose: Gets the real user's IP address from request headers
+When Used: Called by landing page to get user's IP for Facebook tracking
+Process: 1. Checks various IP header fields (x-forwarded-for, x-real-ip, etc.)
+         2. Returns the first valid IP address found
+         3. Falls back to 'unknown' if no IP found
+Data Source: HTTP request headers from Netlify edge functions
+================================================================================
+*/
+
 exports.handler = async (event, context) => {
     // Set function timeout
     context.callbackWaitsForEmptyEventLoop = false;

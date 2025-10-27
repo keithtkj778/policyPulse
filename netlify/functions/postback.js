@@ -1,3 +1,17 @@
+/*
+================================================================================
+MAXBOUNTY CONVERSION POSTBACK FUNCTION
+================================================================================
+Purpose: Receives conversion notifications from MaxBounty and fires Facebook Lead events
+When Used: Called by MaxBounty when a user converts (completes the offer)
+Process: 1. Receives conversion data from MaxBounty callback
+         2. Extracts fbp, fbc, user_agent from URL parameters
+         3. Uses MaxBounty's IP address directly
+         4. Fires Lead event to Facebook Conversions API
+Data Flow: MaxBounty → This Function → Facebook CAPI → Facebook Events Manager
+================================================================================
+*/
+
 const fetch = require('node-fetch');
 
 /*

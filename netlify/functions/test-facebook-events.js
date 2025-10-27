@@ -1,3 +1,16 @@
+/*
+================================================================================
+FACEBOOK EVENTS TEST FUNCTION
+================================================================================
+Purpose: Tests Facebook Conversions API directly with test event code
+When Used: For verifying Facebook CAPI setup with Events Manager test code
+Process: 1. Sends test event directly to Facebook with test_event_code
+         2. Uses test code TEST50276 for Facebook Events Manager validation
+         3. Returns success/failure response
+Facebook Integration: Sends to Facebook's API directly, not through our CAPI function
+================================================================================
+*/
+
 const fetch = require('node-fetch');
 
 // Facebook Pixel API configuration
