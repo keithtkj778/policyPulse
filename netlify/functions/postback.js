@@ -30,12 +30,7 @@ Parameter Mapping:
 ================================================================================
 */
 
-// Facebook Pixel API configuration
-const FACEBOOK_PIXEL_ID = '1601325491243806'; // Replace with your new pixel ID
-const FACEBOOK_ACCESS_TOKEN = 'EAAZA3IukzApIBP59YeDce8KudQBnfwRU8mV5n0lkTBrfnyKlvjQj8qwniiBOBEyQWasssZAYohRmqOEvQVq9Aj6P10gSKuUqmvkZBl75qyBQjZAbegV4eZBfUGucKBrktvVoXWXc6xGEMaP5hlZBOXHLhN0ijFlGbOkUO2RvBGIbCYefdqMNwIsr9BAYt56wZDZD'; // Replace with your new access token
-
-// Facebook Conversions API endpoint
-const FACEBOOK_CONVERSIONS_API = `https://graph.facebook.com/v18.0/${FACEBOOK_PIXEL_ID}/events?access_token=${FACEBOOK_ACCESS_TOKEN}`;
+// Note: Facebook API configuration is now handled in facebook-capi.js function
 
 exports.handler = async (event, context) => {
     // Set function timeout
@@ -110,7 +105,7 @@ exports.handler = async (event, context) => {
             };
         }
 
-        // Fire Facebook Pixel Lead event
+        // Fire Facebook Pixel Lead event via our CAPI function
         await fireFacebookPixelLead({
             fbp: fbp,          // Facebook pixel ID (from s4)
             fbc: fbc,          // Facebook click ID (from s5)
@@ -168,34 +163,23 @@ exports.handler = async (event, context) => {
     }
 };
 
-// Fire Facebook Pixel Lead event via Conversions API
+// Fire Facebook Pixel Lead event via our CAPI function
 async function fireFacebookPixelLead(trackingData) {
     try {
         const eventData = {
-            data: [{
-                event_name: 'Lead',
-                event_time: Math.floor(Date.now() / 1000),
-                action_source: 'website',
-                user_data: {
-                    client_ip_address: trackingData.ip,
-                    client_user_agent: trackingData.userAgent,
-                    fbp: trackingData.fbp,
-                    fbc: trackingData.fbc
-                },
-                custom_data: {
-                    content_name: 'Health Insurance Lead',
-                    content_category: 'Health Insurance',
-                    value: trackingData.sale || 7,  // Default $50 per lead if no sale amount
-                    currency: 'USD'
-                },
-                event_source_url: 'https://policypulse.online',
-                event_id: trackingData.conversionId || `conv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-            }]
+            event_name: 'Lead',
+            _fbp: trackingData.fbp,
+            fbc: trackingData.fbc,
+            client_ip_address: trackingData.ip,
+            client_user_agent: trackingData.userAgent,
+            value: trackingData.sale || 7,  // Default $7 per lead if no sale amount
+            event_id: trackingData.conversionId || `conv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
         };
 
-        console.log('Firing Facebook Pixel Lead event:', eventData);
+        console.log('Firing Facebook Pixel Lead event via CAPI function:', eventData);
 
-        const response = await fetch(FACEBOOK_CONVERSIONS_API, {
+        // Call our internal CAPI function
+        const response = await fetch('https://policypulse.online/.netlify/functions/facebook-capi', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -205,14 +189,14 @@ async function fireFacebookPixelLead(trackingData) {
 
         if (response.ok) {
             const result = await response.json();
-            console.log('Facebook Pixel Lead event fired successfully:', result);
+            console.log('Facebook Pixel Lead event fired successfully via CAPI:', result);
         } else {
             const error = await response.text();
-            console.error('Facebook Pixel Lead event failed:', error);
+            console.error('Facebook Pixel Lead event failed via CAPI:', error);
         }
 
     } catch (error) {
-        console.error('Error firing Facebook Pixel Lead event:', error);
+        console.error('Error firing Facebook Pixel Lead event via CAPI:', error);
     }
 }
 
