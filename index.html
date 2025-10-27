@@ -24,23 +24,7 @@
         const botdPromise = import('https://openfpcdn.io/botd/v1').then((Botd) => Botd.load())
     </script>
 
-    <!-- Meta Pixel Code -->
-<script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1601325491243806');
-    // fbq('track', 'PageView'); // Disabled automatic PageView as want to dwell >=2s to prevent bots from triggering PageView
-    </script>
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=1601325491243806&ev=PageView&noscript=1"
-    /></noscript>
-    <!-- End Meta Pixel Code -->
+    <!-- Meta Pixel Code - Moved to GTM -->
 
     <!-- Google Tag Manager -->
     <script>(function (w, d, s, l, i) {
@@ -1101,17 +1085,7 @@
             // Generate single event ID for consistency
             const eventId = crypto?.randomUUID?.() || `evt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-            // Handle PageView vs custom events for Facebook
-            // 1️⃣ SENDS TO FACEBOOK PIXEL
-            if (typeof fbq !== 'undefined') {
-                if (eventName === 'PageView') {
-                    fbq('track', 'PageView', cleanEventData);
-                } else {
-                    fbq('trackCustom', eventName, cleanEventData, {
-                        eventID: eventId //same event id as gtm for deduplication
-                    });
-                }
-            }
+            // Facebook Pixel events now handled by GTM
 
             // GTM DataLayer for Stape server
             // 2️⃣ SENDS TO STAPE SERVER-SIDE GTM
@@ -1306,9 +1280,7 @@
 
                 fireEventToPixelAndServer('QualifiedAbandonment', abandonmentData);
 
-                if (typeof fbq !== 'undefined') {
-                    fbq('trackCustom', 'QualifiedAbandonment', abandonmentData);
-                }
+                // QualifiedAbandonment event now handled by GTM
             }
         });
     </script>
