@@ -94,7 +94,7 @@ exports.handler = async (event, context) => {
                 event_time: Math.floor(Date.now() / 1000),
                 action_source: 'website',
                 user_data: {
-                    client_ip_address: client_ip_address || 'unknown',
+                    client_ip_address: client_ip_address ? client_ip_address.split(',')[0].trim() : 'unknown',
                     client_user_agent: client_user_agent || 'unknown',
                     fbp: _fbp,
                     fbc: fbc || ''

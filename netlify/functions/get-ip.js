@@ -45,10 +45,15 @@ exports.handler = async (event, context) => {
 
     try {
         // Extract IP address from headers
-        const clientIP = event.headers['client-ip'] || 
-                         event.headers['x-forwarded-for'] || 
-                         event.headers['x-real-ip'] || 
-                         'unknown';
+        let clientIP = event.headers['client-ip'] || 
+                       event.headers['x-forwarded-for'] || 
+                       event.headers['x-real-ip'] || 
+                       'unknown';
+        
+        // Clean up IP - take first IP if comma-separated
+        if (clientIP.includes(',')) {
+            clientIP = clientIP.split(',')[0].trim();
+        }
 
         // Extract user agent
         const userAgent = event.headers['user-agent'] || 'unknown';
