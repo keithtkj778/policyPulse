@@ -1,3 +1,16 @@
+/*
+================================================================================
+FACEBOOK CONVERSIONS API FUNCTION
+================================================================================
+Purpose: Sends events to Facebook Conversions API for server-side tracking
+When Used: Called for every event (PageView, CTAClicked, Lead) to duplicate
+          client-side pixel events with better data quality
+Events Handled: PageView, CTAClicked, Lead
+Data Source: Receives event data from client-side pixel and postback function
+Deduplication: Uses same event_id as pixel for automatic Facebook deduplication
+================================================================================
+*/
+
 const fetch = require('node-fetch');
 
 // Facebook Pixel API configuration

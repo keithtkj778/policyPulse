@@ -1,3 +1,16 @@
+/*
+================================================================================
+POSTBACK TEST FUNCTION
+================================================================================
+Purpose: Tests the MaxBounty postback function with sample conversion data
+When Used: For debugging and verifying postback function works correctly
+Process: 1. Sends test conversion data to postback function
+         2. Simulates MaxBounty callback with sample parameters
+         3. Returns response for verification
+Test Data: Uses sample fbp, fbc, IP, and conversion data for testing
+================================================================================
+*/
+
 exports.handler = async (event, context) => {
     // Set function timeout
     context.callbackWaitsForEmptyEventLoop = false;

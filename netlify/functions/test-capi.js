@@ -1,3 +1,15 @@
+/*
+================================================================================
+CAPI TEST FUNCTION
+================================================================================
+Purpose: Tests the Facebook Conversions API function with sample data
+When Used: For debugging and verifying CAPI function works correctly
+Process: 1. Sends test PageView event to facebook-capi function
+         2. Returns response for verification
+Test Data: Uses sample fbp, fbc, IP, and user agent for testing
+================================================================================
+*/
+
 const fetch = require('node-fetch');
 
 exports.handler = async (event, context) => {
