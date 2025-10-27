@@ -34,10 +34,10 @@ exports.handler = async (event, context) => {
                     currency: 'USD'
                 },
                 event_source_url: 'https://policypulse.online',
-                event_id: `test_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-                // This is the key part - the test event code
-                test_event_code: testEventCode
-            }]
+                event_id: `test_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+            }],
+            // Test event code must be at root level
+            test_event_code: testEventCode
         };
 
         console.log('Sending test event to Facebook with test code:', testEventCode);
