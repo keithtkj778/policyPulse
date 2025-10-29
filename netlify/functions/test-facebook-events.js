@@ -20,7 +20,7 @@ Notes:
 ================================================================================
 */
 
-const { sendFacebookEvents } = require('./facebook-lib');
+const { sendFacebookEvents, buildUserData } = require('./facebook-lib');
 const { FACEBOOK_PIXEL_ID, FACEBOOK_ACCESS_TOKEN } = require('./config');
 
 // Facebook Pixel API configuration from centralized config
@@ -42,12 +42,12 @@ exports.handler = async (event, context) => {
 
         // Build three events to mimic your site: PageView, CTAClicked, Lead
         const now = Math.floor(Date.now() / 1000);
-        const testUserData = {
-            client_ip_address: clientIp,
-            client_user_agent: clientUserAgent,
+        const testUserData = buildUserData({
             fbp: 'fb.1.1234567890.1234567890',
-            fbc: 'fb.1.1234567890.1234567890'
-        };
+            fbc: 'fb.1.1234567890.1234567890',
+            clientIp: clientIp,
+            clientUserAgent: clientUserAgent
+        });
 
         const pageViewEvent = {
             event_name: 'PageView',

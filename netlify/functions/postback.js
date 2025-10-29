@@ -13,6 +13,7 @@ Data Flow: MaxBounty → This Function → Facebook CAPI → Facebook Events Man
 */
 
 const fetch = require('node-fetch');
+const { buildUserData } = require('./facebook-lib');
 
 /*
 ================================================================================
