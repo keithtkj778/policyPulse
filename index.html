@@ -818,13 +818,19 @@
                 console.log('Could not fetch server data:', error);
             }
             
+            // Get Facebook pixel data for both pixel and CAPI
+            const fbp = getCookie('_fbp') || '';
+            const fbc = getCookie('_fbc') || '';
+
             const cleanEventData = {
                 ...eventData,
                 primary_angle: primaryAngle,
                 client_user_agent: navigator.userAgent,
                 client_ip_address: serverData.ip || 'unknown',
                 page_url: window.location.href,
-                referrer: document.referrer
+                referrer: document.referrer,
+                _fbp: fbp,
+                _fbc: fbc
             };
 
             // Generate single event ID for consistency
@@ -842,9 +848,6 @@
             }
 
             // 2️⃣ SENDS TO FACEBOOK CONVERSIONS API VIA NETLIFY
-                const fbp = getCookie('_fbp') || '';
-                const fbc = getCookie('_fbc') || '';
-                
             // Send to our Netlify CAPI function
             fetch('/.netlify/functions/facebook-capi', {
                 method: 'POST',
