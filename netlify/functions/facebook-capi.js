@@ -15,7 +15,7 @@ const fetch = require('node-fetch');
 
 // Facebook Pixel API configuration
 const FACEBOOK_PIXEL_ID = '1601325491243806';
-const FACEBOOK_ACCESS_TOKEN = 'EAAZA3IukzApIBP59YeDce8KudQBnfwRU8mV5n0lkTBrfnyKlvjQj8qwniiBOBEyQWasssZAYohRmqOEvQVq9Aj6P10gSKuUqmvkZBl75qyBQjZAbegV4eZBfUGucKBrktvVoXWXc6xGEMaP5hlZBOXHLhN0ijFlGbOkUO2RvBGIbCYefdqMNwIsr9BAYt56wZDZD';
+const FACEBOOK_ACCESS_TOKEN = 'EAAQbjZBojicsBP85ZCvTbiLMQ6WA9RIlnNZCiDILZAdZAZCaqDYvVhYbqIiZBCUlZBksVpD5oi7ocZCNqjVsliyKrUKZBpaERiKi57PT9VlmyV4zulVOdPM1SlSUVibrevaf5zWUfSesinCRQureCXLPmjuqqUMKZBOq67RUooj0DRSaDcECmEa4x7QN2TuC4POcf4ilQZDZD';
 
 // Facebook Conversions API endpoint
 const FACEBOOK_CONVERSIONS_API = `https://graph.facebook.com/v18.0/${FACEBOOK_PIXEL_ID}/events?access_token=${FACEBOOK_ACCESS_TOKEN}`;
