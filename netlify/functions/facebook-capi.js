@@ -12,10 +12,9 @@ Deduplication: Uses same event_id as pixel for automatic Facebook deduplication
 */
 
 const { sendFacebookEvents } = require('./facebook-lib');
+const { FACEBOOK_PIXEL_ID, FACEBOOK_ACCESS_TOKEN } = require('./config');
 
-// Facebook Pixel API configuration
-const FACEBOOK_PIXEL_ID = '2268409500330056';
-const FACEBOOK_ACCESS_TOKEN = 'EAAQbjZBojicsBP85ZCvTbiLMQ6WA9RIlnNZCiDILZAdZAZCaqDYvVhYbqIiZBCUlZBksVpD5oi7ocZCNqjVsliyKrUKZBpaERiKi57PT9VlmyV4zulVOdPM1SlSUVibrevaf5zWUfSesinCRQureCXLPmjuqqUMKZBOq67RUooj0DRSaDcECmEa4x7QN2TuC4POcf4ilQZDZD';
+// Facebook Pixel API configuration from centralized config
 
 // Using shared sender from facebook-lib
 
