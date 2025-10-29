@@ -11,7 +11,7 @@ Deduplication: Uses same event_id as pixel for automatic Facebook deduplication
 ================================================================================
 */
 
-const { sendFacebookEvents } = require('./facebook-lib');
+const { sendFacebookEvents, buildUserData } = require('./facebook-lib');
 const { FACEBOOK_PIXEL_ID, FACEBOOK_ACCESS_TOKEN } = require('./config');
 
 // Facebook Pixel API configuration from centralized config
@@ -91,12 +91,12 @@ exports.handler = async (event, context) => {
                 event_name: event_name,
                 event_time: Math.floor(Date.now() / 1000),
                 action_source: 'website',
-                user_data: {
-                    client_ip_address: client_ip_address ? client_ip_address.split(',')[0].trim() : 'unknown',
-                    client_user_agent: client_user_agent || 'unknown',
+                user_data: buildUserData({
                     fbp: _fbp,
-                    fbc: fbc || ''
-                },
+                    fbc: fbc,
+                    clientIp: client_ip_address,
+                    clientUserAgent: client_user_agent
+                }),
                 custom_data: {
                     content_name: 'Health Insurance Lead',
                     content_category: 'Health Insurance',

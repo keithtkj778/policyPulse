@@ -1,5 +1,15 @@
 const fetch = require('node-fetch');
 
+// Standardized user data builder - ensures all files use same structure
+function buildUserData({ fbp, fbc, clientIp, clientUserAgent }) {
+    return {
+        client_ip_address: clientIp ? clientIp.split(',')[0].trim() : 'unknown',
+        client_user_agent: clientUserAgent || 'unknown',
+        fbp: fbp || '',
+        fbc: fbc || ''
+    };
+}
+
 async function sendFacebookEvents({ pixelId, accessToken, payload }) {
     if (!pixelId || !accessToken) {
         throw new Error('Missing Facebook Pixel ID or Access Token');
@@ -23,7 +33,8 @@ async function sendFacebookEvents({ pixelId, accessToken, payload }) {
 }
 
 module.exports = {
-    sendFacebookEvents
+    sendFacebookEvents,
+    buildUserData
 };
 
 

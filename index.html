@@ -842,8 +842,8 @@
             }
 
             // 2️⃣ SENDS TO FACEBOOK CONVERSIONS API VIA NETLIFY
-                const fbp = getCookie('_fbp') || `fb.1.${Date.now()}.${Math.random().toString(36).substr(2, 9)}`;
-                const fbc = getCookie('_fbc') || `fb.1.${Date.now()}.${Math.random().toString(36).substr(2, 9)}`;
+                const fbp = getCookie('_fbp') || '';
+                const fbc = getCookie('_fbc') || '';
                 
             // Send to our Netlify CAPI function
             fetch('/.netlify/functions/facebook-capi', {
