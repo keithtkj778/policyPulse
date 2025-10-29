@@ -14,7 +14,7 @@ Deduplication: Uses same event_id as pixel for automatic Facebook deduplication
 const fetch = require('node-fetch');
 
 // Facebook Pixel API configuration
-const FACEBOOK_PIXEL_ID = '1601325491243806';
+const FACEBOOK_PIXEL_ID = '2268409500330056';
 const FACEBOOK_ACCESS_TOKEN = 'EAAQbjZBojicsBP85ZCvTbiLMQ6WA9RIlnNZCiDILZAdZAZCaqDYvVhYbqIiZBCUlZBksVpD5oi7ocZCNqjVsliyKrUKZBpaERiKi57PT9VlmyV4zulVOdPM1SlSUVibrevaf5zWUfSesinCRQureCXLPmjuqqUMKZBOq67RUooj0DRSaDcECmEa4x7QN2TuC4POcf4ilQZDZD';
 
 // Facebook Conversions API endpoint

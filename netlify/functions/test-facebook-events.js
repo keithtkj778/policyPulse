@@ -14,7 +14,7 @@ Facebook Integration: Sends to Facebook's API directly, not through our CAPI fun
 const fetch = require('node-fetch');
 
 // Facebook Pixel API configuration
-const FACEBOOK_PIXEL_ID = '1601325491243806';
+const FACEBOOK_PIXEL_ID = '2268409500330056';
 const FACEBOOK_ACCESS_TOKEN = 'EAAZA3IukzApIBP59YeDce8KudQBnfwRU8mV5n0lkTBrfnyKlvjQj8qwniiBOBEyQWasssZAYohRmqOEvQVq9Aj6P10gSKuUqmvkZBl75qyBQjZAbegV4eZBfUGucKBrktvVoXWXc6xGEMaP5hlZBOXHLhN0ijFlGbOkUO2RvBGIbCYefdqMNwIsr9BAYt56wZDZD';
 
 // Facebook Conversions API endpoint
