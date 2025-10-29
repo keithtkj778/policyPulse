@@ -37,11 +37,16 @@ exports.handler = async (event, context) => {
         // Test event code from Facebook Events Manager
         const testEventCode = 'TEST98765';
         
+        // Derive client IP and user agent from the incoming request (like index.html does via get-ip)
+        const clientIpHeader = event.headers['client-ip'] || event.headers['x-forwarded-for'] || event.headers['x-real-ip'] || '';
+        const clientIp = (clientIpHeader || '').split(',')[0].trim() || 'unknown';
+        const clientUserAgent = event.headers['user-agent'] || 'unknown';
+
         // Build three events to mimic your site: PageView, CTAClicked, Lead
         const now = Math.floor(Date.now() / 1000);
         const testUserData = {
-            client_ip_address: '192.168.1.1',
-            client_user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            client_ip_address: clientIp,
+            client_user_agent: clientUserAgent,
             fbp: 'fb.1.1234567890.1234567890',
             fbc: 'fb.1.1234567890.1234567890'
         };
