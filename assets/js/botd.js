@@ -165,6 +165,22 @@ function setupMotionTracking() {
   });
 }
 
+// Reset bot detection state for fresh page load
+function resetBotDetectionState() {
+    botDetected = false;
+    honeypotInteractions = 0;
+    humanBehaviorValidated = false;
+    eventsBlocked = false;
+    sessionStartTime = Date.now();
+    tabVisible = false;
+    hasScrolled = false;
+    hasPointerMoved = false;
+    motionEntropy = [];
+    botdResult = null;
+    botdClassification = null;
+    console.log('Bot detection state reset for fresh page load');
+}
+
 // Expose API if needed
 window.initializeBotD = initializeBotD;
 window.validateHumanBehavior = validateHumanBehavior;
@@ -172,5 +188,6 @@ window.blockBotSession = blockBotSession;
 window.setupHoneypotMonitoring = setupHoneypotMonitoring;
 window.setupTabVisibilityMonitoring = setupTabVisibilityMonitoring;
 window.setupMotionTracking = setupMotionTracking;
+window.resetBotDetectionState = resetBotDetectionState;
 
 

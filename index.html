@@ -871,19 +871,9 @@
         document.addEventListener('DOMContentLoaded', async () => {
             console.log('Initializing FingerprintJS BotD + behavioral gates...');
             
-            // Reset state for fresh session
-            botDetected = false;
-            honeypotInteractions = 0;
-            humanBehaviorValidated = false;
-            eventsBlocked = false;
-            sessionStartTime = Date.now();
-            tabVisible = false;
-            hasScrolled = false;
-            hasPointerMoved = false;
-            motionEntropy = [];
+            // Reset state for fresh session using centralized function
+            resetBotDetectionState();
             initialScrollY = window.scrollY; // Capture initial scroll position
-            botdResult = null;
-            botdClassification = null;
             
             // Initialize FingerprintJS BotD
             await initializeBotD();
