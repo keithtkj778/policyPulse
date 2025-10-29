@@ -26,7 +26,7 @@ exports.handler = async (event, context) => {
     
     try {
         // Test event code from Facebook Events Manager
-        const testEventCode = 'TEST50276';
+        const testEventCode = 'TEST98765';
         
         // Test data with the test event code
         const testEvent = {
