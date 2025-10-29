@@ -20,14 +20,13 @@ Notes:
 ================================================================================
 */
 
-const fetch = require('node-fetch');
+const { sendFacebookEvents } = require('./facebook-lib');
 
 // Facebook Pixel API configuration
 const FACEBOOK_PIXEL_ID = '2268409500330056';
 const FACEBOOK_ACCESS_TOKEN = 'EAAQbjZBojicsBP85ZCvTbiLMQ6WA9RIlnNZCiDILZAdZAZCaqDYvVhYbqIiZBCUlZBksVpD5oi7ocZCNqjVsliyKrUKZBpaERiKi57PT9VlmyV4zulVOdPM1SlSUVibrevaf5zWUfSesinCRQureCXLPmjuqqUMKZBOq67RUooj0DRSaDcECmEa4x7QN2TuC4POcf4ilQZDZD';
 
-// Facebook Conversions API endpoint
-const FACEBOOK_CONVERSIONS_API = `https://graph.facebook.com/v18.0/${FACEBOOK_PIXEL_ID}/events?access_token=${FACEBOOK_ACCESS_TOKEN}`;
+// Use shared sender from facebook-lib
 
 exports.handler = async (event, context) => {
     // Set function timeout
@@ -109,59 +108,35 @@ exports.handler = async (event, context) => {
             test_event_code: testEventCode
         };
 
-        console.log('Sending test event to Facebook with test code:', testEventCode);
+        console.log('Sending test event via shared lib with test code:', testEventCode);
         console.log('Test event data:', JSON.stringify(testEvent, null, 2));
 
-        // Send test event to Facebook Conversions API
-        const response = await fetch(FACEBOOK_CONVERSIONS_API, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(testEvent)
+        const result = await sendFacebookEvents({
+            pixelId: FACEBOOK_PIXEL_ID,
+            accessToken: FACEBOOK_ACCESS_TOKEN,
+            payload: testEvent
         });
 
-        if (response.ok) {
-            const result = await response.json();
-            console.log('Test event sent successfully:', result);
-            
-            return {
-                statusCode: 200,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
-                body: JSON.stringify({
-                    success: true,
-                    message: 'Test event sent to Facebook Conversions API',
-                    test_event_code: testEventCode,
-                    facebook_response: result,
-                    instructions: [
-                        '1. Keep the Facebook Events Manager Test Events tab open',
-                        '2. Check if the test event appears in the Test Events tab',
-                        '3. Verify the event shows "Server" as the source',
-                        '4. If successful, your CAPI setup is working correctly!'
-                    ]
-                })
-            };
-        } else {
-            const error = await response.text();
-            console.error('Test event failed:', error);
-            
-            return {
-                statusCode: 500,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
-                body: JSON.stringify({
-                    success: false,
-                    error: 'Test event failed',
-                    details: error,
-                    test_event_code: testEventCode
-                })
-            };
-        }
+        console.log('Test event sent successfully:', result);
+        return {
+            statusCode: 200,
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            },
+            body: JSON.stringify({
+                success: true,
+                message: 'Test event sent to Facebook Conversions API',
+                test_event_code: testEventCode,
+                facebook_response: result,
+                instructions: [
+                    '1. Keep the Facebook Events Manager Test Events tab open',
+                    '2. Check if the test event appears in the Test Events tab',
+                    '3. Verify the event shows "Server" as the source',
+                    '4. If successful, your CAPI setup is working correctly!'
+                ]
+            })
+        };
 
     } catch (error) {
         console.error('Error in test function:', error);

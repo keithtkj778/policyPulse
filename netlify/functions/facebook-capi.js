@@ -11,14 +11,13 @@ Deduplication: Uses same event_id as pixel for automatic Facebook deduplication
 ================================================================================
 */
 
-const fetch = require('node-fetch');
+const { sendFacebookEvents } = require('./facebook-lib');
 
 // Facebook Pixel API configuration
 const FACEBOOK_PIXEL_ID = '2268409500330056';
 const FACEBOOK_ACCESS_TOKEN = 'EAAQbjZBojicsBP85ZCvTbiLMQ6WA9RIlnNZCiDILZAdZAZCaqDYvVhYbqIiZBCUlZBksVpD5oi7ocZCNqjVsliyKrUKZBpaERiKi57PT9VlmyV4zulVOdPM1SlSUVibrevaf5zWUfSesinCRQureCXLPmjuqqUMKZBOq67RUooj0DRSaDcECmEa4x7QN2TuC4POcf4ilQZDZD';
 
-// Facebook Conversions API endpoint
-const FACEBOOK_CONVERSIONS_API = `https://graph.facebook.com/v18.0/${FACEBOOK_PIXEL_ID}/events?access_token=${FACEBOOK_ACCESS_TOKEN}`;
+// Using shared sender from facebook-lib
 
 exports.handler = async (event, context) => {
     // Set function timeout
@@ -113,51 +112,28 @@ exports.handler = async (event, context) => {
             }]
         };
 
-        console.log('Sending to Facebook Conversions API:', facebookEvent);
+        console.log('Sending to Facebook Conversions API (shared lib):', facebookEvent);
 
-        // Send to Facebook Conversions API
-        const response = await fetch(FACEBOOK_CONVERSIONS_API, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(facebookEvent)
+        const result = await sendFacebookEvents({
+            pixelId: FACEBOOK_PIXEL_ID,
+            accessToken: FACEBOOK_ACCESS_TOKEN,
+            payload: facebookEvent
         });
 
-        if (response.ok) {
-            const result = await response.json();
-            console.log('Facebook CAPI event sent successfully:', result);
-            
-            return {
-                statusCode: 200,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
-                body: JSON.stringify({
-                    success: true,
-                    message: 'Event sent to Facebook Conversions API',
-                    event_id: facebookEvent.data[0].event_id,
-                    facebook_response: result
-                })
-            };
-        } else {
-            const error = await response.text();
-            console.error('Facebook CAPI error:', error);
-            
-            return {
-                statusCode: 500,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
-                body: JSON.stringify({
-                    success: false,
-                    error: 'Facebook CAPI error',
-                    details: error
-                })
-            };
-        }
+        console.log('Facebook CAPI event sent successfully:', result);
+        return {
+            statusCode: 200,
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            },
+            body: JSON.stringify({
+                success: true,
+                message: 'Event sent to Facebook Conversions API',
+                event_id: facebookEvent.data[0].event_id,
+                facebook_response: result
+            })
+        };
 
     } catch (error) {
         console.error('Error in Facebook CAPI function:', error);
