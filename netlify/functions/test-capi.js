@@ -1,12 +1,22 @@
 /*
 ================================================================================
-CAPI TEST FUNCTION
+CAPI PIPELINE TEST FUNCTION (VIA OUR ENDPOINT, NO TEST CODE)
 ================================================================================
-Purpose: Tests the Facebook Conversions API function with sample data
-When Used: For debugging and verifying CAPI function works correctly
-Process: 1. Sends test PageView event to facebook-capi function
-         2. Returns response for verification
-Test Data: Uses sample fbp, fbc, IP, and user agent for testing
+Purpose: Test our Netlify function pipeline by calling /.netlify/functions/facebook-capi with sample event data.
+When to Use: To verify our endpoint accepts POST and forwards to Facebook successfully.
+
+How it works:
+1) Sends a PageView to our facebook-capi endpoint (not directly to Facebook)
+2) Does NOT include test_event_code; may NOT show in Facebook Test Events tab
+3) Useful to validate our function route, auth, payload structure, and error handling
+
+How to trigger:
+- Browser: https://policypulse.online/.netlify/functions/test-capi
+- Terminal: curl https://policypulse.online/.netlify/functions/test-capi
+
+Notes:
+- Does NOT appear in Test Events (no test_event_code)
+- Use test-facebook-events function if you need to see events in Test Events
 ================================================================================
 */
 

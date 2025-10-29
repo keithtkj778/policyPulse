@@ -13,6 +13,26 @@ Test Data: Uses sample fbp, fbc, IP, and conversion data for testing
 
 const fetch = require('node-fetch');
 
+/*
+================================================================================
+MAXBOUNTY POSTBACK TEST RECEIVER (LOCAL ECHO)
+================================================================================
+Purpose: Simple endpoint to simulate/inspect incoming MaxBounty postbacks.
+When to Use: To verify MaxBounty can reach your callback URL and sends expected params.
+
+How it works:
+1) Accepts any GET query params and returns them in JSON (echo)
+2) Does NOT forward to Facebook; this is for inspection only
+
+How to trigger:
+- Browser: https://policypulse.online/.netlify/functions/test-postback?s1=foo&s4=fbp&s5=fbc
+- MaxBounty: Temporarily use this URL in dashboard to test connectivity
+
+Notes:
+- For real conversions, use /.netlify/functions/postback which forwards to Facebook CAPI
+================================================================================
+*/
+
 exports.handler = async (event, context) => {
     // Set function timeout
     context.callbackWaitsForEmptyEventLoop = false;

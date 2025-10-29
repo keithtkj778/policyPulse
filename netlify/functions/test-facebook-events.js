@@ -1,13 +1,22 @@
 /*
 ================================================================================
-FACEBOOK EVENTS TEST FUNCTION
+FACEBOOK EVENTS TEST FUNCTION (DIRECT TO FB + TEST CODE)
 ================================================================================
-Purpose: Tests Facebook Conversions API directly with test event code
-When Used: For verifying Facebook CAPI setup with Events Manager test code
-Process: 1. Sends test event directly to Facebook with test_event_code
-         2. Uses test code TEST50276 for Facebook Events Manager validation
-         3. Returns success/failure response
-Facebook Integration: Sends to Facebook's API directly, not through our CAPI function
+Purpose: Send a DIRECT server event to Facebook's Conversions API using a test_event_code.
+When to Use: To validate in Facebook Events Manager > Test Events that your Pixel receives server events.
+
+How it works:
+1) Sends a PageView directly to Facebook's /events endpoint (bypasses our CAPI function)
+2) Includes test_event_code = TEST98765 so it appears in the Test Events tab
+3) Verifies Pixel ID + Access Token are valid and accepted by Facebook
+
+How to trigger:
+- Browser: https://policypulse.online/.netlify/functions/test-facebook-events
+- Terminal: curl https://policypulse.online/.netlify/functions/test-facebook-events
+
+Notes:
+- APPEARS in the Test Events stream (because test_event_code is included)
+- Does NOT validate our facebook-capi function path; it talks to Facebook directly
 ================================================================================
 */
 
