@@ -37,27 +37,69 @@ exports.handler = async (event, context) => {
         // Test event code from Facebook Events Manager
         const testEventCode = 'TEST98765';
         
-        // Test data with the test event code
+        // Build three events to mimic your site: PageView, CTAClicked, Lead
+        const now = Math.floor(Date.now() / 1000);
+        const testUserData = {
+            client_ip_address: '192.168.1.1',
+            client_user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            fbp: 'fb.1.1234567890.1234567890',
+            fbc: 'fb.1.1234567890.1234567890'
+        };
+
+        const pageViewEvent = {
+            event_name: 'PageView',
+            event_time: now,
+            action_source: 'website',
+            user_data: testUserData,
+            custom_data: {
+                content_name: 'Health Insurance Lead',
+                content_category: 'Health Insurance',
+                value: 0,
+                currency: 'USD',
+                primary_angle: 'one_bill_away'
+            },
+            event_source_url: 'https://policypulse.online',
+            event_id: `test_pv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+        };
+
+        const ctaClickedEvent = {
+            event_name: 'CTAClicked',
+            event_time: now,
+            action_source: 'website',
+            user_data: testUserData,
+            custom_data: {
+                content_name: 'Health Insurance Lead',
+                content_category: 'Health Insurance',
+                value: 3,
+                currency: 'USD',
+                primary_angle: 'one_bill_away',
+                page_duration: 5,
+                conversion_trigger: 'direct_cta'
+            },
+            event_source_url: 'https://policypulse.online',
+            event_id: `test_cta_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+        };
+
+        const leadEvent = {
+            event_name: 'Lead',
+            event_time: now,
+            action_source: 'website',
+            user_data: testUserData,
+            custom_data: {
+                content_name: 'Health Insurance Lead',
+                content_category: 'Health Insurance',
+                value: 7,
+                currency: 'USD',
+                primary_angle: 'one_bill_away',
+                page_duration: 12,
+                conversion_trigger: 'test_lead'
+            },
+            event_source_url: 'https://policypulse.online',
+            event_id: `test_lead_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+        };
+
         const testEvent = {
-            data: [{
-                event_name: 'PageView',
-                event_time: Math.floor(Date.now() / 1000),
-                action_source: 'website',
-                user_data: {
-                    client_ip_address: '192.168.1.1',
-                    client_user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-                    fbp: 'fb.1.1234567890.1234567890',
-                    fbc: 'fb.1.1234567890.1234567890'
-                },
-                custom_data: {
-                    content_name: 'Health Insurance Lead Test',
-                    content_category: 'Health Insurance',
-                    value: 0,
-                    currency: 'USD'
-                },
-                event_source_url: 'https://policypulse.online',
-                event_id: `test_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-            }],
+            data: [pageViewEvent, ctaClickedEvent, leadEvent],
             // Test event code must be at root level
             test_event_code: testEventCode
         };
