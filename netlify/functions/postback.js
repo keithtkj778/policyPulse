@@ -30,12 +30,12 @@ Instructions:
 
 Parameter Mapping:
 - #S1# = MaxBounty Affiliate ID (765749)
-- #S2# = MaxBounty Session ID (328562336)
-- #S3# = Your Facebook Pixel ID (fbp)
-- #S4# = Your Facebook Click ID (fbc)
-- #S5# = Your User Agent String
+- #S2# = MaxBounty Session ID (auto-generated)
+- #S3# = Facebook Browser ID (fbp) - appended by go-firstquote.js
+- #S4# = Facebook Click ID (fbc) - appended by go-firstquote.js
+- #S5# = User Agent String - appended by go-firstquote.js
 - #OFFID# = Campaign ID
-- #IP# = MaxBounty IP Address (used directly)
+- #IP# = User IP Address from MaxBounty (used directly)
 - #RATE# = Commission Rate
 - #SALE# = Sale Amount
 - #CONVERSION_ID# = Conversion ID
@@ -60,24 +60,22 @@ exports.handler = async (event, context) => {
         // Extract MaxBounty callback parameters
         const {
             s1,      // MaxBounty affiliate ID (765749)
-            s2,      // MaxBounty session ID (328562336)
-            s3,      // Our angle parameter
-            s4,      // Our Facebook pixel ID (fbp)
-            s5,      // Our Facebook click ID (fbc)
-            s6,      // Our real user IP address (from MaxBounty postback)
-            s7,      // Our real user agent (from MaxBounty postback)
+            s2,      // MaxBounty session ID (auto-generated)
+            s3,      // Facebook Browser ID (fbp) - appended by go-firstquote.js
+            s4,      // Facebook Click ID (fbc) - appended by go-firstquote.js
+            s5,      // User Agent String - appended by go-firstquote.js
             OFFID,   // Campaign ID
-            IP,      // MaxBounty's IP address
+            IP,      // User IP Address from MaxBounty
             RATE,    // Commission rate
             SALE,    // Sale amount
             CONVERSION_ID // Conversion ID
         } = event.queryStringParameters || {};
 
         // Map to our tracking variables
-        const fbp = s3;    // Our fbp is in s3
-        const fbc = s4;    // Our fbc is in s4
-        const userAgent = s5 || 'MaxBounty Postback';  // Our user agent is in s5
-        const userIP = IP; // Use MaxBounty's IP directly
+        const fbp = s3;    // Facebook Browser ID from s3
+        const fbc = s4;    // Facebook Click ID from s4
+        const userAgent = s5 || 'MaxBounty Postback';  // User Agent from s5
+        const userIP = IP; // Use MaxBounty's IP parameter directly
 
         console.log('Extracted tracking data:', {
             fbp: fbp,
@@ -103,11 +101,11 @@ exports.handler = async (event, context) => {
 
         // Fire Facebook Pixel Lead event via our CAPI function
         await fireFacebookPixelLead({
-            fbp: fbp,          // Facebook pixel ID (from s4)
-            fbc: fbc,          // Facebook click ID (from s5)
+            fbp: fbp,          // Facebook Browser ID (from s3)
+            fbc: fbc,          // Facebook Click ID (from s4)
             campaignId: OFFID,
-            ip: userIP,        // Real user IP (from s6)
-            userAgent: userAgent, // Real user agent (from s7)
+            ip: userIP,        // User IP from MaxBounty's IP parameter
+            userAgent: userAgent, // User agent from s5 (appended by go-firstquote.js)
             rate: RATE,
             sale: SALE,
             conversionId: CONVERSION_ID
