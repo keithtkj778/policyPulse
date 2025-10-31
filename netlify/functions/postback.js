@@ -89,17 +89,12 @@ exports.handler = async (event, context) => {
             conversionId: CONVERSION_ID
         });
 
-        // Validate required parameters
+        // Log warning if tracking parameters are missing (but still proceed to send)
         if (!fbp || !fbc) {
-            console.log('Missing required tracking parameters');
-            return {
-                statusCode: 400,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ error: 'Missing required parameters' })
-            };
+            console.log('⚠️  Missing fbp/fbc tracking parameters - will send to Facebook with available data (IP, user agent, etc.)');
         }
 
-        // Fire Facebook Pixel Lead event via our CAPI function
+        // Fire Facebook Pixel Lead event via our CAPI function (always send, even if fbp/fbc missing)
         await fireFacebookPixelLead({
             fbp: fbp,          // Facebook Browser ID (from s3)
             fbc: fbc,          // Facebook Click ID (from s4)
@@ -162,10 +157,10 @@ async function fireFacebookPixelLead(trackingData) {
     try {
         const eventData = {
             event_name: 'Lead',
-            _fbp: trackingData.fbp,
-            fbc: trackingData.fbc,
-            client_ip_address: trackingData.ip,
-            client_user_agent: trackingData.userAgent,
+            _fbp: trackingData.fbp || '',  // Empty string if missing (Facebook will match using IP/user agent)
+            fbc: trackingData.fbc || '',    // Empty string if missing
+            client_ip_address: trackingData.ip || 'unknown',
+            client_user_agent: trackingData.userAgent || 'MaxBounty Postback',
             value: trackingData.sale || 7,  // Default $7 per lead if no sale amount
             event_id: trackingData.conversionId || `conv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
         };
