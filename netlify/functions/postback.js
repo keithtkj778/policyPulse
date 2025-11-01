@@ -48,13 +48,18 @@ exports.handler = async (event, context) => {
     // Set function timeout
     context.callbackWaitsForEmptyEventLoop = false;
     
-    // Log the incoming request
-    console.log('MaxBounty postback received:', {
-        method: event.httpMethod,
-        queryString: event.queryStringParameters,
-        headers: event.headers,
-        body: event.body
+    // Log the incoming request with key info
+    const hasParams = event.queryStringParameters && Object.keys(event.queryStringParameters).length > 0;
+    console.log(`✅ [postback] MaxBounty postback received: ${event.httpMethod}`, {
+        has_params: hasParams,
+        param_count: hasParams ? Object.keys(event.queryStringParameters).length : 0,
+        user_agent: event.headers['user-agent']?.substring(0, 50) || 'unknown',
+        ip: event.headers['x-forwarded-for'] || event.headers['client-ip'] || 'unknown'
     });
+
+    if (!hasParams) {
+        console.warn('⚠️  [postback] WARN: No query parameters received - likely a verification/health check call');
+    }
 
     try {
         // Extract MaxBounty callback parameters
@@ -77,21 +82,33 @@ exports.handler = async (event, context) => {
         const userAgent = s5 || 'MaxBounty Postback';  // User Agent from s5
         const userIP = IP; // Use MaxBounty's IP parameter directly
 
-        console.log('Extracted tracking data:', {
-            fbp: fbp,
-            fbc: fbc,
-            maxBountyAffiliateId: s1,
-            maxBountySessionId: s2,
-            campaignId: OFFID,
-            ip: IP,
-            rate: RATE,
-            sale: SALE,
-            conversionId: CONVERSION_ID
+        console.log(`📊 [postback] Extracted conversion data:`, {
+            affiliate_id: s1 || 'MISSING',
+            session_id: s2 || 'MISSING',
+            fbp: fbp ? `${fbp.substring(0, 20)}...` : '❌ MISSING',
+            fbc: fbc ? `${fbc.substring(0, 20)}...` : '❌ MISSING',
+            user_agent: userAgent !== 'MaxBounty Postback' ? '✅ present' : '⚠️ missing',
+            campaign_id: OFFID || 'MISSING',
+            conversion_id: CONVERSION_ID || 'MISSING',
+            ip: IP || 'MISSING',
+            rate: RATE || 'MISSING',
+            sale: SALE || 'MISSING'
         });
 
         // Log warning if tracking parameters are missing (but still proceed to send)
         if (!fbp || !fbc) {
-            console.log('⚠️  Missing fbp/fbc tracking parameters - will send to Facebook with available data (IP, user agent, etc.)');
+            console.warn(`⚠️  [postback] RED FLAG: Missing fbp/fbc for conversion! Will send with reduced match quality`, {
+                has_fbp: !!fbp,
+                has_fbc: !!fbc,
+                has_ip: !!userIP && userIP !== 'unknown',
+                has_user_agent: userAgent !== 'MaxBounty Postback'
+            });
+        } else {
+            console.log(`✅ [postback] All tracking params present - good match quality expected`);
+        }
+
+        if (!s1) {
+            console.warn(`⚠️  [postback] WARN: Missing MaxBounty affiliate ID (s1) - cannot verify source`);
         }
 
         // Fire Facebook Pixel Lead event via our CAPI function (always send, even if fbp/fbc missing)
@@ -118,6 +135,13 @@ exports.handler = async (event, context) => {
         });
 
         // Return success response
+        console.log(`✅ [postback] Conversion processing complete`, {
+            conversion_id: CONVERSION_ID,
+            campaign_id: OFFID,
+            rate: RATE,
+            sale: SALE
+        });
+
         return {
             statusCode: 200,
             headers: {
@@ -139,7 +163,12 @@ exports.handler = async (event, context) => {
         };
 
     } catch (error) {
-        console.error('Error processing postback:', error);
+        console.error('🚨 [postback] CRITICAL ERROR: Exception processing MaxBounty postback', {
+            error: error.message,
+            stack: error.stack,
+            query_params: event.queryStringParameters,
+            timestamp: new Date().toISOString()
+        });
         
         return {
             statusCode: 500,
@@ -165,7 +194,13 @@ async function fireFacebookPixelLead(trackingData) {
             event_id: trackingData.conversionId || `conv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
         };
 
-        console.log('Firing Facebook Pixel Lead event via CAPI function:', eventData);
+        console.log(`📤 [postback] Sending Lead event to Facebook CAPI`, {
+            event_id: eventData.event_id,
+            has_fbp: !!eventData._fbp && eventData._fbp !== '',
+            has_fbc: !!eventData.fbc && eventData.fbc !== '',
+            has_ip: eventData.client_ip_address !== 'unknown',
+            value: eventData.value
+        });
 
         // Call our internal CAPI function
         const response = await fetch('https://policypulse.online/.netlify/functions/facebook-capi', {
@@ -178,14 +213,28 @@ async function fireFacebookPixelLead(trackingData) {
 
         if (response.ok) {
             const result = await response.json();
-            console.log('Facebook Pixel Lead event fired successfully via CAPI:', result);
+            console.log(`✅ [postback] SUCCESS: Lead event sent to Facebook`, {
+                event_id: result.event_id,
+                facebook_response: result.facebook_response
+            });
         } else {
             const error = await response.text();
-            console.error('Facebook Pixel Lead event failed via CAPI:', error);
+            console.error(`🚨 [postback] ERROR: Failed to send Lead event to Facebook CAPI`, {
+                status: response.status,
+                error: error.substring(0, 500),
+                event_data: {
+                    event_id: eventData.event_id,
+                    has_fbp: !!eventData._fbp
+                }
+            });
         }
 
     } catch (error) {
-        console.error('Error firing Facebook Pixel Lead event via CAPI:', error);
+        console.error('🚨 [postback] CRITICAL ERROR: Exception while sending Lead event to CAPI', {
+            error: error.message,
+            stack: error.stack,
+            timestamp: new Date().toISOString()
+        });
     }
 }
 

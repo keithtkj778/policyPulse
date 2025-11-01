@@ -41,25 +41,58 @@ function buildUserData({ fbp, fbc, clientIp, clientUserAgent }) {
 }
 
 async function sendFacebookEvents({ pixelId, accessToken, payload }) {
-    if (!pixelId || !accessToken) {
-        throw new Error('Missing Facebook Pixel ID or Access Token');
+    if (!pixelId) {
+        console.error('🚨 [facebook-lib] CRITICAL: Missing pixelId');
+        throw new Error('Missing Facebook Pixel ID');
     }
-    const endpoint = `https://graph.facebook.com/v18.0/${pixelId}/events?access_token=${accessToken}`;
+    if (!accessToken) {
+        console.error('🚨 [facebook-lib] CRITICAL: Missing accessToken');
+        throw new Error('Missing Facebook Access Token');
+    }
 
-    const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+    const endpoint = `https://graph.facebook.com/v18.0/${pixelId}/events?access_token=${accessToken.substring(0, 10)}...`;
+    const eventCount = payload?.data?.length || 0;
+    
+    console.log(`📤 [facebook-lib] Calling Facebook CAPI`, {
+        endpoint: `v18.0/${pixelId}/events`,
+        event_count: eventCount,
+        has_access_token: !!accessToken
     });
 
-    if (!response.ok) {
-        const errorText = await response.text();
-        const err = new Error(`Facebook CAPI error: ${errorText}`);
-        err.status = response.status;
-        throw err;
-    }
+    try {
+        const response = await fetch(`https://graph.facebook.com/v18.0/${pixelId}/events?access_token=${accessToken}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
 
-    return response.json();
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`🚨 [facebook-lib] Facebook CAPI error:`, {
+                status: response.status,
+                status_text: response.statusText,
+                error: errorText.substring(0, 500),
+                pixel_id: pixelId
+            });
+            const err = new Error(`Facebook CAPI error: ${errorText}`);
+            err.status = response.status;
+            throw err;
+        }
+
+        const result = await response.json();
+        if (result.events_received !== eventCount) {
+            console.warn(`⚠️  [facebook-lib] WARN: Expected ${eventCount} events, Facebook received ${result.events_received}`);
+        }
+        
+        return result;
+    } catch (fetchError) {
+        console.error(`🚨 [facebook-lib] CRITICAL: Network/API error`, {
+            error: fetchError.message,
+            status: fetchError.status,
+            endpoint: `v18.0/${pixelId}/events`
+        });
+        throw fetchError;
+    }
 }
 
 module.exports = {

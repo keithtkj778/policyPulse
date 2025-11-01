@@ -95,7 +95,17 @@ exports.handler = async (event, context) => {
 
     try {
         // Parse form data
-        const formData = new URLSearchParams(event.body);
+        let formData;
+        try {
+            formData = new URLSearchParams(event.body);
+            console.log(`✅ [go-firstquote] CTA click received from ${event.headers['user-agent']?.substring(0, 50) || 'unknown'}`);
+        } catch (parseError) {
+            console.error('🚨 [go-firstquote] ERROR: Failed to parse form data', {
+                error: parseError.message,
+                body: event.body?.substring(0, 200)
+            });
+            throw parseError;
+        }
         
         // Extract tracking parameters
         const angle = formData.get('angle') || 'prelander';
@@ -104,7 +114,20 @@ exports.handler = async (event, context) => {
         const userIP = formData.get('user_ip') || 'unknown';
         const userAgent = formData.get('user_agent') || 'unknown';
 
-        console.log("Received tracking data:", { angle, fbp, fbc, userIP, userAgent });
+        console.log(`📊 [go-firstquote] Tracking data extracted:`, {
+            angle: angle || '❌ MISSING',
+            fbp: fbp && fbp !== `click_${Date.now()}` ? `${fbp.substring(0, 20)}...` : '⚠️ generated fallback',
+            fbc: fbc && fbc !== '0' ? `${fbc.substring(0, 20)}...` : '⚠️ fallback',
+            ip: userIP !== 'unknown' ? '✅ present' : '❌ MISSING',
+            user_agent: userAgent !== 'unknown' ? '✅ present' : '❌ MISSING'
+        });
+
+        if (!fbp || fbp.startsWith('click_')) {
+            console.warn(`⚠️  [go-firstquote] WARN: fbp missing or fallback - tracking may be incomplete`);
+        }
+        if (!fbc || fbc === '0') {
+            console.warn(`⚠️  [go-firstquote] WARN: fbc missing or fallback - tracking may be incomplete`);
+        }
 
         // Note: Tracking data is now passed directly via URL parameters to MaxBounty
 
@@ -114,8 +137,9 @@ exports.handler = async (event, context) => {
         let hops = 0;
         const maxHops = 8;
 
+        console.log(`🔄 [go-firstquote] Following MaxBounty redirect chain (max ${maxHops} hops)`);
         while (hops < maxHops && nextURL && isValidUrl(nextURL)) {
-            console.log(`Following redirect hop ${hops + 1}: ${nextURL}`);
+            console.log(`  → Hop ${hops + 1}/${maxHops}: ${nextURL.substring(0, 100)}...`);
             
             try {
                 const resp = await safeFetch(nextURL, { 
@@ -125,8 +149,6 @@ exports.handler = async (event, context) => {
                     }
                 });
 
-                console.log(`Response status: ${resp.status}`);
-
                 if (resp.status >= 300 && resp.status < 400) {
                     const location = resp.headers.get("location");
                     if (location && isValidUrl(location)) {
@@ -134,26 +156,29 @@ exports.handler = async (event, context) => {
                         finalURL = location;
                         hops++;
                     } else {
-                        console.log("Invalid location header, breaking");
+                        console.warn(`⚠️  [go-firstquote] WARN: Invalid location header on hop ${hops + 1}, stopping`);
                         break;
                     }
                 } else {
-                    console.log("Reached final destination");
+                    console.log(`✅ [go-firstquote] Reached final destination after ${hops} redirect(s)`);
                     break;
                 }
             } catch (fetchError) {
-                console.error(`Fetch error on hop ${hops + 1}:`, fetchError.message);
+                console.error(`🚨 [go-firstquote] ERROR: Fetch failed on hop ${hops + 1}`, {
+                    error: fetchError.message,
+                    url: nextURL?.substring(0, 100)
+                });
                 break;
             }
         }
 
         // If we couldn't get final URL, use MaxBounty URL as fallback
         if (!finalURL || !isValidUrl(finalURL)) {
-            console.log("Failed to resolve final URL - using MaxBounty URL");
+            console.warn(`⚠️  [go-firstquote] WARN: Failed to resolve final URL after ${hops} hops - using fallback`);
             finalURL = MAXBOUNTY_URL;
         }
 
-        console.log("Final URL from MaxBounty:", finalURL);
+        console.log(`✅ [go-firstquote] Final URL resolved: ${finalURL.substring(0, 100)}...`);
 
         // Now append our tracking to the final URL
         let offerURL;
@@ -165,10 +190,19 @@ exports.handler = async (event, context) => {
             offerURL.searchParams.set("s4", fbc);        // s4 = fbc  
             offerURL.searchParams.set("s5", userAgent);  // s5 = user agent
 
-            console.log("Final URL with our tracking:", offerURL.toString());
+            console.log(`✅ [go-firstquote] Tracking appended to URL:`, {
+                s3_fbp: fbp ? '✅' : '❌',
+                s4_fbc: fbc ? '✅' : '❌',
+                s5_user_agent: userAgent !== 'unknown' ? '✅' : '❌',
+                final_url_length: offerURL.toString().length
+            });
 
         } catch (urlError) {
-            console.error("Final URL construction failed:", urlError);
+            console.error(`🚨 [go-firstquote] CRITICAL ERROR: URL construction failed`, {
+                error: urlError.message,
+                final_url: finalURL?.substring(0, 100),
+                timestamp: new Date().toISOString()
+            });
             return {
                 statusCode: 302,
                 headers: { 'Location': MAXBOUNTY_URL }
@@ -176,6 +210,7 @@ exports.handler = async (event, context) => {
         }
 
         // Return JSON response with redirect URL
+        console.log(`✅ [go-firstquote] CTA redirect complete - returning URL to client`);
         return {
             statusCode: 200,
             headers: {
@@ -196,7 +231,12 @@ exports.handler = async (event, context) => {
         };
 
     } catch (error) {
-        console.error("Error in function:", error);
+        console.error(`🚨 [go-firstquote] CRITICAL ERROR: Exception in handler`, {
+            error: error.message,
+            stack: error.stack,
+            body: event.body?.substring(0, 200),
+            timestamp: new Date().toISOString()
+        });
         
         // Fallback to MaxBounty URL
         return {
