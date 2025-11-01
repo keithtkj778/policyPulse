@@ -793,18 +793,42 @@
         async function fireEventToPixelAndServer(eventName, eventData = {}) {
             // Block all events if bot detected
             if (botDetected || eventsBlocked) {
-                console.log(`Event blocked - bot detected: ${eventName}`);
+                const botDetails = {
+                    botDetected: botDetected,
+                    eventsBlocked: eventsBlocked,
+                    botdClassification: botdClassification || 'not-checked',
+                    honeypotInteractions: honeypotInteractions,
+                    humanBehaviorValidated: humanBehaviorValidated,
+                    timeOnPage: `${((Date.now() - sessionStartTime) / 1000).toFixed(2)}s`
+                };
+                
+                console.error(`🚨 [bot-detection] Event BLOCKED: ${eventName}`, {
+                    reason: 'Bot detected or events blocked',
+                    event_name: eventName,
+                    bot_details: botDetails,
+                    user_agent: navigator.userAgent,
+                    timestamp: new Date().toISOString()
+                });
                 return false;
             }
             
             // For PageView, require human behavior validation
             if (eventName === 'PageView' && !humanBehaviorValidated) {
                 if (!validateHumanBehavior()) {
-                    console.log('PageView blocked - human behavior not validated');
+                    console.warn(`⚠️  [bot-detection] PageView BLOCKED: Human behavior validation failed`, {
+                        event_name: eventName,
+                        behavior_state: {
+                            time_spent: `${((Date.now() - sessionStartTime) / 1000).toFixed(2)}s`,
+                            tab_visible: tabVisible,
+                            has_scrolled: hasScrolled,
+                            has_pointer_moved: hasPointerMoved
+                        },
+                        timestamp: new Date().toISOString()
+                    });
                     return false;
                 }
                 humanBehaviorValidated = true;
-                console.log('PageView released - human behavior validated');
+                console.log(`✅ [bot-detection] PageView RELEASED: Human behavior validated`);
             }
 
             // Get IP address and user agent from server
