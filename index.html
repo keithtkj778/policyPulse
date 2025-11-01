@@ -833,22 +833,31 @@
                 _fbc: fbc
             };
 
-            // Generate single event ID for consistency
+            // Generate single event ID for consistency - MUST be same for Pixel and CAPI deduplication
             const eventId = crypto?.randomUUID?.() || `evt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            
+            // Log event ID for debugging (verify Pixel and CAPI use same ID)
+            console.log(`[${eventName}] Using eventID: ${eventId} for both Pixel and CAPI`);
 
             // 1️⃣ SENDS TO FACEBOOK PIXEL (Direct)
             if (typeof fbq !== 'undefined') {
                 if (eventName === 'PageView') {
-                    fbq('track', 'PageView', cleanEventData);
+                    // PageView standard event with eventID for deduplication
+                    // Note: fbp/fbc are automatically read from cookies by Pixel
+                    // We still pass eventData for other custom parameters
+                    fbq('track', 'PageView', cleanEventData, {
+                        eventID: eventId // ✅ SAME event ID as CAPI
+                    });
                 } else {
+                    // Custom events can include all parameters in eventData
                     fbq('trackCustom', eventName, cleanEventData, {
-                        eventID: eventId //same event id as gtm for deduplication
+                        eventID: eventId // ✅ SAME event ID as CAPI
                     });
                 }
             }
 
             // 2️⃣ SENDS TO FACEBOOK CONVERSIONS API VIA NETLIFY
-            // Send to our Netlify CAPI function
+            // Send to our Netlify CAPI function with SAME event_id for deduplication
             fetch('/.netlify/functions/facebook-capi', {
                 method: 'POST',
                 headers: {
@@ -858,7 +867,7 @@
                     event_name: eventName,
                     _fbp: fbp,
                     fbc: fbc,
-                    event_id: eventId, //same event id as pixel for deduplication
+                    event_id: eventId, // ✅ SAME event ID as Pixel (eventID vs event_id is just naming convention)
                     ...cleanEventData
                 })
             }).catch(error => {

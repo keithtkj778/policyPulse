@@ -52,9 +52,24 @@ exports.handler = async (event, context) => {
 
     try {
         // Parse the request body
-        const eventData = JSON.parse(event.body);
-        
-        console.log('Received CAPI event:', eventData);
+        let eventData;
+        try {
+            eventData = JSON.parse(event.body);
+            console.log(`✅ [facebook-capi] Request received: ${event.httpMethod} from ${event.headers['user-agent']?.substring(0, 50) || 'unknown'}`);
+        } catch (parseError) {
+            console.error('🚨 [facebook-capi] ERROR: Invalid JSON in request body', {
+                error: parseError.message,
+                body: event.body?.substring(0, 200)
+            });
+            return {
+                statusCode: 400,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                body: JSON.stringify({ error: 'Invalid JSON in request body' })
+            };
+        }
 
         // Extract event details
         const {
@@ -72,17 +87,29 @@ exports.handler = async (event, context) => {
             ...customData
         } = eventData;
 
-        // Validate required parameters
-        if (!event_name || !_fbp) {
-            console.log('Missing required parameters');
+        // Validate required parameters with detailed logging
+        if (!event_name) {
+            console.error('🚨 [facebook-capi] ERROR: Missing event_name', { received: Object.keys(eventData) });
             return {
                 statusCode: 400,
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'
                 },
-                body: JSON.stringify({ error: 'Missing required parameters' })
+                body: JSON.stringify({ error: 'Missing required parameter: event_name' })
             };
+        }
+
+        if (!_fbp) {
+            console.warn(`⚠️  [facebook-capi] WARN: Missing _fbp for ${event_name} - will use empty string (may reduce match quality)`);
+        }
+
+        // Use provided event_id or generate fallback (should always be provided from frontend)
+        const finalEventId = event_id || `evt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        if (!event_id) {
+            console.warn(`⚠️  [facebook-capi] WARN: Missing event_id for ${event_name} - generated fallback: ${finalEventId} (deduplication may fail!)`);
+        } else {
+            console.log(`✅ [facebook-capi] ${event_name} event - event_id: ${finalEventId} | fbp: ${_fbp?.substring(0, 20) || 'missing'}... | fbc: ${fbc?.substring(0, 20) || 'missing'}...`);
         }
 
         // Prepare Facebook Conversions API payload
@@ -107,11 +134,28 @@ exports.handler = async (event, context) => {
                     conversion_trigger: conversion_trigger || 'unknown'
                 },
                 event_source_url: page_url || 'https://policypulse.online',
-                event_id: event_id || `evt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+                event_id: finalEventId // ✅ SAME event ID as Pixel (for deduplication)
             }]
         };
 
-        console.log('Sending to Facebook Conversions API (shared lib):', facebookEvent);
+        // Validate config before sending
+        if (!FACEBOOK_PIXEL_ID) {
+            console.error('🚨 [facebook-capi] CRITICAL ERROR: FACEBOOK_PIXEL_ID is missing! Check environment variables.');
+            throw new Error('FACEBOOK_PIXEL_ID environment variable is not set');
+        }
+        if (!FACEBOOK_ACCESS_TOKEN) {
+            console.error('🚨 [facebook-capi] CRITICAL ERROR: FACEBOOK_ACCESS_TOKEN is missing! Check environment variables.');
+            throw new Error('FACEBOOK_ACCESS_TOKEN environment variable is not set');
+        }
+
+        console.log(`📤 [facebook-capi] Sending ${event_name} to Facebook CAPI`, {
+            pixel_id: FACEBOOK_PIXEL_ID,
+            event_id: finalEventId,
+            has_fbp: !!_fbp,
+            has_fbc: !!fbc,
+            has_ip: !!client_ip_address && client_ip_address !== 'unknown',
+            has_user_agent: !!client_user_agent && client_user_agent !== 'unknown'
+        });
 
         const result = await sendFacebookEvents({
             pixelId: FACEBOOK_PIXEL_ID,
@@ -119,7 +163,15 @@ exports.handler = async (event, context) => {
             payload: facebookEvent
         });
 
-        console.log('Facebook CAPI event sent successfully:', result);
+        if (result.events_received && result.events_received > 0) {
+            console.log(`✅ [facebook-capi] SUCCESS: ${event_name} sent to Facebook`, {
+                event_id: finalEventId,
+                events_received: result.events_received,
+                messages: result.messages || []
+            });
+        } else {
+            console.warn(`⚠️  [facebook-capi] WARN: ${event_name} may not have been processed by Facebook`, result);
+        }
         return {
             statusCode: 200,
             headers: {
@@ -135,7 +187,12 @@ exports.handler = async (event, context) => {
         };
 
     } catch (error) {
-        console.error('Error in Facebook CAPI function:', error);
+        console.error('🚨 [facebook-capi] CRITICAL ERROR:', {
+            error: error.message,
+            stack: error.stack,
+            event_name: event?.body ? JSON.parse(event.body)?.event_name : 'unknown',
+            timestamp: new Date().toISOString()
+        });
         
         return {
             statusCode: 500,
