@@ -77,33 +77,96 @@ async function initializeBotD() {
     const botd = await botdPromise;
     botdResult = await botd.detect();
     botdClassification = botdResult.bot;
+    
+    console.log(`🤖 [bot-detection] FingerprintJS BotD result:`, {
+      classification: botdClassification,
+      confidence: botdResult?.confidence || 'unknown',
+      details: botdResult || 'no details'
+    });
+    
     if (botdClassification === 'bad' || botdClassification === 'suspect') {
       botDetected = true;
       eventsBlocked = true;
-      console.log('Bot detected by FingerprintJS BotD:', botdClassification);
+      console.error(`🚨 [bot-detection] BOT DETECTED: FingerprintJS BotD flagged as "${botdClassification}"`, {
+        reason: 'FingerprintJS BotD detection',
+        classification: botdClassification,
+        confidence: botdResult?.confidence || 'unknown',
+        user_agent: navigator.userAgent,
+        timestamp: new Date().toISOString(),
+        action: 'All events blocked, CTAs hidden'
+      });
+    } else {
+      console.log(`✅ [bot-detection] FingerprintJS BotD: Human-like (${botdClassification})`);
     }
   } catch (error) {
-    console.error('BotD initialization failed:', error);
+    console.error('🚨 [bot-detection] BotD initialization failed:', {
+      error: error.message,
+      stack: error.stack,
+      timestamp: new Date().toISOString()
+    });
   }
 }
 
 // Check if behavior indicates human (lightweight behavioral gates)
 function validateHumanBehavior() {
   const timeSpent = (Date.now() - sessionStartTime) / 1000;
-  if (timeSpent < 2) return false;
-  if (!tabVisible) return false;
-  if (!hasScrolled && !hasPointerMoved && timeSpent < 5) return false;
+  const failures = [];
+  
+  // Check each behavioral gate
+  if (timeSpent < 2) {
+    failures.push(`Time spent too short: ${timeSpent.toFixed(2)}s (required: 2s+)`);
+  }
+  if (!tabVisible) {
+    failures.push('Tab not visible (page hidden/background)');
+  }
+  if (!hasScrolled && !hasPointerMoved && timeSpent < 5) {
+    failures.push(`No interaction: no scroll, no pointer movement, only ${timeSpent.toFixed(2)}s on page (required: 5s+ if no interaction)`);
+  }
   if (hasPointerMoved && motionEntropy.length > 3) {
     const entropy = calculateMotionEntropy(motionEntropy);
-    if (entropy < 0.01) return false;
+    if (entropy < 0.01) {
+      failures.push(`Low motion entropy: ${entropy.toFixed(6)} (required: 0.01+) - motion too mechanical/patterned`);
+    }
   }
+  
+  if (failures.length > 0) {
+    console.warn(`⚠️  [bot-detection] Human behavior validation FAILED:`, {
+      failures: failures,
+      behavior: {
+        time_spent: `${timeSpent.toFixed(2)}s`,
+        tab_visible: tabVisible,
+        has_scrolled: hasScrolled,
+        has_pointer_moved: hasPointerMoved,
+        motion_samples: motionEntropy.length
+      },
+      timestamp: new Date().toISOString()
+    });
+    return false;
+  }
+  
+  console.log(`✅ [bot-detection] Human behavior validated:`, {
+    time_spent: `${timeSpent.toFixed(2)}s`,
+    tab_visible: tabVisible,
+    has_scrolled: hasScrolled,
+    has_pointer_moved: hasPointerMoved,
+    motion_samples: motionEntropy.length
+  });
   return true;
 }
 
 // Block all events silently
-function blockBotSession() {
+function blockBotSession(reason = 'Unknown') {
   botDetected = true;
   eventsBlocked = true;
+  
+  console.error(`🚨 [bot-detection] BOT SESSION BLOCKED: ${reason}`, {
+    reason: reason,
+    honeypot_interactions: honeypotInteractions,
+    user_agent: navigator.userAgent,
+    timestamp: new Date().toISOString(),
+    action: 'All events blocked, CTAs hidden'
+  });
+  
   document.querySelectorAll('.cta-primary').forEach(cta => {
     cta.style.display = 'none';
     cta.onclick = null;
@@ -122,14 +185,33 @@ function setupHoneypotMonitoring() {
     const elements = document.querySelectorAll(selector);
     elements.forEach(element => {
       ['focus', 'input', 'change', 'click', 'mousedown', 'mouseup'].forEach(eventType => {
-        element.addEventListener(eventType, () => {
+        element.addEventListener(eventType, (e) => {
           honeypotInteractions++;
+          const fieldInfo = {
+            selector: selector,
+            field_id: element.id || 'no-id',
+            field_name: element.name || 'no-name',
+            field_type: element.type || 'no-type',
+            event_type: eventType,
+            interaction_count: honeypotInteractions
+          };
+          
+          console.error(`🚨 [bot-detection] HONEYPOT TRIGGERED:`, {
+            reason: 'Honeypot field interaction detected',
+            details: fieldInfo,
+            user_agent: navigator.userAgent,
+            timestamp: new Date().toISOString(),
+            action: 'Bot session blocked'
+          });
+          
           botDetected = true;
-          blockBotSession();
+          blockBotSession(`Honeypot field "${fieldInfo.field_id || fieldInfo.field_name}" interacted with via ${eventType}`);
         });
       });
     });
   });
+  
+  console.log(`✅ [bot-detection] Honeypot monitoring active: ${formSelectors.length} selectors monitored`);
 }
 
 // Tab visibility monitoring
@@ -178,7 +260,10 @@ function resetBotDetectionState() {
     motionEntropy = [];
     botdResult = null;
     botdClassification = null;
-    console.log('Bot detection state reset for fresh page load');
+    console.log(`✅ [bot-detection] State reset for fresh page load`, {
+        timestamp: new Date().toISOString(),
+        user_agent: navigator.userAgent?.substring(0, 50) || 'unknown'
+    });
 }
 
 // Expose API if needed
