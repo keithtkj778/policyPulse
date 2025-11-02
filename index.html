@@ -944,6 +944,15 @@
                         facebook_response: data.facebook_response
                     });
                     
+                    // Handle recommended cookies from ParamBuilder (improves fbp/fbc coverage)
+                    if (data.recommended_cookies && data.recommended_cookies.length > 0) {
+                        console.log(`✅ [tracking] ParamBuilder recommended ${data.recommended_cookies.length} cookie(s) for better fbp/fbc coverage`);
+                        data.recommended_cookies.forEach(cookie => {
+                            // Set cookie on client side as recommended by ParamBuilder
+                            document.cookie = `${cookie.name}=${cookie.value}; max-age=${cookie.maxAge}; path=/; domain=${cookie.domain || '.policypulse.online'}; SameSite=Lax`;
+                        });
+                    }
+                    
                     // Log coverage status
                     if (pixelSent && capiSent) {
                         console.log(`✅ [tracking] ${eventName} coverage: BOTH Pixel and CAPI successful`, {
