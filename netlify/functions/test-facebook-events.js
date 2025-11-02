@@ -7,7 +7,7 @@ When to Use: To validate in Facebook Events Manager > Test Events that your Pixe
 
 How it works:
 1) Sends a PageView directly to Facebook's /events endpoint (bypasses our CAPI function)
-2) Includes test_event_code = TEST98765 so it appears in the Test Events tab
+2) Includes test_event_code = TEST92722 so it appears in the Test Events tab
 3) Verifies Pixel ID + Access Token are valid and accepted by Facebook
 
 How to trigger:
@@ -33,7 +33,7 @@ exports.handler = async (event, context) => {
     
     try {
         // Test event code from Facebook Events Manager
-        const testEventCode = 'TEST98765';
+        const testEventCode = 'TEST92722';
         
         // Derive client IP and user agent from the incoming request (like index.html does via get-ip)
         const clientIpHeader = event.headers['client-ip'] || event.headers['x-forwarded-for'] || event.headers['x-real-ip'] || '';
