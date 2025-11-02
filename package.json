@@ -9,6 +9,7 @@
     "deploy": "netlify deploy --prod"
   },
   "dependencies": {
+    "capi-param-builder-nodejs": "^1.2.0",
     "node-fetch": "^2.6.7",
     "redis": "^4.6.0"
   },
