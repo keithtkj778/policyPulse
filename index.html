@@ -21,6 +21,12 @@
     <!-- Bot Detection & Behavioral Gates -->
     <script src="assets/js/botd.js"></script>
     
+    <!-- Facebook Client-Side Parameter Builder (for improved fbp/fbc coverage)
+         This library collects and stores fbc, fbp, and client_ip_address in cookies (_fbc, _fbp, _fbi)
+         early in the page load, which the server-side Parameter Builder can then use to improve
+         match quality. Works in tandem with server-side ParamBuilder for maximum coverage. -->
+    <script src="https://capi-automation.s3.us-east-2.amazonaws.com/public/client_js/capiParamBuilder/clientParamBuilder.bundle.js"></script>
+    
     <!-- Meta Pixel Code -->
 <script>
     !function(f,b,e,v,n,t,s)
@@ -775,6 +781,77 @@
 
         // ===== Bot detection functions are loaded from external file =====
 
+        // ===== CLIENT-SIDE PARAMETER BUILDER INITIALIZATION =====
+        // Initialize Facebook Client-Side Parameter Builder to improve fbp/fbc coverage
+        (async function initClientParamBuilder() {
+            try {
+                // Wait for Parameter Builder library to load
+                if (typeof clientParamBuilder === 'undefined') {
+                    console.warn('⚠️  [param-builder] Client Parameter Builder library not loaded yet, retrying...');
+                    // Retry after a short delay
+                    setTimeout(initClientParamBuilder, 100);
+                    return;
+                }
+
+                // Async function to fetch client IPv6 address, fallback to IPv4 if not available
+                const getIpFn = async function() {
+                    // Helper to add timeout to fetch
+                    const fetchWithTimeout = (url, timeout = 3000) => {
+                        return Promise.race([
+                            fetch(url),
+                            new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), timeout))
+                        ]);
+                    };
+                    
+                    try {
+                        // Try IPv6 first (preferred by Meta)
+                        const ipv6Response = await fetchWithTimeout('https://api64.ipify.org?format=text', 3000);
+                        if (ipv6Response.ok) {
+                            const ipv6 = await ipv6Response.text();
+                            // Validate it's actually IPv6 format
+                            if (ipv6.includes(':')) {
+                                console.log(`✅ [param-builder] Retrieved IPv6: ${ipv6.substring(0, 30)}...`);
+                                return ipv6;
+                            }
+                        }
+                    } catch (ipv6Error) {
+                        console.log(`⚠️  [param-builder] IPv6 retrieval failed, falling back to IPv4:`, ipv6Error.message);
+                    }
+                    
+                    // Fallback to IPv4
+                    try {
+                        const ipv4Response = await fetchWithTimeout('https://api.ipify.org?format=text', 3000);
+                        if (ipv4Response.ok) {
+                            const ipv4 = await ipv4Response.text();
+                            console.log(`✅ [param-builder] Retrieved IPv4: ${ipv4}`);
+                            return ipv4;
+                        }
+                    } catch (ipv4Error) {
+                        console.warn(`⚠️  [param-builder] IPv4 retrieval also failed:`, ipv4Error.message);
+                        return null;
+                    }
+                    return null;
+                };
+
+                // Process and collect all parameters (fbc, fbp, client_ip_address)
+                // This will store cookies: _fbc, _fbp, _fbi (client IP)
+                const currentUrl = window.location.href;
+                const updatedCookie = await clientParamBuilder.processAndCollectAllParams(currentUrl, getIpFn);
+                
+                console.log(`✅ [param-builder] Client Parameter Builder initialized successfully`, {
+                    fbc: updatedCookie['_fbc'] ? `${updatedCookie['_fbc'].substring(0, 20)}...` : 'not available',
+                    fbp: updatedCookie['_fbp'] ? `${updatedCookie['_fbp'].substring(0, 20)}...` : 'not available',
+                    client_ip: updatedCookie['_fbi'] ? `${updatedCookie['_fbi'].substring(0, 30)}...` : 'not available',
+                    cookies_stored: Object.keys(updatedCookie).join(', ')
+                });
+            } catch (error) {
+                console.error(`🚨 [param-builder] Client Parameter Builder initialization failed:`, {
+                    error: error.message,
+                    stack: error.stack,
+                    timestamp: new Date().toISOString()
+                });
+            }
+        })();
         
         // Set angle content on load
         if (angles[primaryAngle] && primaryAngle !== 'one_bill_away') {
