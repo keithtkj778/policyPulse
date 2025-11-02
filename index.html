@@ -860,8 +860,16 @@
             // Generate single event ID for consistency - MUST be same for Pixel and CAPI deduplication
             const eventId = crypto?.randomUUID?.() || `evt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
             
+            // Track success for both Pixel and CAPI to diagnose coverage gaps
+            let pixelSent = false;
+            let capiSent = false;
+            
             // Log event ID for debugging (verify Pixel and CAPI use same ID)
-            console.log(`[${eventName}] Using eventID: ${eventId} for both Pixel and CAPI`);
+            console.log(`📊 [tracking] Preparing ${eventName} event`, {
+                event_id: eventId,
+                fbp: fbp ? 'present' : 'missing',
+                fbc: fbc ? 'present' : 'missing'
+            });
 
             // 1️⃣ SENDS TO FACEBOOK PIXEL (Direct)
             if (typeof fbq !== 'undefined') {
@@ -872,21 +880,34 @@
                     fbq('track', 'PageView', cleanEventData, {
                         eventID: eventId // ✅ SAME event ID as CAPI
                     });
+                    pixelSent = true;
+                    console.log(`✅ [tracking] ${eventName} sent to Pixel`, {
+                        event_id: eventId,
+                        fbp: fbp ? 'present' : 'missing',
+                        fbc: fbc ? 'present' : 'missing'
+                    });
                 } else {
                     // Custom events can include all parameters in eventData
                     fbq('trackCustom', eventName, cleanEventData, {
                         eventID: eventId // ✅ SAME event ID as CAPI
                     });
+                    console.log(`✅ [tracking] ${eventName} sent to Pixel`, {
+                        event_id: eventId
+                    });
                 }
+            } else {
+                console.warn(`⚠️  [tracking] Pixel not available - cannot send ${eventName} to Pixel`);
             }
 
             // 2️⃣ SENDS TO FACEBOOK CONVERSIONS API VIA NETLIFY
             // Send to our Netlify CAPI function with SAME event_id for deduplication
+            // Use keepalive to ensure request completes even if user navigates away
             fetch('/.netlify/functions/facebook-capi', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                keepalive: true, // Critical: Ensures request completes even if page unloads
                 body: JSON.stringify({
                     event_name: eventName,
                     _fbp: fbp,
@@ -894,9 +915,55 @@
                     event_id: eventId, // ✅ SAME event ID as Pixel (eventID vs event_id is just naming convention)
                     ...cleanEventData
                 })
-            }).catch(error => {
-                console.log('CAPI tracking failed:', error);
+            })
+            .then(response => {
+                if (response.ok) {
+                    capiSent = true;
+                    console.log(`✅ [tracking] ${eventName} sent to CAPI successfully`, {
+                        event_id: eventId,
+                        status: response.status
+                    });
+                    return response.json();
+                } else {
+                    console.error(`🚨 [tracking] CAPI returned error for ${eventName}`, {
+                        event_id: eventId,
+                        status: response.status,
+                        status_text: response.statusText
+                    });
+                    return response.text().then(text => {
+                        console.error(`🚨 [tracking] CAPI error details:`, text);
+                        throw new Error(`CAPI error: ${response.status} - ${text}`);
+                    });
+                }
+            })
+            .then(data => {
+                if (data && data.success) {
+                    capiSent = true;
+                    console.log(`✅ [tracking] ${eventName} confirmed by CAPI`, {
+                        event_id: data.event_id,
+                        facebook_response: data.facebook_response
+                    });
+                    
+                    // Log coverage status
+                    if (pixelSent && capiSent) {
+                        console.log(`✅ [tracking] ${eventName} coverage: BOTH Pixel and CAPI successful`, {
+                            event_id: eventId
+                        });
+                    }
+                }
+            })
+            .catch(error => {
+                console.error(`🚨 [tracking] CRITICAL: CAPI tracking failed for ${eventName}`, {
+                    event_id: eventId,
+                    event_name: eventName,
+                    pixel_sent: pixelSent,
+                    capi_sent: false,
+                    error: error.message,
+                    error_type: error.name,
+                    timestamp: new Date().toISOString(),
+                    note: '⚠️ COVERAGE GAP: This event was sent to Pixel but NOT to CAPI - this causes low event coverage in Facebook!'
                 });
+            });
             
             return true;
         }
