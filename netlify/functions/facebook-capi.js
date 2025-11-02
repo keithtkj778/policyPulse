@@ -101,10 +101,12 @@ exports.handler = async (event, context) => {
         }
 
         // Initialize Parameter Builder to improve fbp/fbc quality and IP handling
-        // Note: We receive fbp/fbc via JSON body from frontend, but ParamBuilder helps validate and improve IP
+        // Per Meta's Server-Side Parameter Builder documentation:
+        // https://developers.facebook.com/docs/marketing-api/conversions-api/parameter-builder/server-side
         const paramBuilder = new ParamBuilder(['policypulse.online']);
         
         // Parse cookies from request headers (if any)
+        // Meta docs: Parse cookies from HTTP request headers
         const cookies = {};
         if (event.headers.cookie) {
             event.headers.cookie.split(';').forEach(cookie => {
@@ -113,7 +115,9 @@ exports.handler = async (event, context) => {
             });
         }
 
-        // Process request with Parameter Builder (helps with IP and cookie validation)
+        // Process request with Parameter Builder (Meta's recommended flow)
+        // Meta docs: Call processRequest() first, then use get APIs
+        // Note: queryParams is empty since this is a POST endpoint with JSON body (no URL query params)
         const queryParams = {};
         const host = event.headers.host || 'policypulse.online';
         const xForwardedFor = event.headers['x-forwarded-for'] || event.headers['x-nf-client-connection-ip'] || null;
@@ -121,6 +125,7 @@ exports.handler = async (event, context) => {
         
         let recommendedCookies = [];
         try {
+            // Meta docs: processRequest() returns list of recommended cookie updates
             const cookieSettings = paramBuilder.processRequest(
                 host,
                 queryParams,
@@ -130,7 +135,7 @@ exports.handler = async (event, context) => {
                 remoteAddr
             );
 
-            // Store recommended cookies to return in response
+            // Store recommended cookies to return in response (Meta best practice)
             if (cookieSettings && cookieSettings.length > 0) {
                 recommendedCookies = cookieSettings;
                 console.log(`✅ [facebook-capi] ParamBuilder recommended ${cookieSettings.length} cookie update(s) for better tracking`, {
@@ -141,7 +146,8 @@ exports.handler = async (event, context) => {
             console.warn(`⚠️  [facebook-capi] ParamBuilder processRequest error (continuing with existing values):`, pbError.message);
         }
 
-        // Get improved values from ParamBuilder (falls back to provided values if not available)
+        // Meta docs: After processRequest(), call get APIs to retrieve improved values
+        // These APIs return optimized fbp/fbc/IP values following Meta's best practices
         const improvedFbp = paramBuilder.getFbp() || _fbp || '';
         const improvedFbc = paramBuilder.getFbc() || fbc || '';
         const improvedIp = paramBuilder.getClientIpAddress() || client_ip_address || 'unknown';

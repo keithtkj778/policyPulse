@@ -836,13 +836,23 @@
                 // Process and collect all parameters (fbc, fbp, client_ip_address)
                 // This will store cookies: _fbc, _fbp, _fbi (client IP)
                 const currentUrl = window.location.href;
-                const updatedCookie = await clientParamBuilder.processAndCollectAllParams(currentUrl, getIpFn);
+                await clientParamBuilder.processAndCollectAllParams(currentUrl, getIpFn);
+                
+                // Use ParamBuilder's get APIs (per Meta's documentation best practices)
+                const fbc = clientParamBuilder.getFbc() || '';
+                const fbp = clientParamBuilder.getFbp() || '';
+                const clientIp = clientParamBuilder.getClientIpAddress() || '';
+                
+                // Store globally for use in tracking functions
+                window.paramBuilderFbp = fbp;
+                window.paramBuilderFbc = fbc;
+                window.paramBuilderClientIp = clientIp;
                 
                 console.log(`✅ [param-builder] Client Parameter Builder initialized successfully`, {
-                    fbc: updatedCookie['_fbc'] ? `${updatedCookie['_fbc'].substring(0, 20)}...` : 'not available',
-                    fbp: updatedCookie['_fbp'] ? `${updatedCookie['_fbp'].substring(0, 20)}...` : 'not available',
-                    client_ip: updatedCookie['_fbi'] ? `${updatedCookie['_fbi'].substring(0, 30)}...` : 'not available',
-                    cookies_stored: Object.keys(updatedCookie).join(', ')
+                    fbc: fbc ? `${fbc.substring(0, 20)}...` : 'not available',
+                    fbp: fbp ? `${fbp.substring(0, 20)}...` : 'not available',
+                    client_ip: clientIp ? `${clientIp.substring(0, 30)}...` : 'not available',
+                    source: 'ParamBuilder get APIs (Meta best practices)'
                 });
             } catch (error) {
                 console.error(`🚨 [param-builder] Client Parameter Builder initialization failed:`, {
@@ -919,19 +929,50 @@
                 console.log('Could not fetch server data:', error);
             }
             
-            // Get Facebook pixel data for both pixel and CAPI
-            const fbp = getCookie('_fbp') || '';
-            const fbc = getCookie('_fbc') || '';
+            // Get Facebook pixel data using ParamBuilder get APIs (Meta's best practices)
+            // Per Meta docs: Call getFbc(), getFbp(), getClientIpAddress() after processAndCollectAllParams
+            // This ensures we use ParamBuilder's validated and improved values
+            // Reference: https://developers.facebook.com/docs/marketing-api/conversions-api/parameter-builder/client-side
+            let fbp = '';
+            let fbc = '';
+            let clientIpFromParamBuilder = '';
+            
+            if (typeof clientParamBuilder !== 'undefined' && clientParamBuilder.getFbp && clientParamBuilder.getFbc) {
+                // Use ParamBuilder's get APIs (recommended by Meta documentation)
+                fbp = clientParamBuilder.getFbp() || '';
+                fbc = clientParamBuilder.getFbc() || '';
+                clientIpFromParamBuilder = clientParamBuilder.getClientIpAddress() || '';
+                
+                if (fbp || fbc) {
+                    console.log(`✅ [tracking] Using ParamBuilder get APIs for fbp/fbc (Meta best practices)`);
+                }
+            }
+            
+            // Fallback to window variables or cookies if ParamBuilder APIs not available
+            if (!fbp && window.paramBuilderFbp) {
+                fbp = window.paramBuilderFbp;
+            } else if (!fbp) {
+                fbp = getCookie('_fbp') || '';
+            }
+            
+            if (!fbc && window.paramBuilderFbc) {
+                fbc = window.paramBuilderFbc;
+            } else if (!fbc) {
+                fbc = getCookie('_fbc') || '';
+            }
+            
+            // Prioritize ParamBuilder client IP if available (stored in _fbi cookie)
+            const clientIp = clientIpFromParamBuilder || window.paramBuilderClientIp || serverData.ip || 'unknown';
             
             const cleanEventData = {
                 ...eventData,
                 primary_angle: primaryAngle,
                 client_user_agent: navigator.userAgent,
-                client_ip_address: serverData.ip || 'unknown',
+                client_ip_address: clientIp, // Use ParamBuilder IP (from _fbi cookie) or server IP as fallback
                 page_url: window.location.href,
                 referrer: document.referrer,
-                _fbp: fbp,
-                _fbc: fbc
+                _fbp: fbp, // From ParamBuilder getFbp() API (Meta best practices)
+                _fbc: fbc  // From ParamBuilder getFbc() API (Meta best practices)
             };
 
             // Generate single event ID for consistency - MUST be same for Pixel and CAPI deduplication
