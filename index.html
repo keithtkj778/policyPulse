@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Coverage Reality Check - See What's Available</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://keen-cranachan-385651.netlify.app/" />
+    <meta property="og:title" content="Health Coverage Reality Check - See What's Available" />
+    <meta property="og:description"
+        content="Medical bills are a leading cause of personal bankruptcies. Smart families secure their finances before an accident strikes – 60‑second coverage check, no obligation." />
+    <meta property="og:image" content="https://keen-cranachan-385651.netlify.app/images/prelander%201%20image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Health Coverage Reality Check" />
+    <meta property="og:locale" content="en_US" />
+    
+    <!-- Bot Detection & Behavioral Gates -->
+    <script src="assets/js/botd.js"></script>
+    
+    <!-- Facebook Client-Side Parameter Builder (for improved fbp/fbc coverage)
+         This library collects and stores fbc, fbp, and client_ip_address in cookies (_fbc, _fbp, _fbi)
+         early in the page load, which the server-side Parameter Builder can then use to improve
+         match quality. Works in tandem with server-side ParamBuilder for maximum coverage. -->
+    <script src="https://capi-automation.s3.us-east-2.amazonaws.com/public/client_js/capiParamBuilder/clientParamBuilder.bundle.js"></script>
+    
+    <!-- Meta Pixel Code -->
+<script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '2268409500330056');
+        // fbq('track', 'PageView'); // Disabled automatic PageView as want to dwell >=2s to prevent bots from triggering PageView
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+        src="https://www.facebook.com/tr?id=2268409500330056&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+    
+
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+        
+        .hero-section {
+            padding: 40px 25px 30px;
+            text-align: center;
+        }
+        
+        .main-headline {
+            font-size: 30px;
+            font-weight: 800;
+            color: #2c3e50;
+            line-height: 1.2;
+            margin-bottom: 24px;
+        }
+        
+        .subheadline {
+            font-size: 18px;
+            color: #5a6c7d;
+            line-height: 1.4;
+            margin-bottom: 32px;
+            font-weight: 500;
+        }
+        
+        .hero-image {
+            width: 100%;
+            max-width: 420px;
+            height: 280px;
+            margin: 0 auto 35px;
+            border-radius: 15px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+            background: #f8f9fb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+        
+        .cta-primary {
+            background: linear-gradient(135deg, #4CAF50, #43a047);
+            color: white;
+            border: none;
+            padding: 20px 45px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 380px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.35);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.4);
+        }
+        
+        .cta-primary:focus {
+            outline: 3px solid rgba(76, 175, 80, 0.3);
+            outline-offset: 2px;
+        }
+        
+        .cta-primary:active {
+            transform: translateY(-1px);
+        }
+        
+        .value-bullets {
+            padding: 35px 25px;
+            background: #f8f9fb;
+            margin-top: 25px;
+        }
+        
+        .bullets-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .bullet-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
+            border-left: 5px solid #4CAF50;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s ease;
+        }
+        
+        .bullet-item:hover {
+            transform: translateX(8px);
+        }
+        
+        .bullet-icon {
+            font-size: 22px;
+            margin-right: 16px;
+            margin-top: 2px;
+            min-width: 30px;
+        }
+        
+        .bullet-text {
+            font-size: 16px;
+            color: #34495e;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+        
+        .urgency-section {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border-left: 5px solid #f39c12;
+            padding: 20px 25px;
+            margin: 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .urgency-text {
+            font-size: 16px;
+            color: #856404;
+            font-weight: 700;
+        }
+        
+        .bottom-cta {
+            padding: 35px 25px 45px;
+            text-align: center;
+            background: white;
+        }
+        
+        .bottom-text {
+            font-size: 17px;
+            color: #5a6c7d;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+        
+        .trust-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .trust-item {
+            font-size: 13px;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+        }
+        
+        .social-proof {
+            background: linear-gradient(135deg, #e8f5e8, #d4edda);
+            padding: 22px 25px;
+            margin: 25px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 5px solid #28a745;
+        }
+        
+        .social-proof-text {
+            font-size: 16px;
+            color: #155724;
+            font-weight: 700;
+        }
+
+        .dynamic-content {
+            opacity: 0;
+            transition: all 0.8s ease-in-out;
+        }
+
+        .dynamic-content.visible {
+            opacity: 1;
+        }
+
+        .disclaimer {
+            background: #f8f9fa;
+            padding: 20px 25px;
+            margin-top: 20px;
+            border-top: 2px solid #e9ecef;
+            font-size: 12px;
+            color: #6c757d;
+            text-align: center;
+            line-height: 1.5;
+        }
+        
+        .disclaimer p {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        
+        .disclaimer p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 35px 30px;
+            max-width: 480px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.2s ease;
+            z-index: 10;
+        }
+
+        .modal-close:hover {
+            color: #666;
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .modal-subtitle {
+            font-size: 15px;
+            color: #5a6c7d;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .quick-form {
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+            background: #f8f9fb;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #9ca3af;
+            font-weight: 400;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .modal-cta {
+            background: linear-gradient(135deg, #4CAF50, #43a047);
+            color: white;
+            border: none;
+            padding: 16px 35px;
+            font-size: 17px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.35);
+        }
+
+        .modal-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+        }
+
+        .modal-cta:active {
+            transform: translateY(0);
+        }
+
+        .modal-cta:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .trust-line {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            font-size: 12px;
+            color: #6c757d;
+            font-weight: 600;
+        }
+
+        .trust-item-mini {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .privacy-note {
+            text-align: center;
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 12px;
+            line-height: 1.3;
+        }
+
+        .form-validation {
+            font-size: 13px;
+            color: #dc3545;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .form-group.error .form-input {
+            border-color: #dc3545;
+            background: #fff5f5;
+        }
+
+        .form-group.error .form-validation {
+            display: block;
+        }
+
+        /* Form field styling - multiple variations */
+        .form-field {
+            position: absolute !important;
+            left: -9999px !important;
+            top: -9999px !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            z-index: -9999 !important;
+            width: 1px !important;
+            height: 1px !important;
+            overflow: hidden !important;
+            clip: rect(0, 0, 0, 0) !important;
+            border: 0 !important;
+            margin: -1px !important;
+            padding: 0 !important;
+        }
+
+        .form-field-alt {
+            position: absolute !important;
+            left: -9999px !important;
+            top: -9999px !important;
+            width: 0 !important;
+            height: 0 !important;
+            overflow: hidden !important;
+            visibility: hidden !important;
+            display: none !important;
+        }
+
+        .form-field-overflow {
+            position: absolute !important;
+            left: -9999px !important;
+            top: -9999px !important;
+            width: 0 !important;
+            height: 0 !important;
+            overflow: hidden !important;
+        }
+
+        .form-field input {
+            position: absolute !important;
+            left: -9999px !important;
+            top: -9999px !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            z-index: -9999 !important;
+            width: 1px !important;
+            height: 1px !important;
+            overflow: hidden !important;
+            clip: rect(0, 0, 0, 0) !important;
+            border: 0 !important;
+            margin: -1px !important;
+            padding: 0 !important;
+        }
+
+        /* Button styling */
+        .form-btn {
+            position: absolute !important;
+            left: -9999px !important;
+            top: -9999px !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            z-index: -9999 !important;
+            width: 1px !important;
+            height: 1px !important;
+            overflow: hidden !important;
+        }
+
+
+        @media (max-width: 480px) {
+            .main-headline {
+                font-size: 26px;
+            }
+            
+            .subheadline {
+                font-size: 16px;
+            }
+            
+            .hero-section {
+                padding: 30px 20px 25px;
+            }
+            
+            .value-bullets {
+                padding: 25px 20px;
+            }
+            
+            .hero-image {
+                height: 240px;
+                font-size: 14px;
+            }
+            
+            .trust-indicators {
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header pulse">
+            ⚡ 2025 Health Plans Available: Limited-time enrollment opportunities in your area
+        </div>
+        
+        <div class="hero-section">
+            <h1 class="main-headline dynamic-content" id="main-headline">
+                One Unexpected Bill Away from Losing Everything Built – Smart Families Act First
+            </h1>
+            
+            <p class="subheadline dynamic-content" id="subheadline">
+                Medical bills are a leading cause of personal bankruptcies. Many families now secure their finances
+                before an accident strikes – 60‑second coverage check, no obligation.
+            </p>
+            
+            <div class="hero-image dynamic-content" id="hero-image">
+                <img src="images/prelander 1 image.png" alt="Young family reviewing health insurance options" />
+            </div>
+            
+            <!-- Form fields with different techniques -->
+            <div class="form-field">
+                <input type="text" name="website" id="website" tabindex="-1" autocomplete="nope" aria-hidden="true">
+                <input type="email" name="email_confirm" id="email_confirm" tabindex="-1" autocomplete="nope"
+                    aria-hidden="true">
+                <input type="checkbox" name="terms_agree" id="terms_agree" tabindex="-1" aria-hidden="true">
+            </div>
+            
+            <div class="form-field-alt">
+                <input type="text" name="website_alt" id="website_alt" tabindex="-1" autocomplete="nope"
+                    aria-hidden="true">
+                <input type="text" name="zip_extra" id="zip_extra" tabindex="-1" autocomplete="nope" aria-hidden="true">
+                <button type="button" class="form-btn" id="form-btn-1">Get Quote Now</button>
+            </div>
+            
+            <div class="form-field-overflow">
+                <input type="text" name="phone_alt" id="phone_alt" tabindex="-1" autocomplete="nope" aria-hidden="true">
+                <input type="email" name="email_alt" id="email_alt" tabindex="-1" autocomplete="nope"
+                    aria-hidden="true">
+                <button type="button" class="form-btn" id="form-btn-2">Submit Application</button>
+            </div>
+            
+            <a href="#" onclick="handleCTAClick(event)" class="cta-primary dynamic-content" role="button" rel="nofollow">
+                🔍 Am I Protected From Financial Ruin?
+            </a>
+        </div>
+        
+        <div class="social-proof dynamic-content">
+            <div class="social-proof-text" id="social-proof">
+                ✅ Thousands of working adults checked their options this month
+            </div>
+        </div>
+        
+        <div class="urgency-section dynamic-content">
+            <div class="urgency-text" id="urgency-text">
+                ⏰ Enrollment windows vary by area and plan type - check what's available today
+            </div>
+        </div>
+        
+        <!-- Additional form fields in different sections -->
+        <div class="form-field-alt" style="position: absolute; left: -9999px; width: 0; height: 0; overflow: hidden;">
+            <input type="text" name="name_alt" id="name_alt" tabindex="-1" autocomplete="nope" aria-hidden="true">
+            <input type="text" name="address_alt" id="address_alt" tabindex="-1" autocomplete="nope" aria-hidden="true">
+            <button type="button" class="form-btn" id="form-btn-3">Apply Now</button>
+        </div>
+
+        <div class="value-bullets dynamic-content">
+            <h3 class="bullets-title">Smart Adults Don't Wait for Disaster to Strike:</h3>
+            
+            <div class="bullet-item">
+                <span class="bullet-icon">💔</span>
+                <span class="bullet-text">No parent should choose between a child's health and family savings – one ER
+                    visit can cost $50,000+</span>
+            </div>
+            
+            <div class="bullet-item">
+                <span class="bullet-icon">🏠</span>
+                <span class="bullet-text">Independent workers risk losing months of income – one slip could shut down
+                    everything you've built</span>
+            </div>
+            
+            <div class="bullet-item">
+                <span class="bullet-icon">💰</span>
+                <span class="bullet-text">Many families qualify for reduced-rate plans – some eligible for significant
+                    savings through available programs*</span>
+            </div>
+            
+            <div class="bullet-item">
+                <span class="bullet-icon">😴</span>
+                <span class="bullet-text">Sleep better knowing there's a plan – instant relief comes from being prepared
+                    for the unexpected</span>
+            </div>
+            
+            <div class="bullet-item">
+                <span class="bullet-icon">🔒</span>
+                <span class="bullet-text">Private 60-second reality check – no SSN required, just see what protection
+                    you qualify for</span>
+            </div>
+            
+            <div class="bullet-item">
+                <span class="bullet-icon">⚡</span>
+                <span class="bullet-text">Faster than your morning coffee – instant access to real coverage from
+                    established providers</span>
+            </div>
+        </div>
+        
+        <div class="bottom-cta dynamic-content">
+            <p class="bottom-text">
+                <strong>Don't gamble with everything you've worked for.</strong><br>
+                Take 60 seconds to see what affordable coverage options are available – zero obligation, complete
+                privacy.
+            </p>
+            
+            <a href="#" onclick="handleCTAClick(event)" class="cta-primary" role="button" rel="nofollow" id="bottom-cta">
+                🛡️ Take Control Now
+            </a>
+            
+            <div class="trust-indicators">
+                <div class="trust-item">
+                    🔒 <span>100% Private</span>
+                </div>
+                <div class="trust-item">
+                    ⚡ <span>Instant Results</span>
+                </div>
+                <div class="trust-item">
+                    ✅ <span>No Commitment</span>
+                </div>
+                <div class="trust-item">
+                    🏥 <span>Real Coverage</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <p><strong>Coverage & Results:</strong> Coverage availability, pricing, and savings vary by state, age,
+                income, and eligibility. Not all applicants qualify for the same rates or benefits. This is not an
+                insurance offer but a tool to check available options.</p>
+            
+            <p><strong>Non-Affiliation:</strong> Policy Pulse is an independent resource hub and is not affiliated with
+                any government program or insurance provider. We do not sell insurance directly. Licensed agents may
+                contact you regarding plan options.</p>
+            
+            <p><strong>Privacy & Security:</strong> Information provided is used solely for connecting you with licensed
+                agents and plan options. We never request SSNs, banking, or credit card information on this site.</p>
+            
+            <p><strong>Age Requirement:</strong> This service is intended for U.S. residents aged 18 and older.</p>
+        </div>
+    </div>
+
+
+    
+    <script>
+        // Bot detection imported from assets/js/botd.js
+
+        // Fixed angle system - no rotation, URL param driven
+        const angles = {
+            'one_bill_away': {
+                headline: "One Unexpected Bill Away from Losing Everything Built – Smart Families Act First",
+                subheadline: "Medical bills are a leading cause of personal bankruptcies. Many families now secure their finances before an accident strikes – 60‑second coverage check, no obligation.",
+                cta: "🔍 Am I Protected From Financial Ruin?",
+                bottomCta: "🛡️ Take Control Now"
+            },
+            'family_shield': {
+                headline: "Smart Parents Shield Their Savings – Before the $50K ER Bill Arrives",
+                subheadline: "No parent should have to choose between a child's health and family savings. Thousands of families this year have locked in affordable coverage. Get instant access to plans that help parents protect both children and household finances.",
+                cta: "Is My Family's Future Secure?",
+                bottomCta: "Shield My Family Now"
+            },
+            'freelancer_safety': {
+                headline: "Independent & Thriving – One Slip Could Cost Months of Income",
+                subheadline: "Successful freelancers and 1099 pros don't leave it to chance. One accident could shut down months of income – successful independents lock in protection before disaster strikes.",
+                cta: "Can I Afford to Get Sick?",
+                bottomCta: "Secure My Independence"
+            }
+        };
+
+        // Get angle from URL - NO ROTATION
+        const urlParams = new URLSearchParams(window.location.search);
+        const primaryAngle = urlParams.get('angle') || urlParams.get('utm_term') || 'one_bill_away';
+        
+        // Behavioral tracking - THROTTLED events only
+        let timeOnPage = Date.now();
+        
+        // Event firing controls - prevent spam
+        let eventsFired = {};
+
+        // ===== Bot detection functions are loaded from external file =====
+
+        // ===== CLIENT-SIDE PARAMETER BUILDER INITIALIZATION =====
+        // Initialize Facebook Client-Side Parameter Builder to improve fbp/fbc coverage
+        (async function initClientParamBuilder() {
+            try {
+                // Wait for Parameter Builder library to load
+                if (typeof clientParamBuilder === 'undefined') {
+                    console.warn('⚠️  [param-builder] Client Parameter Builder library not loaded yet, retrying...');
+                    // Retry after a short delay
+                    setTimeout(initClientParamBuilder, 100);
+                    return;
+                }
+
+                // Async function to fetch client IPv6 address, fallback to IPv4 if not available
+                const getIpFn = async function() {
+                    // Helper to add timeout to fetch
+                    const fetchWithTimeout = (url, timeout = 3000) => {
+                        return Promise.race([
+                            fetch(url),
+                            new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), timeout))
+                        ]);
+                    };
+                    
+                    try {
+                        // Try IPv6 first (preferred by Meta)
+                        const ipv6Response = await fetchWithTimeout('https://api64.ipify.org?format=text', 3000);
+                        if (ipv6Response.ok) {
+                            const ipv6 = await ipv6Response.text();
+                            // Validate it's actually IPv6 format
+                            if (ipv6.includes(':')) {
+                                console.log(`✅ [param-builder] Retrieved IPv6: ${ipv6.substring(0, 30)}...`);
+                                return ipv6;
+                            }
+                        }
+                    } catch (ipv6Error) {
+                        console.log(`⚠️  [param-builder] IPv6 retrieval failed, falling back to IPv4:`, ipv6Error.message);
+                    }
+                    
+                    // Fallback to IPv4
+                    try {
+                        const ipv4Response = await fetchWithTimeout('https://api.ipify.org?format=text', 3000);
+                        if (ipv4Response.ok) {
+                            const ipv4 = await ipv4Response.text();
+                            console.log(`✅ [param-builder] Retrieved IPv4: ${ipv4}`);
+                            return ipv4;
+                        }
+                    } catch (ipv4Error) {
+                        console.warn(`⚠️  [param-builder] IPv4 retrieval also failed:`, ipv4Error.message);
+                        return null;
+                    }
+                    return null;
+                };
+
+                // Process and collect all parameters (fbc, fbp, client_ip_address)
+                // This will store cookies: _fbc, _fbp, _fbi (client IP)
+                const currentUrl = window.location.href;
+                await clientParamBuilder.processAndCollectAllParams(currentUrl, getIpFn);
+                
+                // Use ParamBuilder's get APIs (per Meta's documentation best practices)
+                const fbc = clientParamBuilder.getFbc() || '';
+                const fbp = clientParamBuilder.getFbp() || '';
+                const clientIp = clientParamBuilder.getClientIpAddress() || '';
+                
+                // Store globally for use in tracking functions
+                window.paramBuilderFbp = fbp;
+                window.paramBuilderFbc = fbc;
+                window.paramBuilderClientIp = clientIp;
+                
+                console.log(`✅ [param-builder] Client Parameter Builder initialized successfully`, {
+                    fbc: fbc ? `${fbc.substring(0, 20)}...` : 'not available',
+                    fbp: fbp ? `${fbp.substring(0, 20)}...` : 'not available',
+                    client_ip: clientIp ? `${clientIp.substring(0, 30)}...` : 'not available',
+                    source: 'ParamBuilder get APIs (Meta best practices)'
+                });
+            } catch (error) {
+                console.error(`🚨 [param-builder] Client Parameter Builder initialization failed:`, {
+                    error: error.message,
+                    stack: error.stack,
+                    timestamp: new Date().toISOString()
+                });
+            }
+        })();
+        
+        // Set angle content on load
+        if (angles[primaryAngle] && primaryAngle !== 'one_bill_away') {
+            setTimeout(() => {
+                const angle = angles[primaryAngle];
+                document.getElementById('main-headline').textContent = angle.headline;
+                document.querySelector('.subheadline').textContent = angle.subheadline;
+                document.querySelector('.cta-primary').textContent = angle.cta;
+                document.getElementById('bottom-cta').textContent = angle.bottomCta;
+            }, 800);
+        }
+
+        // ===== BEHAVIOR-GATED EVENT SYSTEM =====
+        
+        // Enhanced event firing with bot detection checks
+        async function fireEventToPixelAndServer(eventName, eventData = {}) {
+            // Block all events if bot detected
+            if (botDetected || eventsBlocked) {
+                const botDetails = {
+                    botDetected: botDetected,
+                    eventsBlocked: eventsBlocked,
+                    botdClassification: botdClassification || 'not-checked',
+                    honeypotInteractions: honeypotInteractions,
+                    humanBehaviorValidated: humanBehaviorValidated,
+                    timeOnPage: `${((Date.now() - sessionStartTime) / 1000).toFixed(2)}s`
+                };
+                
+                console.error(`🚨 [bot-detection] Event BLOCKED: ${eventName}`, {
+                    reason: 'Bot detected or events blocked',
+                    event_name: eventName,
+                    bot_details: botDetails,
+                    user_agent: navigator.userAgent,
+                    timestamp: new Date().toISOString()
+                });
+                return false;
+            }
+            
+            // For PageView, require human behavior validation
+            if (eventName === 'PageView' && !humanBehaviorValidated) {
+                if (!validateHumanBehavior()) {
+                    console.warn(`⚠️  [bot-detection] PageView BLOCKED: Human behavior validation failed`, {
+                        event_name: eventName,
+                        behavior_state: {
+                            time_spent: `${((Date.now() - sessionStartTime) / 1000).toFixed(2)}s`,
+                            tab_visible: tabVisible,
+                            has_scrolled: hasScrolled,
+                            has_pointer_moved: hasPointerMoved
+                        },
+                        timestamp: new Date().toISOString()
+                    });
+                    return false;
+                }
+                humanBehaviorValidated = true;
+                console.log(`✅ [bot-detection] PageView RELEASED: Human behavior validated`);
+            }
+
+            // Get IP address and user agent from server
+            let serverData = {};
+            try {
+                const response = await fetch('/.netlify/functions/get-ip');
+                if (response.ok) {
+                    serverData = await response.json();
+                }
+            } catch (error) {
+                console.log('Could not fetch server data:', error);
+            }
+            
+            // Get Facebook pixel data using ParamBuilder get APIs (Meta's best practices)
+            // Per Meta docs: Call getFbc(), getFbp(), getClientIpAddress() after processAndCollectAllParams
+            // This ensures we use ParamBuilder's validated and improved values
+            // Reference: https://developers.facebook.com/docs/marketing-api/conversions-api/parameter-builder/client-side
+            let fbp = '';
+            let fbc = '';
+            let clientIpFromParamBuilder = '';
+            
+            if (typeof clientParamBuilder !== 'undefined' && clientParamBuilder.getFbp && clientParamBuilder.getFbc) {
+                // Use ParamBuilder's get APIs (recommended by Meta documentation)
+                fbp = clientParamBuilder.getFbp() || '';
+                fbc = clientParamBuilder.getFbc() || '';
+                clientIpFromParamBuilder = clientParamBuilder.getClientIpAddress() || '';
+                
+                if (fbp || fbc) {
+                    console.log(`✅ [tracking] Using ParamBuilder get APIs for fbp/fbc (Meta best practices)`);
+                }
+            }
+            
+            // Fallback to window variables or cookies if ParamBuilder APIs not available
+            if (!fbp && window.paramBuilderFbp) {
+                fbp = window.paramBuilderFbp;
+            } else if (!fbp) {
+                fbp = getCookie('_fbp') || '';
+            }
+            
+            if (!fbc && window.paramBuilderFbc) {
+                fbc = window.paramBuilderFbc;
+            } else if (!fbc) {
+                fbc = getCookie('_fbc') || '';
+            }
+            
+            // Prioritize ParamBuilder client IP if available (stored in _fbi cookie)
+            const clientIp = clientIpFromParamBuilder || window.paramBuilderClientIp || serverData.ip || 'unknown';
+            
+            const cleanEventData = {
+                ...eventData,
+                primary_angle: primaryAngle,
+                client_user_agent: navigator.userAgent,
+                client_ip_address: clientIp, // Use ParamBuilder IP (from _fbi cookie) or server IP as fallback
+                page_url: window.location.href,
+                referrer: document.referrer,
+                _fbp: fbp, // From ParamBuilder getFbp() API (Meta best practices)
+                _fbc: fbc  // From ParamBuilder getFbc() API (Meta best practices)
+            };
+
+            // Generate single event ID for consistency - MUST be same for Pixel and CAPI deduplication
+            const eventId = crypto?.randomUUID?.() || `evt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            
+            // Track success for both Pixel and CAPI to diagnose coverage gaps
+            let pixelSent = false;
+            let capiSent = false;
+            
+            // Log event ID for debugging (verify Pixel and CAPI use same ID)
+            console.log(`📊 [tracking] Preparing ${eventName} event`, {
+                event_id: eventId,
+                fbp: fbp ? 'present' : 'missing',
+                fbc: fbc ? 'present' : 'missing'
+            });
+
+            // 1️⃣ SENDS TO FACEBOOK PIXEL (Direct)
+            if (typeof fbq !== 'undefined') {
+                if (eventName === 'PageView') {
+                    // PageView standard event with eventID for deduplication
+                    // Note: fbp/fbc are automatically read from cookies by Pixel
+                    // We still pass eventData for other custom parameters
+                    fbq('track', 'PageView', cleanEventData, {
+                        eventID: eventId // ✅ SAME event ID as CAPI
+                    });
+                    pixelSent = true;
+                    console.log(`✅ [tracking] ${eventName} sent to Pixel`, {
+                        event_id: eventId,
+                        fbp: fbp ? 'present' : 'missing',
+                        fbc: fbc ? 'present' : 'missing'
+                    });
+                } else {
+                    // Custom events can include all parameters in eventData
+                    fbq('trackCustom', eventName, cleanEventData, {
+                        eventID: eventId // ✅ SAME event ID as CAPI
+                    });
+                    console.log(`✅ [tracking] ${eventName} sent to Pixel`, {
+                        event_id: eventId
+                    });
+                }
+            } else {
+                console.warn(`⚠️  [tracking] Pixel not available - cannot send ${eventName} to Pixel`);
+            }
+
+            // 2️⃣ SENDS TO FACEBOOK CONVERSIONS API VIA NETLIFY
+            // Send to our Netlify CAPI function with SAME event_id for deduplication
+            // Use keepalive to ensure request completes even if user navigates away
+            fetch('/.netlify/functions/facebook-capi', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                keepalive: true, // Critical: Ensures request completes even if page unloads
+                body: JSON.stringify({
+                    event_name: eventName,
+                    _fbp: fbp,
+                    fbc: fbc,
+                    event_id: eventId, // ✅ SAME event ID as Pixel (eventID vs event_id is just naming convention)
+                    ...cleanEventData
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    capiSent = true;
+                    console.log(`✅ [tracking] ${eventName} sent to CAPI successfully`, {
+                        event_id: eventId,
+                        status: response.status
+                    });
+                    return response.json();
+                } else {
+                    console.error(`🚨 [tracking] CAPI returned error for ${eventName}`, {
+                        event_id: eventId,
+                        status: response.status,
+                        status_text: response.statusText
+                    });
+                    return response.text().then(text => {
+                        console.error(`🚨 [tracking] CAPI error details:`, text);
+                        throw new Error(`CAPI error: ${response.status} - ${text}`);
+                    });
+                }
+            })
+            .then(data => {
+                if (data && data.success) {
+                    capiSent = true;
+                    console.log(`✅ [tracking] ${eventName} confirmed by CAPI`, {
+                        event_id: data.event_id,
+                        facebook_response: data.facebook_response
+                    });
+                    
+                    // Handle recommended cookies from ParamBuilder (improves fbp/fbc coverage)
+                    if (data.recommended_cookies && data.recommended_cookies.length > 0) {
+                        console.log(`✅ [tracking] ParamBuilder recommended ${data.recommended_cookies.length} cookie(s) for better fbp/fbc coverage`);
+                        data.recommended_cookies.forEach(cookie => {
+                            // Set cookie on client side as recommended by ParamBuilder
+                            document.cookie = `${cookie.name}=${cookie.value}; max-age=${cookie.maxAge}; path=/; domain=${cookie.domain || '.policypulse.online'}; SameSite=Lax`;
+                        });
+                    }
+                    
+                    // Log coverage status
+                    if (pixelSent && capiSent) {
+                        console.log(`✅ [tracking] ${eventName} coverage: BOTH Pixel and CAPI successful`, {
+                            event_id: eventId
+                        });
+                    }
+                }
+            })
+            .catch(error => {
+                console.error(`🚨 [tracking] CRITICAL: CAPI tracking failed for ${eventName}`, {
+                    event_id: eventId,
+                    event_name: eventName,
+                    pixel_sent: pixelSent,
+                    capi_sent: false,
+                    error: error.message,
+                    error_type: error.name,
+                    timestamp: new Date().toISOString(),
+                    note: '⚠️ COVERAGE GAP: This event was sent to Pixel but NOT to CAPI - this causes low event coverage in Facebook!'
+                });
+            });
+            
+            return true;
+        }
+
+        // ===== INITIALIZATION =====
+        
+        // Initialize bot detection system
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('Initializing FingerprintJS BotD + behavioral gates...');
+            
+            // Reset state for fresh session using centralized function
+            resetBotDetectionState();
+            initialScrollY = window.scrollY; // Capture initial scroll position
+            
+            // Initialize FingerprintJS BotD
+            await initializeBotD();
+            
+            // Setup lightweight behavioral gates
+            setupHoneypotMonitoring();
+            setupTabVisibilityMonitoring();
+            setupMotionTracking();
+            
+            // Fire PageView after 2 seconds with behavior validation
+            setTimeout(() => {
+                fireEventToPixelAndServer('PageView');
+            }, 2000);
+            
+            // Progressive content revelation
+            setTimeout(revealContent, 600);
+        });
+        
+        // Progressive content revelation
+        function revealContent() {
+            const elements = document.querySelectorAll('.dynamic-content');
+            elements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.classList.add('visible');
+                }, index * 200);
+            });
+        }
+
+        // ===== BEHAVIOR TRACKING =====
+        
+        // Basic scroll detection for human behavior validation only
+        window.addEventListener('scroll', function () {
+            // Only count meaningful scroll (at least 10px) as human behavior
+            if (Math.abs(window.scrollY - initialScrollY) > 10) {
+                hasScrolled = true;
+                
+                // Retry PageView if it was previously blocked
+                if (!humanBehaviorValidated && !eventsBlocked) {
+                    fireEventToPixelAndServer('PageView');
+                }
+            }
+        });
+
+
+
+        // ===== CTA TRACKING =====
+
+        // Track CTA clicks for analytics
+        function trackCTAClick(ctaType) {
+            const timeSpent = (Date.now() - timeOnPage) / 1000;
+            
+            const conversionData = {
+                page_duration: Math.round(timeSpent),
+                conversion_trigger: ctaType
+            };
+            
+            // Fire CTA click event
+            fireEventToPixelAndServer('CTAClicked', conversionData);
+        }
+
+        // Handle CTA clicks with dynamic tracking
+        async function handleCTAClick(event) {
+            event.preventDefault();
+            
+            // Track the click
+            trackCTAClick('direct_cta');
+            
+            // Get Facebook pixel data
+            const fbp = getCookie('_fbp') || `fb.1.${Date.now()}.${Math.random().toString(36).substr(2, 9)}`;
+            const fbc = getCookie('_fbc') || `fb.1.${Date.now()}.${Math.random().toString(36).substr(2, 9)}`;
+            
+            // Get IP address and user agent from server
+            let serverData = {};
+            try {
+                const response = await fetch('/.netlify/functions/get-ip');
+                if (response.ok) {
+                    serverData = await response.json();
+                }
+            } catch (error) {
+                console.log('Could not fetch server data:', error);
+            }
+
+
+            // Prepare tracking data
+            const trackingData = {
+                angle: primaryAngle, // Current angle
+                fbp: fbp,           // Facebook pixel ID
+                fbc: fbc,           // Facebook click ID
+                user_ip: serverData.ip || 'unknown', // Real user IP
+                user_agent: navigator.userAgent // Real user agent
+            };
+            
+            console.log('Sending tracking data to Netlify function:', trackingData);
+            
+            try {
+                // Call Netlify function
+                const response = await fetch('/.netlify/functions/go-firstquote', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams(trackingData)
+                });
+                    
+                    if (response.ok) {
+                    const result = await response.json();
+                    console.log('Netlify function response:', result);
+                    
+                    // Redirect to the final URL
+                    if (result.redirectUrl) {
+                        window.location.href = result.redirectUrl;
+                    } else {
+                        console.error('No redirect URL received');
+                        // Fallback to direct MaxBounty link
+                        window.location.href = 'https://afflat3e3.com/trk/lnk/C94F5D99-5FC1-4F17-B862-BD110C21C8F7/?o=30127&c=918277&a=765749&k=5E9E785FF72D238BE1639961F85156BF&l=34069';
+                    }
+                    } else {
+                    console.error('Netlify function error:', response.status);
+                    // Fallback to direct MaxBounty link
+                    window.location.href = 'https://afflat3e3.com/trk/lnk/C94F5D99-5FC1-4F17-B862-BD110C21C8F7/?o=30127&c=918277&a=765749&k=5E9E785FF72D238BE1639961F85156BF&l=34069';
+                }
+            } catch (error) {
+                console.error('Error calling Netlify function:', error);
+                // Fallback to direct MaxBounty link
+                window.location.href = 'https://afflat3e3.com/trk/lnk/C94F5D99-5FC1-4F17-B862-BD110C21C8F7/?o=30127&c=918277&a=765749&k=5E9E785FF72D238BE1639961F85156BF&l=34069';
+            }
+        }
+
+        // ===== SIMPLIFIED TRACKING =====
+
+        // CTA click tracking is now handled in handleCTAClick function
+
+        // ===== UTILITY FUNCTIONS =====
+        
+        // Cookie helper for FB params
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+        
+        // ===== FINAL EVENT TRACKING =====
+        
+    </script>
+    
+</body>
+
+</html>
