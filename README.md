@@ -58,6 +58,12 @@ End-to-end: **ad → prelander → offer → conversion**, with tracking at ever
 
 ---
 
+## Why Meta CAPI matters
+
+**Conversions API (CAPI)** is Meta’s server-side way to record what users do—page views, button clicks, leads—so your ads can be measured and improved even when the browser blocks or limits normal tracking. This project sends those events from your own server to Meta: when someone lands on the page or clicks the CTA, and when they later convert, your backend tells Meta. Meta uses that information to see which ads actually drive leads and to learn what kind of people convert, so over time it shows your ad to more people who are likely to take action. The result is better targeting, fewer wasted impressions, and more leads for the same spend.
+
+---
+
 ### Why this funnel is built this way
 
 The prelander is built for **conversion-efficient lead gen**: minimize cost per lead (CPL) and maximize return on ad spend (ROAS) while keeping lead quality high. It’s not built to slow traffic with heavy forms; it’s built to:
