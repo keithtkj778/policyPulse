@@ -1,0 +1,28 @@
+{
+  "name": "health-insurance-lead-gen",
+  "version": "1.0.0",
+  "description": "Health insurance lead generation landing page with Facebook Pixel and Conversions API",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'No build step required'",
+    "dev": "netlify dev",
+    "deploy": "netlify deploy --prod"
+  },
+  "dependencies": {
+    "capi-param-builder-nodejs": "^1.2.0",
+    "node-fetch": "^2.6.7",
+    "redis": "^4.6.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "^12.0.0"
+  },
+  "keywords": [
+    "health-insurance",
+    "lead-generation",
+    "facebook-pixel",
+    "conversions-api",
+    "netlify"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}
