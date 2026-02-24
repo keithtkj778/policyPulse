@@ -35,24 +35,43 @@ End-to-end: **ad → prelander → offer → conversion**, with tracking at ever
 │  User sees  │     │  Prelander       │     │  Offer / quote   │     │  Conversion  │
 │  your ad    │ ──► │  (this repo)     │ ──► │  (external)     │ ──► │  (e.g. lead) │
 └─────────────┘     └──────────────────┘     └─────────────────┘     └──────────────┘
-                            │                          │                      │
-                            ▼                          │                      │
-                    • Page view + CTA                  │                      │
-                      sent to Facebook                 │                      │
-                    • Bot checks, angle-based copy     │                      │
-                    • Button → server gets final URL   │                      │
-                      and adds fbp/fbc for tracking    │                      │
-                                                       │                      │
-                                                       └──────────────────────┘
-                                                         Affiliate network
-                                                         calls your postback URL
-                                                         → you send “Lead” to Facebook
+        ▲                    │                          │                      │
+        │                    ▼                          │                      │
+        │            • Page view + CTA                  │                      │
+        │              sent to Facebook                 │                      │
+        │            • Bot checks, angle-based copy     │                      │
+        │            • CTA → server gets offer URL      │                      │
+        │              and appends fbp/fbc for tracking │                      │
+        │                                              │                      │
+        │                                              ▼                      ▼
+        │            ┌─────────────────────────────────────────────────────────────┐
+        │            │  Affiliate network calls your postback URL                    │
+        │            │  → Netlify receives postback                                 │
+        │            │  → Server sends converted Lead to Facebook CAPI               │
+        │            │  → CAPI feeds Meta's algorithm (conversion signal)            │
+        │            └─────────────────────────────────────────────────────────────┘
+        │                                              │
+        └──────────────────────────────────────────────┘
+          Algorithm learns who converts → delivers ad to more users likely to convert
+          (lower CPL, better ROAS over time)
 ```
 
-- **Prelander:** Single page. Loads config (pixel ID, etc.) from environment variables, renders angle-based copy, and on CTA click calls the server to get the offer URL with tracking params.
-- **Server (Netlify functions):** Resolves the offer redirect and attaches tracking (fbp, fbc, user agent). On conversion callback from the network, sends a Lead event to Facebook Conversions API.
+---
 
-No secrets or API keys are stored in the repo; everything is driven by environment variables (see Setup).
+### Why this funnel is built this way
+
+The prelander is built for **conversion-efficient lead gen**: minimize cost per lead (CPL) and maximize return on ad spend (ROAS) while keeping lead quality high. It’s not built to slow traffic with heavy forms; it’s built to:
+
+- **Create an emotional path to the CTA** — Identity-based tension (“Smart families act first”), urgency, and relief (e.g. “60-second check, no obligation”) so the click feels like a small, low-risk step rather than a big commitment.
+- **Keep message-match tight** — The same psychological thread runs from ad → prelander → offer, so users don’t get a jarring shift that kills intent.
+- **Let every dollar do two jobs** — Generate the lead and **train the platform**. By sending conversions back to Meta via CAPI, the algorithm learns which users convert and can optimize delivery toward similar people, so you get better traffic over time without manually chasing volume.
+- **Filter by behavior, not by long forms** — Bot detection, dwell time, and scroll/click behavior act as light quality filters so the funnel stays fast but still surfaces intent. The prelander doesn’t over-qualify; it routes and segments.
+
+Copy uses **identity-relevant tension**, **social proof**, **scarcity/urgency**, and **risk reversal** (no SSN, no obligation) so the opt-in feels like access or relief, not “submit a quote request.” The result is a funnel that aims for high intent and conversion velocity at a sustainable CPL.
+
+---
+
+**Implementation details:** The prelander loads config (pixel ID, etc.) from environment variables, renders angle-based copy, and on CTA click calls the server to get the offer URL with tracking (fbp, fbc, user agent). The server resolves the redirect and appends those params; on conversion callback it sends a Lead event to Facebook CAPI. No secrets or API keys are stored in the repo; everything is driven by environment variables (see Setup).
 
 ---
 
