@@ -1,38 +1,10 @@
-/*
-================================================================================
-FACEBOOK EVENTS TEST FUNCTION (DIRECT TO FB + TEST CODE)
-================================================================================
-Purpose: Send a DIRECT server event to Facebook's Conversions API using a test_event_code.
-When to Use: To validate in Facebook Events Manager > Test Events that your Pixel receives server events.
-
-How it works:
-1) Sends a PageView directly to Facebook's /events endpoint (bypasses our CAPI function)
-2) Includes test_event_code = TEST92722 so it appears in the Test Events tab
-3) Verifies Pixel ID + Access Token are valid and accepted by Facebook
-
-How to trigger:
-- Browser: https://policypulse.online/.netlify/functions/test-facebook-events
-- Terminal: curl https://policypulse.online/.netlify/functions/test-facebook-events
-
-Notes:
-- APPEARS in the Test Events stream (because test_event_code is included)
-- Does NOT validate our facebook-capi function path; it talks to Facebook directly
-================================================================================
-*/
-
+/** GET: sends test events to Facebook CAPI with test_event_code (shows in Test Events tab). */
 const { sendFacebookEvents, buildUserData } = require('./facebook-lib');
-const { FACEBOOK_PIXEL_ID, FACEBOOK_ACCESS_TOKEN } = require('./config');
-
-// Facebook Pixel API configuration from centralized config
-
-// Use shared sender from facebook-lib
+const { FACEBOOK_PIXEL_ID, FACEBOOK_ACCESS_TOKEN, SITE_URL } = require('./config');
 
 exports.handler = async (event, context) => {
-    // Set function timeout
     context.callbackWaitsForEmptyEventLoop = false;
-    
     try {
-        // Test event code from Facebook Events Manager
         const testEventCode = 'TEST92722';
         
         // Derive client IP and user agent from the incoming request (like index.html does via get-ip)
@@ -61,7 +33,7 @@ exports.handler = async (event, context) => {
                 currency: 'USD',
                 primary_angle: 'one_bill_away'
             },
-            event_source_url: 'https://policypulse.online',
+            event_source_url: SITE_URL || 'https://policypulse.online',
             event_id: `test_pv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
         };
 
@@ -79,7 +51,7 @@ exports.handler = async (event, context) => {
                 page_duration: 5,
                 conversion_trigger: 'direct_cta'
             },
-            event_source_url: 'https://policypulse.online',
+            event_source_url: SITE_URL || 'https://policypulse.online',
             event_id: `test_cta_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
         };
 
@@ -97,7 +69,7 @@ exports.handler = async (event, context) => {
                 page_duration: 12,
                 conversion_trigger: 'test_lead'
             },
-            event_source_url: 'https://policypulse.online',
+            event_source_url: SITE_URL || 'https://policypulse.online',
             event_id: `test_lead_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
         };
 

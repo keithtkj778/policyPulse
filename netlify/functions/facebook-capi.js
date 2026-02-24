@@ -1,22 +1,8 @@
-/*
-================================================================================
-FACEBOOK CONVERSIONS API FUNCTION
-================================================================================
-Purpose: Sends events to Facebook Conversions API for server-side tracking
-When Used: Called for every event (PageView, CTAClicked, Lead) to duplicate
-          client-side pixel events with better data quality
-Events Handled: PageView, CTAClicked, Lead
-Data Source: Receives event data from client-side pixel and postback function
-Deduplication: Uses same event_id as pixel for automatic Facebook deduplication
-================================================================================
-*/
-
+/** POST: receives event payload, enriches with ParamBuilder, sends to Facebook CAPI. */
 const { sendFacebookEvents, buildUserData } = require('./facebook-lib');
-const { FACEBOOK_PIXEL_ID, FACEBOOK_ACCESS_TOKEN } = require('./config');
+const { FACEBOOK_PIXEL_ID, FACEBOOK_ACCESS_TOKEN, SITE_URL } = require('./config');
 const { ParamBuilder } = require('capi-param-builder-nodejs');
-
-// Facebook Pixel API configuration from centralized config
-// Using Parameter Builder to improve fbp/fbc quality and coverage per Meta best practices
+const { PARAM_BUILDER_DOMAIN } = require('./constants');
 
 exports.handler = async (event, context) => {
     // Set function timeout
@@ -103,7 +89,8 @@ exports.handler = async (event, context) => {
         // Initialize Parameter Builder to improve fbp/fbc quality and IP handling
         // Per Meta's Server-Side Parameter Builder documentation:
         // https://developers.facebook.com/docs/marketing-api/conversions-api/parameter-builder/server-side
-        const paramBuilder = new ParamBuilder(['policypulse.online']);
+        const domain = (SITE_URL && new URL(SITE_URL).hostname) || PARAM_BUILDER_DOMAIN;
+        const paramBuilder = new ParamBuilder([domain]);
         
         // Parse cookies from request headers (if any)
         // Meta docs: Parse cookies from HTTP request headers
@@ -119,7 +106,7 @@ exports.handler = async (event, context) => {
         // Meta docs: Call processRequest() first, then use get APIs
         // Note: queryParams is empty since this is a POST endpoint with JSON body (no URL query params)
         const queryParams = {};
-        const host = event.headers.host || 'policypulse.online';
+        const host = event.headers.host || (SITE_URL ? new URL(SITE_URL).host : PARAM_BUILDER_DOMAIN);
         const xForwardedFor = event.headers['x-forwarded-for'] || event.headers['x-nf-client-connection-ip'] || null;
         const remoteAddr = event.headers['client-ip'] || null;
         
@@ -187,7 +174,7 @@ exports.handler = async (event, context) => {
                     page_duration: page_duration || 0,
                     conversion_trigger: conversion_trigger || 'unknown'
                 },
-                event_source_url: page_url || 'https://policypulse.online',
+                event_source_url: page_url || SITE_URL || 'https://policypulse.online',
                 event_id: finalEventId // ✅ SAME event ID as Pixel (for deduplication)
             }]
         };
@@ -240,7 +227,8 @@ exports.handler = async (event, context) => {
         if (recommendedCookies && recommendedCookies.length > 0) {
             // Note: Netlify Functions can return multiple Set-Cookie headers via array
             responseHeaders['Set-Cookie'] = recommendedCookies.map(cookie => {
-                return `${cookie.name}=${cookie.value}; Max-Age=${cookie.maxAge}; Path=/; Domain=${cookie.domain || '.policypulse.online'}; SameSite=Lax`;
+                const cookieDomain = cookie.domain || (SITE_URL ? '.' + new URL(SITE_URL).hostname : '.' + PARAM_BUILDER_DOMAIN);
+            return `${cookie.name}=${cookie.value}; Max-Age=${cookie.maxAge}; Path=/; Domain=${cookieDomain}; SameSite=Lax`;
             });
             console.log(`✅ [facebook-capi] Returning ${recommendedCookies.length} cookie(s) for client to set for improved fbp/fbc coverage`);
         }
