@@ -1,0 +1,9 @@
+# Netlify config for Policy Pulse (use this for deploys)
+# Override or merge with Netlify UI settings as needed.
+
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"

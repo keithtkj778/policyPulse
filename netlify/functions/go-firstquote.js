@@ -1,37 +1,19 @@
-/*
-================================================================================
-CTA CLICK HANDLER FUNCTION
-================================================================================
-Purpose: Handles CTA button clicks and redirects users to MaxBounty offer
-When Used: Called when user clicks "Am I Protected From Financial Ruin?" or 
-          "Take Control Now" buttons on the landing page
-Process: 1. Follows MaxBounty redirect chain to get final offer URL
-         2. Appends tracking parameters (s3=fbp, s4=fbc, s5=user_agent)
-         3. Returns final URL for user redirection
-Tracking: Adds fbp, fbc, and user_agent to MaxBounty URL for conversion tracking
-================================================================================
-*/
-
+/** POST: resolves offer redirect chain, appends s3=fbp, s4=fbc, s5=user_agent; returns redirect URL. */
 const fetch = require('node-fetch');
 const { URL } = require('url');
-
-// MaxBounty affiliate link
-const MAXBOUNTY_URL = "https://afflat3e3.com/trk/lnk/C94F5D99-5FC1-4F17-B862-BD110C21C8F7/?o=30127&c=918277&a=765749&k=5E9E785FF72D238BE1639961F85156BF&l=34069";
-
-// Retry configuration
-const MAX_RETRIES = 3;
-const RETRY_DELAY = 1000;
+const { OFFER_REDIRECT_URL } = require('./config');
+const { MAX_REDIRECT_HOPS, FETCH_MAX_RETRIES, FETCH_RETRY_DELAY_MS, FETCH_TIMEOUT_MS } = require('./constants');
 
 // Sleep function for retries
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Safe fetch with retries
-async function safeFetch(url, options, retries = MAX_RETRIES) {
+async function safeFetch(url, options, retries = FETCH_MAX_RETRIES) {
     for (let i = 0; i <= retries; i++) {
         try {
             const response = await fetch(url, {
                 ...options,
-                timeout: 10000,
+                timeout: FETCH_TIMEOUT_MS,
                 headers: {
                     "User-Agent": options.headers?.['user-agent'] || "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
                     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
@@ -46,7 +28,7 @@ async function safeFetch(url, options, retries = MAX_RETRIES) {
         } catch (error) {
             console.log(`Fetch attempt ${i + 1} failed:`, error.message);
             if (i === retries) throw error;
-            await sleep(RETRY_DELAY * (i + 1));
+            await sleep(FETCH_RETRY_DELAY_MS * (i + 1));
         }
     }
 }
@@ -131,15 +113,23 @@ exports.handler = async (event, context) => {
 
         // Note: Tracking data is now passed directly via URL parameters to MaxBounty
 
-        // Call MaxBounty link to get final URL
-        let finalURL = null;
-        let nextURL = MAXBOUNTY_URL;
-        let hops = 0;
-        const maxHops = 8;
+        const baseUrl = OFFER_REDIRECT_URL;
+        if (!baseUrl || !isValidUrl(baseUrl)) {
+            console.error('🚨 [go-firstquote] OFFER_REDIRECT_URL is not set or invalid');
+            return {
+                statusCode: 500,
+                headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+                body: JSON.stringify({ error: 'Redirect URL not configured', success: false }),
+            };
+        }
 
-        console.log(`🔄 [go-firstquote] Following MaxBounty redirect chain (max ${maxHops} hops)`);
-        while (hops < maxHops && nextURL && isValidUrl(nextURL)) {
-            console.log(`  → Hop ${hops + 1}/${maxHops}: ${nextURL.substring(0, 100)}...`);
+        let finalURL = null;
+        let nextURL = baseUrl;
+        let hops = 0;
+
+        console.log(`🔄 [go-firstquote] Following redirect chain (max ${MAX_REDIRECT_HOPS} hops)`);
+        while (hops < MAX_REDIRECT_HOPS && nextURL && isValidUrl(nextURL)) {
+            console.log(`  → Hop ${hops + 1}/${MAX_REDIRECT_HOPS}: ${nextURL.substring(0, 100)}...`);
             
             try {
                 const resp = await safeFetch(nextURL, { 
@@ -172,10 +162,9 @@ exports.handler = async (event, context) => {
             }
         }
 
-        // If we couldn't get final URL, use MaxBounty URL as fallback
         if (!finalURL || !isValidUrl(finalURL)) {
-            console.warn(`⚠️  [go-firstquote] WARN: Failed to resolve final URL after ${hops} hops - using fallback`);
-            finalURL = MAXBOUNTY_URL;
+            console.warn(`⚠️  [go-firstquote] WARN: Failed to resolve final URL after ${hops} hops - using base URL`);
+            finalURL = baseUrl;
         }
 
         console.log(`✅ [go-firstquote] Final URL resolved: ${finalURL.substring(0, 100)}...`);
@@ -205,7 +194,7 @@ exports.handler = async (event, context) => {
             });
             return {
                 statusCode: 302,
-                headers: { 'Location': MAXBOUNTY_URL }
+                headers: { 'Location': baseUrl }
             };
         }
 
@@ -238,10 +227,10 @@ exports.handler = async (event, context) => {
             timestamp: new Date().toISOString()
         });
         
-        // Fallback to MaxBounty URL
+        const fallback = OFFER_REDIRECT_URL || '/';
         return {
             statusCode: 302,
-            headers: { 'Location': MAXBOUNTY_URL }
+            headers: { 'Location': fallback }
         };
     }
 };

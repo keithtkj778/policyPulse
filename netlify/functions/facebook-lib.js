@@ -50,15 +50,7 @@ async function sendFacebookEvents({ pixelId, accessToken, payload }) {
         throw new Error('Missing Facebook Access Token');
     }
 
-    const endpoint = `https://graph.facebook.com/v18.0/${pixelId}/events?access_token=${accessToken.substring(0, 10)}...`;
     const eventCount = payload?.data?.length || 0;
-    
-    console.log(`📤 [facebook-lib] Calling Facebook CAPI`, {
-        endpoint: `v18.0/${pixelId}/events`,
-        event_count: eventCount,
-        has_access_token: !!accessToken
-    });
-
     try {
         const response = await fetch(`https://graph.facebook.com/v18.0/${pixelId}/events?access_token=${accessToken}`, {
             method: 'POST',

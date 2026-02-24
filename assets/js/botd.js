@@ -1,10 +1,5 @@
-// FingerprintJS BotD loader
-// Initialize an agent at application startup, once per page/app.
 const botdPromise = import('https://openfpcdn.io/botd/v1').then((Botd) => Botd.load());
 
-// ===== FINGERPRINTJS BOTD + BEHAVIORAL GATES =====
-
-// Bot detection state
 let botDetected = false;
 let honeypotInteractions = 0;
 let humanBehaviorValidated = false;
@@ -14,41 +9,9 @@ let tabVisible = false;
 let hasScrolled = false;
 let hasPointerMoved = false;
 let motionEntropy = [];
-
-// FingerprintJS BotD state
 let botdResult = null;
 let botdClassification = null;
 
-// Disposable email domains list
-const disposableEmailDomains = [
-  'mailinator.com', '10minutemail.com', 'guerrillamail.com', 'tempmail.org',
-  'throwaway.email', 'temp-mail.org', 'getnada.com', 'maildrop.cc',
-  'yopmail.com', 'sharklasers.com', 'guerrillamail.biz', 'guerrillamail.de',
-  'guerrillamail.net', 'guerrillamail.org', 'guerrillamailblock.com',
-  'pokemail.net', 'spam4.me', 'bccto.me', 'chacuo.net', 'dispostable.com',
-  'mailnesia.com', 'mailnull.com', 'spamgourmet.com', 'spamhole.com',
-  'spammotel.com', 'spamobox.com', 'spamspot.com', 'spamthis.co.uk',
-  'spamthisplease.com', 'spamtrail.com', 'spamtroll.net', 'spamwc.cf',
-  'spamwc.ga', 'spamwc.gq', 'spamwc.ml', 'spamwc.tk', 'spamwc.xyz',
-  'trashmail.com', 'trashmail.net', 'trashmail.org', 'trashmail.ws',
-  'trashmailer.com', 'trashymail.com', 'trashymail.net', 'trashymail.org',
-  'trbvm.com', 'trbvm.net', 'trbvm.org', 'trbvm.ws', 'trbvm.xyz',
-  'trbvm.gq', 'trbvm.ga', 'trbvm.ml', 'trbvm.tk', 'trbvm.cf'
-];
-
-// leave it here can be used in future
-function validateEmail(email) {
-  if (!email || typeof email !== 'string') return false;
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) return false;
-  const domain = email.split('@')[1]?.toLowerCase();
-  if (disposableEmailDomains.includes(domain)) return false;
-  const localPart = email.split('@')[0];
-  if (domain === 'gmail.com' && (localPart.length < 6 || localPart.length > 64)) return false;
-  return true;
-}
-
-// Motion entropy calculation - less strict
 function calculateMotionEntropy(movements) {
   if (movements.length < 2) return 0;
   let totalDistance = 0;
@@ -71,32 +34,14 @@ function calculateMotionEntropy(movements) {
   return directionChanges / Math.max(totalDistance, 1);
 }
 
-// Initialize FingerprintJS BotD (Open Source)
 async function initializeBotD() {
   try {
     const botd = await botdPromise;
     botdResult = await botd.detect();
     botdClassification = botdResult.bot;
-    
-    console.log(`🤖 [bot-detection] FingerprintJS BotD result:`, {
-      classification: botdClassification,
-      confidence: botdResult?.confidence || 'unknown',
-      details: botdResult || 'no details'
-    });
-    
     if (botdClassification === 'bad' || botdClassification === 'suspect') {
       botDetected = true;
       eventsBlocked = true;
-      console.error(`🚨 [bot-detection] BOT DETECTED: FingerprintJS BotD flagged as "${botdClassification}"`, {
-        reason: 'FingerprintJS BotD detection',
-        classification: botdClassification,
-        confidence: botdResult?.confidence || 'unknown',
-        user_agent: navigator.userAgent,
-        timestamp: new Date().toISOString(),
-        action: 'All events blocked, CTAs hidden'
-      });
-    } else {
-      console.log(`✅ [bot-detection] FingerprintJS BotD: Human-like (${botdClassification})`);
     }
   } catch (error) {
     console.error('🚨 [bot-detection] BotD initialization failed:', {
@@ -129,44 +74,13 @@ function validateHumanBehavior() {
     }
   }
   
-  if (failures.length > 0) {
-    console.warn(`⚠️  [bot-detection] Human behavior validation FAILED:`, {
-      failures: failures,
-      behavior: {
-        time_spent: `${timeSpent.toFixed(2)}s`,
-        tab_visible: tabVisible,
-        has_scrolled: hasScrolled,
-        has_pointer_moved: hasPointerMoved,
-        motion_samples: motionEntropy.length
-      },
-      timestamp: new Date().toISOString()
-    });
-    return false;
-  }
-  
-  console.log(`✅ [bot-detection] Human behavior validated:`, {
-    time_spent: `${timeSpent.toFixed(2)}s`,
-    tab_visible: tabVisible,
-    has_scrolled: hasScrolled,
-    has_pointer_moved: hasPointerMoved,
-    motion_samples: motionEntropy.length
-  });
+  if (failures.length > 0) return false;
   return true;
 }
 
-// Block all events silently
-function blockBotSession(reason = 'Unknown') {
+function blockBotSession(reason) {
   botDetected = true;
   eventsBlocked = true;
-  
-  console.error(`🚨 [bot-detection] BOT SESSION BLOCKED: ${reason}`, {
-    reason: reason,
-    honeypot_interactions: honeypotInteractions,
-    user_agent: navigator.userAgent,
-    timestamp: new Date().toISOString(),
-    action: 'All events blocked, CTAs hidden'
-  });
-  
   document.querySelectorAll('.cta-primary').forEach(cta => {
     cta.style.display = 'none';
     cta.onclick = null;
@@ -185,33 +99,14 @@ function setupHoneypotMonitoring() {
     const elements = document.querySelectorAll(selector);
     elements.forEach(element => {
       ['focus', 'input', 'change', 'click', 'mousedown', 'mouseup'].forEach(eventType => {
-        element.addEventListener(eventType, (e) => {
+        element.addEventListener(eventType, () => {
           honeypotInteractions++;
-          const fieldInfo = {
-            selector: selector,
-            field_id: element.id || 'no-id',
-            field_name: element.name || 'no-name',
-            field_type: element.type || 'no-type',
-            event_type: eventType,
-            interaction_count: honeypotInteractions
-          };
-          
-          console.error(`🚨 [bot-detection] HONEYPOT TRIGGERED:`, {
-            reason: 'Honeypot field interaction detected',
-            details: fieldInfo,
-            user_agent: navigator.userAgent,
-            timestamp: new Date().toISOString(),
-            action: 'Bot session blocked'
-          });
-          
           botDetected = true;
-          blockBotSession(`Honeypot field "${fieldInfo.field_id || fieldInfo.field_name}" interacted with via ${eventType}`);
+          blockBotSession('Honeypot interaction');
         });
       });
     });
   });
-  
-  console.log(`✅ [bot-detection] Honeypot monitoring active: ${formSelectors.length} selectors monitored`);
 }
 
 // Tab visibility monitoring
@@ -247,26 +142,20 @@ function setupMotionTracking() {
   });
 }
 
-// Reset bot detection state for fresh page load
 function resetBotDetectionState() {
-    botDetected = false;
-    honeypotInteractions = 0;
-    humanBehaviorValidated = false;
-    eventsBlocked = false;
-    sessionStartTime = Date.now();
-    tabVisible = false;
-    hasScrolled = false;
-    hasPointerMoved = false;
-    motionEntropy = [];
-    botdResult = null;
-    botdClassification = null;
-    console.log(`✅ [bot-detection] State reset for fresh page load`, {
-        timestamp: new Date().toISOString(),
-        user_agent: navigator.userAgent?.substring(0, 50) || 'unknown'
-    });
+  botDetected = false;
+  honeypotInteractions = 0;
+  humanBehaviorValidated = false;
+  eventsBlocked = false;
+  sessionStartTime = Date.now();
+  tabVisible = false;
+  hasScrolled = false;
+  hasPointerMoved = false;
+  motionEntropy = [];
+  botdResult = null;
+  botdClassification = null;
 }
 
-// Expose API if needed
 window.initializeBotD = initializeBotD;
 window.validateHumanBehavior = validateHumanBehavior;
 window.blockBotSession = blockBotSession;
@@ -274,5 +163,4 @@ window.setupHoneypotMonitoring = setupHoneypotMonitoring;
 window.setupTabVisibilityMonitoring = setupTabVisibilityMonitoring;
 window.setupMotionTracking = setupMotionTracking;
 window.resetBotDetectionState = resetBotDetectionState;
-
 
