@@ -1,6 +1,6 @@
 # Policy Pulse
 
-A **health insurance lead-generation prelander**: a single landing page that qualifies visitors and sends them to an offer, with full tracking so advertisers can measure and optimize campaigns.
+A **health insurance lead-generation prelander**: the middle step between your Facebook ad and the client’s landing page. Visitors click your ad → land here (Policy Pulse) for a short “reality check” → click the CTA → go to the client’s page (e.g. enter ZIP, view plans, call). Full tracking so you can measure and optimize.
 
 Built with vanilla HTML/CSS/JS and Netlify serverless functions. No framework—easy to read and deploy.
 
@@ -8,11 +8,11 @@ Built with vanilla HTML/CSS/JS and Netlify serverless functions. No framework—
 
 ## What it does
 
-1. **User clicks an ad** → Lands on a short “reality check” page about health coverage.
-2. **User clicks the CTA** (“Am I protected?”, “Take control now”) → The server resolves the final offer URL, attaches tracking (fbp, fbc, user agent), and redirects the user.
-3. **User converts** (e.g. completes a quote) → The offer network calls the postback URL; the server sends a Lead event to Facebook Conversions API for attribution and optimization.
+1. **User clicks your Facebook ad** → Lands on **this prelander** (Policy Pulse): headline, benefits, “Am I protected?” / “Take control now” CTA.
+2. **User clicks the CTA** → Your server resolves the client’s landing page URL, attaches tracking (fbp, fbc, user agent), and redirects the user there.
+3. **User reaches the client’s landing page** (e.g. enter ZIP, view plans, or call) → Converts there. The client’s/affiliate network calls your postback URL; your server sends a Lead event to Facebook Conversions API.
 
-End-to-end: **ad → prelander → offer → conversion**, with tracking at every step.
+**Flow in one line:** Facebook ad → **this prelander** → **client’s landing page** → conversion, with tracking at every step.
 
 ---
 
@@ -26,26 +26,35 @@ End-to-end: **ad → prelander → offer → conversion**, with tracking at ever
 | ------------------------- |
 | ![Prelander bottom](docs/screenshots/prelander-bottom.png) |
 
+**Client’s landing page** (where users go after clicking the prelander CTA — e.g. enter ZIP, view plans, or call):
+
+| |
+|--|
+| ![Client landing page](docs/screenshots/client-landing-page.png) |
+
+For every submitted form (or qualified lead) on the client’s landing page, **$X** is generated from affiliate networks. Replace **$X** with your actual payout per lead; the exact amount depends on the offer and network.
+
 ---
 
 ## How the flow works
 
 ```
-┌─────────────┐     ┌──────────────────┐     ┌─────────────────┐     ┌──────────────┐
-│  User sees  │     │  Prelander       │     │  Offer / quote   │     │  Conversion  │
-│  your ad    │ ──► │  (this repo)     │ ──► │  (external)     │ ──► │  (e.g. lead) │
-└─────────────┘     └──────────────────┘     └─────────────────┘     └──────────────┘
+┌─────────────┐     ┌──────────────────┐     ┌─────────────────────────┐     ┌──────────────┐
+│  User      │     │  Prelander       │     │  Client's landing page   │     │  Conversion  │
+│  clicks    │ ──► │  (this repo)    │ ──► │  (ZIP, view plans, call) │ ──► │  (e.g. lead) │
+│  FB ad     │     │  Policy Pulse   │     │  external               │     │              │
+└─────────────┘     └──────────────────┘     └─────────────────────────┘     └──────────────┘
         ▲                    │                          │                      │
         │                    ▼                          │                      │
         │            • Page view + CTA                  │                      │
         │              sent to Facebook                 │                      │
         │            • Bot checks, angle-based copy     │                      │
-        │            • CTA → server gets offer URL      │                      │
+        │            • CTA → server gets client landing-page URL │                      │
         │              and appends fbp/fbc for tracking │                      │
         │                                              │                      │
         │                                              ▼                      ▼
         │            ┌─────────────────────────────────────────────────────────────┐
-        │            │  Affiliate network calls your postback URL                    │
+        │            │  Client's/affiliate network calls your postback URL            │
         │            │  → Netlify receives postback                                 │
         │            │  → Server sends converted Lead to Facebook CAPI               │
         │            │  → CAPI feeds Meta's algorithm (conversion signal)            │
@@ -55,6 +64,8 @@ End-to-end: **ad → prelander → offer → conversion**, with tracking at ever
           Algorithm learns who converts → delivers ad to more users likely to convert
           (lower CPL, better ROAS over time)
 ```
+
+**In plain terms:** Click Facebook ad → land on **this prelander** (Policy Pulse) → click CTA → go to **client’s landing page** (e.g. enter ZIP, view plans, call) → convert. Your server tracks each step and sends conversions to Meta so the algorithm can improve who sees the ad.
 
 ---
 
@@ -77,7 +88,7 @@ Copy uses **identity-relevant tension**, **social proof**, **scarcity/urgency**,
 
 ---
 
-**Implementation details:** The prelander loads config (pixel ID, etc.) from environment variables, renders angle-based copy, and on CTA click calls the server to get the offer URL with tracking (fbp, fbc, user agent). The server resolves the redirect and appends those params; on conversion callback it sends a Lead event to Facebook CAPI. No secrets or API keys are stored in the repo; everything is driven by environment variables (see Setup).
+**Implementation details:** The prelander loads config (pixel ID, etc.) from environment variables, renders angle-based copy, and on CTA click calls the server to get the client’s landing page URL with tracking (fbp, fbc, user agent). The server resolves the redirect and appends those params; when the user converts on the client’s page, the postback fires and your server sends a Lead event to Facebook CAPI. No secrets or API keys are stored in the repo; everything is driven by environment variables (see Setup).
 
 ---
 
