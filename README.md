@@ -75,6 +75,18 @@ For every submitted form (or qualified lead) on the client’s landing page, **$
 
 ---
 
+## Bot and fraud detection
+
+Lead-gen pages attract bots and fake traffic, which wastes ad spend and skews Meta's algorithm. This prelander reduces that by (1) **detecting automated browsers** (FingerprintJS BotD) and (2) **checking behavior**: e.g. time on page, scroll/pointer movement, and motion patterns. Hidden "honeypot" fields catch simple bots that fill every field. If a visitor is classified as a bot or fails the behavior checks, we **don't send** their page views or events to Meta—so fake traffic doesn't get counted as conversions and the campaign data stays cleaner for optimization.
+
+---
+
+## Server-side tracking (privacy-resilient)
+
+Many users block cookies or use browsers (e.g. Safari, Firefox) that limit tracking. If we relied only on the browser (pixels, cookies), we'd lose a lot of conversion data. Here, **events are sent from our server** to Meta's Conversions API: the server receives the request (with IP, user agent, and fbp/fbc when available), then forwards the event to Meta. So even when the browser blocks the pixel or cookies, we still record the action server-side. That keeps attribution and optimization working despite ad blockers and privacy restrictions.
+
+---
+
 ### Why this funnel is built this way
 
 The prelander is built for **conversion-efficient lead gen**: minimize cost per lead (CPL) and maximize return on ad spend (ROAS) while keeping lead quality high. It’s not built to slow traffic with heavy forms; it’s built to:
