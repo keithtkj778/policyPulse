@@ -24,6 +24,8 @@ An **affiliate network** (e.g. MaxBounty) is a marketplace: companies list offer
 | --------------------------------------------- | --------------------------------------------------------- |
 | ![MaxBounty dashboard](docs/screenshots/maxbounty-dashboard.png) | ![MaxBounty earnings](docs/screenshots/maxbounty-earnings.png) |
 
+The left screenshot is the actual MaxBounty affiliate network dashboard. The right is a real earnings report from running the health insurance prelander offer (this type of funnel).
+
 **Important:** Joining a network gives you access to offers and payouts; it does **not** run or fund your ads. You need your own **infrastructure** (landing pages, tracking, a prelander like this one) and your own **ad budget** (e.g. Facebook Ads). You drive the traffic; the network tracks conversions and pays you per lead or sale.
 
 ---
