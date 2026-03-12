@@ -8,9 +8,9 @@ Built with vanilla HTML/CSS/JS and Netlify serverless functions. No framework—
 
 ## What it does
 
-1. **User clicks your Facebook ad** → Lands on **this prelander** (Policy Pulse): headline, benefits, “Am I protected?” / “Take control now” CTA.
-2. **User clicks the CTA** → Your server resolves the client’s landing page URL, attaches tracking (fbp, fbc, user agent), and redirects the user there.
-3. **User reaches the client’s landing page** (e.g. enter ZIP, view plans, or call) → Converts there. The client’s/affiliate network calls your postback URL; your server sends a Lead event to Facebook Conversions API.
+1. **User clicks your Facebook ad** → Lands on **this prelander** (Policy Pulse): headline, benefits, and a main button (“Am I protected?” / “Take control now”).
+2. **User clicks the button** → Your server looks up the client’s landing page URL, adds tracking info (so Meta can tie the visit to your ad), and sends the user there.
+3. **User reaches the client’s landing page** (e.g. enter ZIP, view plans, or call) → Converts there. The affiliate network then notifies your server; your server tells Meta “this was a lead” so your ad stats stay accurate.
 
 **Flow in one line:** Facebook ad → **this prelander** → **client’s landing page** → conversion, with tracking at every step.
 
@@ -30,15 +30,19 @@ An **affiliate network** (e.g. MaxBounty) is a marketplace: companies list offer
 
 ## Screenshots
 
-| Hero — headline, social proof, primary CTA | Benefits — value propositions and urgency |
-| ----------------------------------------- | ----------------------------------------- |
+What the prelander (this page) and the next step look like in practice.
+
+**Prelander (Policy Pulse) — the page in this repo.** First three are the same page, different sections:
+
+| Prelander: hero — headline, social proof, main button | Prelander: benefits — why it matters, urgency |
+| ----------------------------------------------------- | --------------------------------------------- |
 | ![Prelander hero](docs/screenshots/prelander-hero.png) | ![Prelander benefits](docs/screenshots/prelander-benefits.png) |
 
-| Bottom CTA and disclaimers |
-| ------------------------- |
+| Prelander: bottom — final button and disclaimers |
+| ------------------------------------------------ |
 | ![Prelander bottom](docs/screenshots/prelander-bottom.png) |
 
-**Client’s landing page** (where users go after clicking the prelander CTA — e.g. enter ZIP, view plans, or call):
+**Client’s landing page** (external site users go to after clicking the prelander button — e.g. enter ZIP, view plans, or call):
 
 | |
 |--|
@@ -74,45 +78,45 @@ For every submitted form (or qualified lead) on the client’s landing page, **$
         │                                              │
         └──────────────────────────────────────────────┘
           Algorithm learns who converts → delivers ad to more users likely to convert
-          (lower CPL, better ROAS over time)
+          (lower cost per lead, better return on ad spend over time)
 ```
 
-**In plain terms:** Click Facebook ad → land on **this prelander** (Policy Pulse) → click CTA → go to **client’s landing page** (e.g. enter ZIP, view plans, call) → convert. Your server tracks each step and sends conversions to Meta so the algorithm can improve who sees the ad.
+**In plain terms:** User clicks your ad → lands on this prelander → clicks the main button → goes to the client’s page (e.g. enter ZIP, view plans, call) → converts. Your server records each step and tells Meta, so Meta can show your ad to more people who are likely to convert.
 
 ---
 
 ## Why Meta CAPI matters
 
-**Conversions API (CAPI)** is Meta’s server-side way to record what users do—page views, button clicks, leads—so your ads can be measured and improved even when the browser blocks or limits normal tracking. This project sends those events from your own server to Meta: when someone lands on the page or clicks the CTA, and when they later convert, your backend tells Meta. Meta uses that information to see which ads actually drive leads and to learn what kind of people convert, so over time it shows your ad to more people who are likely to take action. The result is better targeting, fewer wasted impressions, and more leads for the same spend.
+**Conversions API (CAPI)** is Meta’s way to record what users do (page views, button clicks, leads) **from your server** instead of only from the browser. That matters because many people block or limit tracking in the browser—so browser-only tracking would miss a lot of conversions. This project sends events from your server to Meta: when someone lands on the page or clicks the button, and when they later convert, your server tells Meta. Meta uses that to see which ads actually drive leads and to show your ad to more people like those who convert. Result: better targeting and more leads for the same ad spend.
 
 ---
 
 ## Bot and fraud detection
 
-Lead-gen pages attract bots and fake traffic, which wastes ad spend and skews Meta's algorithm. This prelander reduces that by (1) **detecting automated browsers** (FingerprintJS BotD) and (2) **checking behavior**: e.g. time on page, scroll/pointer movement, and motion patterns. Hidden "honeypot" fields catch simple bots that fill every field. If a visitor is classified as a bot or fails the behavior checks, we **don't send** their page views or events to Meta—so fake traffic doesn't get counted as conversions and the campaign data stays cleaner for optimization.
+Lead-gen pages get hit by bots and fake traffic, which wastes ad spend and messes up Meta’s data. This prelander fights that in two ways: (1) **detecting automated browsers** (e.g. FingerprintJS BotD), and (2) **checking human-like behavior**—e.g. time on page, scrolling, mouse movement. Hidden fields (“honeypots”) catch dumb bots that fill every box. If we decide a visitor is a bot or doesn’t behave like a human, we **don’t send** their visits or events to Meta, so fake traffic isn’t counted and your numbers stay useful.
 
 ---
 
 ## Server-side tracking (privacy-resilient)
 
-Many users block cookies or use browsers (e.g. Safari, Firefox) that limit tracking. If we relied only on the browser (pixels, cookies), we'd lose a lot of conversion data. Here, **events are sent from our server** to Meta's Conversions API: the server receives the request (with IP, user agent, and fbp/fbc when available), then forwards the event to Meta. So even when the browser blocks the pixel or cookies, we still record the action server-side. That keeps attribution and optimization working despite ad blockers and privacy restrictions.
+Lots of people block cookies or use browsers that limit tracking. If we only tracked from the browser (pixels, cookies), we’d miss many conversions. Here, **your server** sends events to Meta’s Conversions API—using the request your server receives (IP, browser info, and Facebook IDs when available). So even when the browser blocks the pixel or cookies, we still record the action. That keeps your conversion data and ad optimization working despite blockers and privacy settings.
 
 ---
 
 ### Why this funnel is built this way
 
-The prelander is built for **conversion-efficient lead gen**: minimize cost per lead (CPL) and maximize return on ad spend (ROAS) while keeping lead quality high. It’s not built to slow traffic with heavy forms; it’s built to:
+The prelander is built to get leads cheaply and convert well—minimize cost per lead and maximize return on ad spend without long forms. It’s designed to:
 
-- **Create an emotional path to the CTA** — Identity-based tension (“Smart families act first”), urgency, and relief (e.g. “60-second check, no obligation”) so the click feels like a small, low-risk step rather than a big commitment.
-- **Keep message-match tight** — The same psychological thread runs from ad → prelander → offer, so users don’t get a jarring shift that kills intent.
-- **Let every dollar do two jobs** — Generate the lead and **train the platform**. By sending conversions back to Meta via CAPI, the algorithm learns which users convert and can optimize delivery toward similar people, so you get better traffic over time without manually chasing volume.
-- **Filter by behavior, not by long forms** — Bot detection, dwell time, and scroll/click behavior act as light quality filters so the funnel stays fast but still surfaces intent. The prelander doesn’t over-qualify; it routes and segments.
+- **Make the button feel like a small step** — Copy uses identity, urgency, and relief (e.g. “60-second check, no obligation”) so clicking feels low-risk, not like a big commitment.
+- **Keep the message consistent** — Same thread from ad → prelander → offer, so users don’t get a jarring change that kills interest.
+- **Use conversions to train Meta** — Sending conversions back to Meta via CAPI lets the algorithm learn who converts and show your ad to more people like them, so traffic improves over time.
+- **Filter by behavior, not long forms** — Bot checks, time on page, and scroll/click behavior act as light quality filters so the funnel stays fast but still catches real intent.
 
-Copy uses **identity-relevant tension**, **social proof**, **scarcity/urgency**, and **risk reversal** (no SSN, no obligation) so the opt-in feels like access or relief, not “submit a quote request.” The result is a funnel that aims for high intent and conversion velocity at a sustainable CPL.
+Copy uses identity, social proof, urgency, and risk reversal (no SSN, no obligation) so the opt-in feels like access or relief, not “fill out a quote form.” The goal is high intent and steady conversions at a sustainable cost per lead.
 
 ---
 
-**Implementation details:** The prelander loads config (pixel ID, etc.) from environment variables, renders angle-based copy, and on CTA click calls the server to get the client’s landing page URL with tracking (fbp, fbc, user agent). The server resolves the redirect and appends those params; when the user converts on the client’s page, the postback fires and your server sends a Lead event to Facebook CAPI. No secrets or API keys are stored in the repo; everything is driven by environment variables (see Setup).
+**Implementation details:** The prelander reads settings (pixel ID, etc.) from environment variables, shows the right headline/message variant, and on button click calls your server to get the client’s landing page URL with tracking attached. When the user converts on the client’s page, the affiliate network calls your postback URL and your server sends a “Lead” event to Meta. No API keys in the repo—everything is in env vars (see Setup).
 
 ---
 
@@ -132,9 +136,9 @@ In **Netlify** (Site settings → Environment variables), add:
 
 | Variable                | Description                                                                           |
 | ----------------------- | ------------------------------------------------------------------------------------- |
-| `FACEBOOK_PIXEL_ID`     | Meta Pixel ID (from Events Manager).                                                  |
-| `FACEBOOK_ACCESS_TOKEN` | Access token for the Conversions API (e.g. System User token with `ads_management`).  |
-| `OFFER_REDIRECT_URL`    | Full affiliate/offer URL users are sent to when they click the CTA.                   |
+| `FACEBOOK_PIXEL_ID`     | Your Meta Pixel ID (from Meta Events Manager).                                        |
+| `FACEBOOK_ACCESS_TOKEN` | Token that lets your server send events to Meta (e.g. System User token).             |
+| `OFFER_REDIRECT_URL`    | The affiliate/offer URL users are sent to when they click the main button.             |
 | `SITE_URL`              | Site base URL (e.g. `https://your-site.netlify.app`). Optional but recommended.       |
 | `OFFER_FALLBACK_URL`    | (Optional) URL to use if the redirect fails.                                          |
 
@@ -154,7 +158,7 @@ In the campaign’s callback/postback settings, set the callback URL to:
 
 `https://YOUR-SITE-URL/.netlify/functions/postback?s1=#S1#&s2=#S2#&s3=#S3#&s4=#S4#&s5=#S5#&OFFID=#OFFID#&IP=#IP#&RATE=#RATE#&SALE=#SALE#&CONVERSION_ID=#CONVERSION_ID#`
 
-Replace `YOUR-SITE-URL` with your deployed domain. The server maps `s3` → fbp, `s4` → fbc, `s5` → user agent so Facebook can attribute the conversion.
+Replace `YOUR-SITE-URL` with your deployed domain. Your server maps the network’s parameters (s3, s4, s5) to Facebook’s tracking IDs and user info so Meta can attribute the conversion to your ad.
 
 ---
 
@@ -164,10 +168,10 @@ Replace `YOUR-SITE-URL` with your deployed domain. The server maps `s3` → fbp,
 | ----------------- | ------------------------------------------------------------------------------------ |
 | Frontend          | Vanilla HTML, CSS, JS (single page, no framework).                                    |
 | Hosting / backend | Netlify (static site + serverless functions).                                       |
-| Tracking          | Meta Pixel + Conversions API; client- and server-side Parameter Builder for fbp/fbc. |
-| Bot / quality     | FingerprintJS BotD + behavioral checks (dwell time, scroll, honeypot fields).        |
+| Tracking          | Meta Pixel + Conversions API (browser and server); server helps match events when cookies are blocked. |
+| Bot / quality     | FingerprintJS BotD + behavior checks (time on page, scroll, honeypot fields).        |
 
-Code layout: `index.html`, `assets/css/main.css`, `assets/js/` (app and bot detection), and `netlify/functions/` (config, CAPI, redirect, postback, test endpoints). Config is env-driven; no secrets in the repo.
+Code layout: `index.html`, `assets/css/main.css`, `assets/js/` (app and bot detection), and `netlify/functions/` (config, CAPI, redirect, postback, test endpoints). All config via env vars; no secrets in the repo.
 
 ---
 
