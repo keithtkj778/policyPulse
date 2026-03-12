@@ -105,7 +105,7 @@ Config and copy variants are env-driven; the main button calls your server for t
 ### 1. Get the code
 
 ```bash
-git clone https://github.com/peakvantagelabs-png/policyPulse.git
+git clone https://github.com/YOUR-USERNAME/policyPulse.git  # replace YOUR-USERNAME with repo owner
 cd policyPulse
 npm install
 ```
