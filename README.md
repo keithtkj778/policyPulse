@@ -1,56 +1,40 @@
 # Policy Pulse
 
-A **health insurance lead-generation prelander**: the middle step between your Facebook ad and the client’s landing page. Visitors click your ad → land here (Policy Pulse) for a short “reality check” → click the CTA → go to the client’s page (e.g. enter ZIP, view plans, call). Full tracking so you can measure and optimize.
+A **health insurance lead-gen prelander**: the step between your Facebook ad and the client's landing page. Ad click → short "reality check" here → one click through to the offer (ZIP, plans, call). **End-to-end tracking** so every step is measurable and attributable.
 
-Built with vanilla HTML/CSS/JS and Netlify serverless functions. No framework—easy to read and deploy.
+Vanilla HTML/CSS/JS and Netlify serverless functions—no framework, easy to read and deploy.
 
 ---
 
 ## What it does
 
-1. **User clicks your Facebook ad** → Lands on **this prelander** (Policy Pulse): headline, benefits, and a main button (“Am I protected?” / “Take control now”).
-2. **User clicks the button** → Your server looks up the client’s landing page URL, adds tracking info (so Meta can tie the visit to your ad), and sends the user there.
-3. **User reaches the client’s landing page** (e.g. enter ZIP, view plans, or call) → Converts there. The affiliate network then notifies your server; your server tells Meta “this was a lead” so your ad stats stay accurate.
+1. **User clicks your ad** → Lands on this prelander (headline, benefits, main button).
+2. **User clicks the button** → Your server resolves the offer URL, attaches tracking (fbp, fbc, user agent), and redirects. Meta can tie the visit to your ad.
+3. **User converts on the client's page** → The affiliate network hits your postback; your server sends a Lead event to Meta. Attribution stays accurate.
 
-**Flow in one line:** Facebook ad → **this prelander** → **client’s landing page** → conversion, with tracking at every step.
-
----
-
-## Leads and affiliate networks (context)
-
-An **affiliate network** (e.g. MaxBounty) is a marketplace: companies list offers (“we’ll pay $X per lead” or “Y% of each sale”), and **affiliates** (you) promote those offers and get paid when someone does the action—e.g. fills out a form. A **lead** is that conversion: one person who completed the step the advertiser cares about. The network tracks clicks and conversions and pays you according to the offer’s terms.
-
-| Network dashboard — browse offers and payouts | Earnings report — clicks, leads, conversion rate, earnings |
-| --------------------------------------------- | --------------------------------------------------------- |
-| ![MaxBounty dashboard](docs/screenshots/maxbounty-dashboard.png) | ![MaxBounty earnings](docs/screenshots/maxbounty-earnings.png) |
-
-The left screenshot is the actual MaxBounty affiliate network dashboard. The right is a real earnings report from running the health insurance prelander offer (this type of funnel).
-
-**Important:** Joining a network gives you access to offers and payouts; it does **not** run or fund your ads. You need your own **infrastructure** (landing pages, tracking, a prelander like this one) and your own **ad budget** (e.g. Facebook Ads). You drive the traffic; the network tracks conversions and pays you per lead or sale.
+**In one line:** Ad → prelander → offer page → conversion, with **tracking at every step**.
 
 ---
 
-## Screenshots
+## What it looks like
 
-What the prelander (this page) and the next step look like in practice.
+The prelander (this repo) and the offer page it sends users to.
 
-**Prelander (Policy Pulse) — the page in this repo.** First three are the same page, different sections:
+**Prelander (Policy Pulse)** — one page, three sections shown below:
 
-| Prelander: hero — headline, social proof, main button | Prelander: benefits — why it matters, urgency |
-| ----------------------------------------------------- | --------------------------------------------- |
+| Hero — headline, social proof, main button | Benefits — urgency and value |
+| ----------------------------------------- | ---------------------------- |
 | ![Prelander hero](docs/screenshots/prelander-hero.png) | ![Prelander benefits](docs/screenshots/prelander-benefits.png) |
 
-| Prelander: bottom — final button and disclaimers |
-| ------------------------------------------------ |
+| Bottom — final CTA and disclaimers |
+| ---------------------------------- |
 | ![Prelander bottom](docs/screenshots/prelander-bottom.png) |
 
-**Client’s landing page** (external site users go to after clicking the prelander button — e.g. enter ZIP, view plans, or call):
+**Client's landing page** (external)—e.g. enter ZIP, view plans, or call. Each qualified lead pays out per the offer; amount depends on the network.
 
 | |
 |--|
 | ![Client landing page](docs/screenshots/client-landing-page.png) |
-
-For every submitted form (or qualified lead) on the client’s landing page, **$X** is generated from affiliate networks. Replace **$X** with your actual payout per lead; the exact amount depends on the offer and network.
 
 ---
 
@@ -64,61 +48,55 @@ For every submitted form (or qualified lead) on the client’s landing page, **$
 └─────────────┘     └──────────────────┘     └─────────────────────────┘     └──────────────┘
         ▲                    │                          │                      │
         │                    ▼                          │                      │
-        │            • Page view + CTA                  │                      │
-        │              sent to Facebook                 │                      │
+        │            • Page view + CTA → Meta          │                      │
         │            • Bot checks, angle-based copy     │                      │
-        │            • CTA → server gets client landing-page URL │                      │
-        │              and appends fbp/fbc for tracking │                      │
-        │                                              │                      │
+        │            • Server appends fbp/fbc, redirects│                      │
         │                                              ▼                      ▼
         │            ┌─────────────────────────────────────────────────────────────┐
-        │            │  Client's/affiliate network calls your postback URL            │
-        │            │  → Netlify receives postback                                 │
-        │            │  → Server sends converted Lead to Facebook CAPI               │
-        │            │  → CAPI feeds Meta's algorithm (conversion signal)            │
+        │            │  Network calls postback → server sends Lead to Meta CAPI    │
+        │            │  → Algorithm gets conversion signal → better targeting      │
         │            └─────────────────────────────────────────────────────────────┘
-        │                                              │
-        └──────────────────────────────────────────────┘
-          Algorithm learns who converts → delivers ad to more users likely to convert
-          (lower cost per lead, better return on ad spend over time)
+        └──────────────────────────────────────────────────────────────────────────
 ```
 
-**In plain terms:** User clicks your ad → lands on this prelander → clicks the main button → goes to the client’s page (e.g. enter ZIP, view plans, call) → converts. Your server records each step and tells Meta, so Meta can show your ad to more people who are likely to convert.
+**Plain terms:** Ad → prelander → offer → convert. Your server records each step and reports to Meta so the algorithm can optimize who sees your ad.
 
 ---
 
-## Why Meta CAPI matters
+## Where this fits: leads and affiliate networks
 
-**Conversions API (CAPI)** is Meta’s way to record what users do (page views, button clicks, leads) **from your server** instead of only from the browser. That matters because many people block or limit tracking in the browser—so browser-only tracking would miss a lot of conversions. This project sends events from your server to Meta: when someone lands on the page or clicks the button, and when they later convert, your server tells Meta. Meta uses that to see which ads actually drive leads and to show your ad to more people like those who convert. Result: better targeting and more leads for the same ad spend.
+**Affiliate networks** (e.g. MaxBounty) list offers—"$X per lead" or "Y% of sale"—and **affiliates** promote them and get paid per conversion. A **lead** is one completed action the advertiser pays for. The network tracks and pays; you bring traffic.
 
----
+| Real MaxBounty dashboard | Real earnings report (this funnel) |
+| ------------------------ | ---------------------------------- |
+| ![MaxBounty dashboard](docs/screenshots/maxbounty-dashboard.png) | ![MaxBounty earnings](docs/screenshots/maxbounty-earnings.png) |
 
-## Bot and fraud detection
+Left: the actual network dashboard. Right: earnings from running this health insurance prelander offer.
 
-Lead-gen pages get hit by bots and fake traffic, which wastes ad spend and messes up Meta’s data. This prelander fights that in two ways: (1) **detecting automated browsers** (e.g. FingerprintJS BotD), and (2) **checking human-like behavior**—e.g. time on page, scrolling, mouse movement. Hidden fields (“honeypots”) catch dumb bots that fill every box. If we decide a visitor is a bot or doesn’t behave like a human, we **don’t send** their visits or events to Meta, so fake traffic isn’t counted and your numbers stay useful.
-
----
-
-## Server-side tracking (privacy-resilient)
-
-Lots of people block cookies or use browsers that limit tracking. If we only tracked from the browser (pixels, cookies), we’d miss many conversions. Here, **your server** sends events to Meta’s Conversions API—using the request your server receives (IP, browser info, and Facebook IDs when available). So even when the browser blocks the pixel or cookies, we still record the action. That keeps your conversion data and ad optimization working despite blockers and privacy settings.
+**Note:** The network gives you offers and payouts—not ad spend or infrastructure. You run your own landing pages, tracking, and ads (e.g. Facebook). This repo is the kind of infrastructure you need in the middle.
 
 ---
 
-### Why this funnel is built this way
+## Why tracking and quality matter
 
-The prelander is built to get leads cheaply and convert well—minimize cost per lead and maximize return on ad spend without long forms. It’s designed to:
+**Meta CAPI** — Events are sent **from your server** to Meta, not only from the browser. When users block cookies or use strict privacy settings, browser-only tracking drops conversions. Server-side events keep attribution working so Meta can see which ads drive leads and optimize delivery.
 
-- **Make the button feel like a small step** — Copy uses identity, urgency, and relief (e.g. “60-second check, no obligation”) so clicking feels low-risk, not like a big commitment.
-- **Keep the message consistent** — Same thread from ad → prelander → offer, so users don’t get a jarring change that kills interest.
-- **Use conversions to train Meta** — Sending conversions back to Meta via CAPI lets the algorithm learn who converts and show your ad to more people like them, so traffic improves over time.
-- **Filter by behavior, not long forms** — Bot checks, time on page, and scroll/click behavior act as light quality filters so the funnel stays fast but still catches real intent.
+**Privacy-resilient** — Your server receives the request (IP, user agent, fbp/fbc when available) and forwards the event to CAPI. Blockers and cookie limits don’t break the pipeline; conversion data stays reliable.
 
-Copy uses identity, social proof, urgency, and risk reversal (no SSN, no obligation) so the opt-in feels like access or relief, not “fill out a quote form.” The goal is high intent and steady conversions at a sustainable cost per lead.
+**Bot and fraud** — Lead-gen attracts bots and junk traffic. This prelander uses **FingerprintJS BotD** plus behavior checks (dwell time, scroll, pointer movement, motion patterns) and honeypot fields. Suspect or bot traffic isn’t sent to Meta—so your stats stay usable and the algorithm isn’t trained on noise.
 
 ---
 
-**Implementation details:** The prelander reads settings (pixel ID, etc.) from environment variables, shows the right headline/message variant, and on button click calls your server to get the client’s landing page URL with tracking attached. When the user converts on the client’s page, the affiliate network calls your postback URL and your server sends a “Lead” event to Meta. No API keys in the repo—everything is in env vars (see Setup).
+## Why this funnel is built this way
+
+Built to **lower cost per lead** and **improve return on ad spend** without long forms. Design choices:
+
+- **Low-friction CTA** — Copy frames the click as a small step (e.g. "60-second check, no obligation") so it feels low-risk.
+- **Message match** — Same thread from ad → prelander → offer so intent doesn’t drop at the handoff.
+- **Conversions train Meta** — CAPI sends conversions back; the algorithm learns who converts and targets similar users.
+- **Behavior over forms** — Bot checks and engagement (time on page, scroll, click) filter quality without adding fields.
+
+Config and copy variants are env-driven; the main button calls your server for the offer URL with tracking attached. On conversion, the network hits your postback and your server sends the Lead event to Meta. No secrets in the repo—everything via env vars (see Setup).
 
 ---
 
@@ -134,17 +112,17 @@ npm install
 
 ### 2. Environment variables
 
-In **Netlify** (Site settings → Environment variables), add:
+In **Netlify** (Site settings → Environment variables):
 
-| Variable                | Description                                                                           |
-| ----------------------- | ------------------------------------------------------------------------------------- |
-| `FACEBOOK_PIXEL_ID`     | Your Meta Pixel ID (from Meta Events Manager).                                        |
-| `FACEBOOK_ACCESS_TOKEN` | Token that lets your server send events to Meta (e.g. System User token).             |
-| `OFFER_REDIRECT_URL`    | The affiliate/offer URL users are sent to when they click the main button.             |
-| `SITE_URL`              | Site base URL (e.g. `https://your-site.netlify.app`). Optional but recommended.       |
-| `OFFER_FALLBACK_URL`    | (Optional) URL to use if the redirect fails.                                          |
+| Variable                | Description |
+| ----------------------- | ----------- |
+| `FACEBOOK_PIXEL_ID`     | Meta Pixel ID (Events Manager). |
+| `FACEBOOK_ACCESS_TOKEN` | Server-side token for CAPI (e.g. System User with `ads_management`). |
+| `OFFER_REDIRECT_URL`    | Affiliate/offer URL users are sent to on CTA click. |
+| `SITE_URL`              | Site base URL (e.g. `https://your-site.netlify.app`). Optional. |
+| `OFFER_FALLBACK_URL`    | Optional fallback if redirect fails. |
 
-For local development, copy `.env.example` to `.env` and set the same values. Do not commit `.env`.
+Local dev: copy `.env.example` to `.env` and set the same. Don’t commit `.env`.
 
 ### 3. Deploy
 
@@ -152,28 +130,28 @@ For local development, copy `.env.example` to `.env` and set the same values. Do
 npx netlify deploy --prod
 ```
 
-Set or confirm the variables in the Netlify dashboard after deploy.
+Confirm variables in the Netlify dashboard.
 
-### 4. Affiliate / offer network (e.g. MaxBounty)
+### 4. Affiliate network (e.g. MaxBounty)
 
-In the campaign’s callback/postback settings, set the callback URL to:
+When a user converts, the network must notify your server. In the campaign’s callback/postback settings, set the URL to:
 
 `https://YOUR-SITE-URL/.netlify/functions/postback?s1=#S1#&s2=#S2#&s3=#S3#&s4=#S4#&s5=#S5#&OFFID=#OFFID#&IP=#IP#&RATE=#RATE#&SALE=#SALE#&CONVERSION_ID=#CONVERSION_ID#`
 
-Replace `YOUR-SITE-URL` with your deployed domain. Your server maps the network’s parameters (s3, s4, s5) to Facebook’s tracking IDs and user info so Meta can attribute the conversion to your ad.
+Replace `YOUR-SITE-URL` with your deployed domain. Your server maps s3→fbp, s4→fbc, s5→user agent so Meta can attribute the conversion.
 
 ---
 
 ## Tech stack
 
-| Layer             | Choice                                                                               |
-| ----------------- | ------------------------------------------------------------------------------------ |
-| Frontend          | Vanilla HTML, CSS, JS (single page, no framework).                                    |
-| Hosting / backend | Netlify (static site + serverless functions).                                       |
-| Tracking          | Meta Pixel + Conversions API (browser and server); server helps match events when cookies are blocked. |
-| Bot / quality     | FingerprintJS BotD + behavior checks (time on page, scroll, honeypot fields).        |
+| Layer             | Choice |
+| ----------------- | ------ |
+| Frontend          | Vanilla HTML, CSS, JS (single page). |
+| Hosting / backend | Netlify (static + serverless functions). |
+| Tracking          | Meta Pixel + Conversions API (browser + server). |
+| Bot / quality     | FingerprintJS BotD + behavior checks + honeypots. |
 
-Code layout: `index.html`, `assets/css/main.css`, `assets/js/` (app and bot detection), and `netlify/functions/` (config, CAPI, redirect, postback, test endpoints). All config via env vars; no secrets in the repo.
+Structure: `index.html`, `assets/css/main.css`, `assets/js/` (app + bot detection), `netlify/functions/` (config, CAPI, redirect, postback). Env-driven; no secrets in repo.
 
 ---
 
@@ -181,9 +159,9 @@ Code layout: `index.html`, `assets/css/main.css`, `assets/js/` (app and bot dete
 
 After deploy:
 
-- **CAPI pipeline:** `GET https://your-site.netlify.app/.netlify/functions/test-capi`
-- **Postback flow:** `GET https://your-site.netlify.app/.netlify/functions/test-postback`
-- **Facebook Test Events:** `GET https://your-site.netlify.app/.netlify/functions/test-facebook-events` (events appear in Events Manager → Test Events)
+- **CAPI:** `GET https://your-site.netlify.app/.netlify/functions/test-capi`
+- **Postback:** `GET https://your-site.netlify.app/.netlify/functions/test-postback`
+- **Test events:** `GET https://your-site.netlify.app/.netlify/functions/test-facebook-events` (Events Manager → Test Events)
 
 ---
 
