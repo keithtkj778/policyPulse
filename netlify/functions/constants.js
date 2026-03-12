@@ -4,8 +4,8 @@
  */
 
 module.exports = {
-    /** Domain used for ParamBuilder cookie scope (set via SITE_URL in production) */
-    PARAM_BUILDER_DOMAIN: 'policypulse.online',
+    /** Domain used for ParamBuilder cookie scope when SITE_URL is unset (e.g. local dev) */
+    PARAM_BUILDER_DOMAIN: 'localhost',
 
     /** Max redirect hops when resolving offer URL */
     MAX_REDIRECT_HOPS: 8,

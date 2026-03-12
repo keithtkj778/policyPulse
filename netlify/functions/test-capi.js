@@ -11,10 +11,10 @@ exports.handler = async (event, context) => {
             fbc: 'fb.1.1234567890.1234567890',
             client_ip_address: '192.168.1.1',
             client_user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-            page_url: SITE_URL || 'https://policypulse.online',
+            page_url: SITE_URL || 'https://your-site.netlify.app',
             primary_angle: 'test'
         };
-        const base = (SITE_URL || 'https://policypulse.online').replace(/\/$/, '');
+        const base = (SITE_URL || 'https://your-site.netlify.app').replace(/\/$/, '');
         const response = await fetch(`${base}/.netlify/functions/facebook-capi`, {
             method: 'POST',
             headers: {

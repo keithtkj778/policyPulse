@@ -174,7 +174,7 @@ exports.handler = async (event, context) => {
                     page_duration: page_duration || 0,
                     conversion_trigger: conversion_trigger || 'unknown'
                 },
-                event_source_url: page_url || SITE_URL || 'https://policypulse.online',
+                event_source_url: page_url || SITE_URL || 'https://your-site.netlify.app',
                 event_id: finalEventId // ✅ SAME event ID as Pixel (for deduplication)
             }]
         };

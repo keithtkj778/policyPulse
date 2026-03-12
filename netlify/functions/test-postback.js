@@ -18,7 +18,7 @@ exports.handler = async (event, context) => {
             CONVERSION_ID: `test_conv_${Date.now()}`,
         };
 
-        const base = (SITE_URL || 'https://policypulse.online').replace(/\/$/, '');
+        const base = (SITE_URL || 'https://your-site.netlify.app').replace(/\/$/, '');
         const postbackUrl = `${base}/.netlify/functions/postback`;
         const queryString = new URLSearchParams(testData).toString();
         const response = await fetch(`${postbackUrl}?${queryString}`);

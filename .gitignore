@@ -29,5 +29,7 @@ Thumbs.db
 .env.test.local
 .env.production.local
 
-# Netlify CLI / generated
+# Netlify CLI / generated (local paths, site ID — do not commit)
 .netlify/
+.netlify/state.json
+.netlify/netlify.toml

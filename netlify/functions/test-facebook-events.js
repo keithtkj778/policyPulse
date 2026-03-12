@@ -33,7 +33,7 @@ exports.handler = async (event, context) => {
                 currency: 'USD',
                 primary_angle: 'one_bill_away'
             },
-            event_source_url: SITE_URL || 'https://policypulse.online',
+            event_source_url: SITE_URL || 'https://your-site.netlify.app',
             event_id: `test_pv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
         };
 
@@ -51,7 +51,7 @@ exports.handler = async (event, context) => {
                 page_duration: 5,
                 conversion_trigger: 'direct_cta'
             },
-            event_source_url: SITE_URL || 'https://policypulse.online',
+            event_source_url: SITE_URL || 'https://your-site.netlify.app',
             event_id: `test_cta_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
         };
 
@@ -69,7 +69,7 @@ exports.handler = async (event, context) => {
                 page_duration: 12,
                 conversion_trigger: 'test_lead'
             },
-            event_source_url: SITE_URL || 'https://policypulse.online',
+            event_source_url: SITE_URL || 'https://your-site.netlify.app',
             event_id: `test_lead_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
         };
 

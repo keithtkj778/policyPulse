@@ -28,8 +28,8 @@ const FACEBOOK_ACCESS_TOKEN = getEnv('FACEBOOK_ACCESS_TOKEN');
 /** Optional Redis URL for caching (if used). */
 const REDIS_URL = getEnv('REDIS_URL', '');
 
-/** Site base URL, e.g. https://yoursite.netlify.app — used for CAPI callback and tests */
-const SITE_URL = getEnv('SITE_URL', 'https://policypulse.online');
+/** Site base URL, e.g. https://yoursite.netlify.app — set in Netlify env or .env. No default. */
+const SITE_URL = getEnv('SITE_URL');
 
 /** Offer redirect URL (affiliate/offer link). Used by go-firstquote and as client fallback. */
 const OFFER_REDIRECT_URL = getEnv('OFFER_REDIRECT_URL');
