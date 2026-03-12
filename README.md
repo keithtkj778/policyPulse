@@ -16,6 +16,18 @@ Built with vanilla HTML/CSS/JS and Netlify serverless functions. No framework—
 
 ---
 
+## Leads and affiliate networks (context)
+
+An **affiliate network** (e.g. MaxBounty) is a marketplace: companies list offers (“we’ll pay $X per lead” or “Y% of each sale”), and **affiliates** (you) promote those offers and get paid when someone does the action—e.g. fills out a form. A **lead** is that conversion: one person who completed the step the advertiser cares about. The network tracks clicks and conversions and pays you according to the offer’s terms.
+
+| Network dashboard — browse offers and payouts | Earnings report — clicks, leads, conversion rate, earnings |
+| --------------------------------------------- | --------------------------------------------------------- |
+| ![MaxBounty dashboard](assets/image-c53128d6-ee71-4a78-add6-6fca5e2c20c4.png) | ![MaxBounty earnings](assets/image-80eeb7c5-0dca-499c-81d0-b1ba9afadb8f.png) |
+
+**Important:** Joining a network gives you access to offers and payouts; it does **not** run or fund your ads. You need your own **infrastructure** (landing pages, tracking, a prelander like this one) and your own **ad budget** (e.g. Facebook Ads). You drive the traffic; the network tracks conversions and pays you per lead or sale.
+
+---
+
 ## Screenshots
 
 | Hero — headline, social proof, primary CTA | Benefits — value propositions and urgency |
